@@ -22,7 +22,7 @@ Think about a name. This is going to be part of your DNSCrypt provider name.
 If you are planning to make your resolver publicly accessible, this name will
 be public.
 It has to look like a domain name (`example.com`), but it doesn't have to be
-a registered domain either.
+a registered domain.
 
 Let's pick `example.com` here.
 

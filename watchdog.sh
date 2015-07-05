@@ -7,7 +7,7 @@ for service in unbound dnscrypt-wrapper; do
 done
 
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
-GRACE_PERIOD=6
+GRACE_PERIOD=600
 
 provider_key=$(cat "${KEYS_DIR}/public.key.txt")
 provider_name=$(cat "${KEYS_DIR}/provider_name")
