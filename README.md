@@ -79,5 +79,13 @@ Latest stable version, compiled from source.
 minimal build compiled from source.
 - [dnscrypt-wrapper](https://github.com/Cofyc/dnscrypt-wrapper) - Latest stable version,
 compiled from source.
-- [dnscyrpt-proxy](https://github.com/jedisct1/dnscrypt-proxy) - Latest stable version,
+- [dnscrypt-proxy](https://github.com/jedisct1/dnscrypt-proxy) - Latest stable version,
 compiled from source.
+
+Keys and certificate are automatically rotated every 12 hour.
+
+Coming up next
+==============
+
+- Namecoin support, by linking a distinct image with namecore and ncdns.
+- Metrics
