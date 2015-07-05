@@ -79,5 +79,5 @@ Latest stable version, compiled from source.
 minimal build compiled from source.
 - [dnscrypt-wrapper](https://github.com/Cofyc/dnscrypt-wrapper) - Latest stable version,
 compiled from source.
-- [dnscrpt-proxy](https://github.com/jedisct1/dnscrypt-proxy) - Latest stable version,
+- [dnscyrpt-proxy](https://github.com/jedisct1/dnscrypt-proxy) - Latest stable version,
 compiled from source.
