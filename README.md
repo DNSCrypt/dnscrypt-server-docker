@@ -28,8 +28,7 @@ Let's pick `example.com` here.
 
 Create and initialize the container, once and for all:
 
-    $ docker run --name=dnscrypt-server \
-        -p 443:443/udp -p 443:443/tcp \
+    $ docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp \
         dnscrypt-server-image init -N example.com
 
 This will only accept connections via DNSCrypt. Containers on the same virtual
