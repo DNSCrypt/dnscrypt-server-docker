@@ -33,8 +33,8 @@ Create and initialize the container, once and for all:
 
 This will only accept connections via DNSCrypt. Containers on the same virtual
 network can directly access the DNS cache on the standard DNS port (53), but
-to create a non-authenticated public DNS resolver, this extra port has to be
-explicitly exposed (`-p 53:53/udp -p 53:53/tcp`).
+to create a regular, non-authenticated public DNS resolver, this extra port
+has to be explicitly exposed (`-p 53:53/udp -p 53:53/tcp`).
 
 Now, to start the whole stack:
 
