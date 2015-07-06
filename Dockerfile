@@ -88,7 +88,7 @@ RUN set -x && \
     cd /tmp/src && \
     curl -sSL $DNSCRYPT_PROXY_DOWNLOAD_URL -o dnscrypt-proxy.tar.gz && \
     echo "${DNSCRYPT_PROXY_SHA256} *dnscrypt-proxy.tar.gz" | sha256sum -c - && \
-    tar xvf dnscrypt-proxy.tar.gz && \
+    tar xzf dnscrypt-proxy.tar.gz && \
     rm -f dnscrypt-proxy.tar.gz && \
     cd dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION} && \
     mkdir -p /opt/dnscrypt-proxy/empty && \
@@ -100,9 +100,9 @@ RUN set -x && \
     rm -fr /opt/dnscrypt-proxy/share && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV DNSCRYPT_WRAPPER_GIT_TAG stable
-ENV DNSCRYPT_WRAPPER_SERIAL 1.0.17.0
-ENV DNSCRYPT_WRAPPER_GIT_REMOTE_URL https://github.com/jedisct1/dnscrypt-wrapper.git
+ENV DNSCRYPT_WRAPPER_VERSION 0.1.17
+ENV DNSCRYPT_WRAPPER_SHA256 972fc603be2af6653cff8f849aacb719d48c0559a9dec87ad3d23e7e670e383e
+ENV DNSCRYPT_WRAPPER_DOWNLOAD_URL https://github.com/Cofyc/dnscrypt-wrapper/releases/download/v${DNSCRYPT_WRAPPER_VERSION}/dnscrypt-wrapper-v${DNSCRYPT_WRAPPER_VERSION}.tar.bz2
 
 RUN set -x && \
     apt-get update && \
@@ -112,9 +112,10 @@ RUN set -x && \
         --no-install-recommends && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    git clone "$DNSCRYPT_WRAPPER_GIT_REMOTE_URL" dnscrypt-wrapper && \
-    cd dnscrypt-wrapper && \
-    git checkout "$DNSCRYPT_WRAPPER_GIT_TAG" && \
+    curl -sSL $DNSCRYPT_WRAPPER_DOWNLOAD_URL -o dnscrypt-wrapper.tar.bz2 && \
+    echo "${DNSCRYPT_WRAPPER_SHA256} *dnscrypt-wrapper.tar.bz2" | sha256sum -c - && \
+    tar xjf dnscrypt-wrapper.tar.bz2 && \
+    cd dnscrypt-wrapper-v${DNSCRYPT_WRAPPER_VERSION} && \
     mkdir -p /opt/dnscrypt-wrapper/empty && \
     groupadd _dnscrypt-wrapper && \
     useradd -g _dnscrypt-wrapper -s /etc -d /opt/dnscrypt-wrapper/empty _dnscrypt-wrapper && \
