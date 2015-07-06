@@ -101,6 +101,7 @@ RUN set -x && \
     rm -fr /tmp/* /var/tmp/*
 
 ENV DNSCRYPT_WRAPPER_GIT_TAG stable
+ENV DNSCRYPT_WRAPPER_SERIAL 1.0.17.0
 ENV DNSCRYPT_WRAPPER_GIT_REMOTE_URL https://github.com/jedisct1/dnscrypt-wrapper.git
 
 RUN set -x && \
