@@ -136,15 +136,15 @@ RUN mkdir -p \
     /etc/service/unbound \
     /etc/service/watchdog
 
-ADD entrypoint.sh /
+COPY entrypoint.sh /
 
-ADD unbound.sh /etc/service/unbound/run
-ADD unbound-check.sh /etc/service/unbound/check
+COPY unbound.sh /etc/service/unbound/run
+COPY unbound-check.sh /etc/service/unbound/check
 
-ADD dnscrypt-wrapper.sh /etc/service/dnscrypt-wrapper/run
+COPY dnscrypt-wrapper.sh /etc/service/dnscrypt-wrapper/run
 
-ADD key-rotation.sh /etc/service/key-rotation/run
-ADD watchdog.sh /etc/service/watchdog/run
+COPY key-rotation.sh /etc/service/key-rotation/run
+COPY watchdog.sh /etc/service/watchdog/run
 
 VOLUME ["/opt/dnscrypt-wrapper/etc/keys"]
 
