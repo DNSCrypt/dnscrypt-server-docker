@@ -27,7 +27,7 @@ new_key() {
         --provider-publickey-file="${KEYS_DIR}/public.key" \
         --provider-secretkey-file="${KEYS_DIR}/secret.key" \
         --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
-        --provider-cert-file="${STKEYS_DIR}/${ts}.cert" && \
+        --provider-cert-file="${STKEYS_DIR}/${ts}.cert" \
         --cert-file-expire-days=1 && \
     mv -f "${STKEYS_DIR}/${ts}.cert" "${STKEYS_DIR}/dnscrypt.cert"
 }
