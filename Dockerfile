@@ -11,8 +11,8 @@ RUN set -x && \
         ldnsutils \
         --no-install-recommends
 
-ENV LIBRESSL_VERSION 2.2.0
-ENV LIBRESSL_SHA256 9690d8f38a5d48425395452eeb305b05bb0f560cd96e0ee30f370d4f16563040
+ENV LIBRESSL_VERSION 2.2.1
+ENV LIBRESSL_SHA256 4f331750abfc3b605b02eeca1e8994fa0d2629985bc3f62924378197fbfe572d
 ENV LIBRESSL_DOWNLOAD_URL http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz
 
 RUN set -x && \
