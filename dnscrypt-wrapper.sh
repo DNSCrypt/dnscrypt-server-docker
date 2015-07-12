@@ -8,10 +8,14 @@ prune() {
 }
 
 rotation_needed() {
-    if [ $(find "$STKEYS_DIR" -type f -cmin -43200 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
+    if [ ! -f "${STKEYS_DIR}/dnscrypt.cert" ]; then
         echo true
     else
-        echo false
+        if [ $(find "$STKEYS_DIR" -type f -cmin -43200 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
+            echo true
+        else
+            echo false
+        fi
     fi
 }
 
