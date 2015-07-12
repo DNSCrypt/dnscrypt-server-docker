@@ -10,14 +10,6 @@ to get your resolver up and running.
 Installation
 ============
 
-Download the Docker image source:
-
-    $ git clone https://github.com/jedisct1/dnscrypt-server-docker.git
-
-Build the image:
-
-    $ docker build -t dnscrypt-server-image .
-
 Think about a name. This is going to be part of your DNSCrypt provider name.
 If you are planning to make your resolver publicly accessible, this name will
 be public.
@@ -26,10 +18,10 @@ a registered domain.
 
 Let's pick `example.com` here.
 
-Create and initialize the container, once and for all:
+Download, create and initialize the container, once and for all:
 
     $ docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp \
-        dnscrypt-server-image init -N example.com
+        jedisct1/unbound-dnscrypt-server init -N example.com
 
 This will only accept connections via DNSCrypt. Containers on the same virtual
 network can directly access the DNS cache on the standard DNS port (53), but
