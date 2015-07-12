@@ -1,5 +1,7 @@
 #! /bin/sh
 
+KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
+
 reserved=8388608
 availableMemory=$((1024 * $(fgrep MemAvailable /proc/meminfo | sed 's/[^0-9]//g') - $reserved))
 if [ $availableMemory -le 0 ]; then
@@ -14,8 +16,11 @@ else
     threads=1
 fi
 
+provider_name=$(cat "$KEYS_DIR/provider_name")
+
 sed \
     -e "s/@MSG_CACHE_SIZE@/${msg_cache_size}/" \
+    -e "s/@PROVIDER_NAME@/${provider_name}/" \
     -e "s/@RR_CACHE_SIZE@/${rr_cache_size}/" \
     -e "s/@THREADS@/${threads}/" \
     > /opt/unbound/etc/unbound/unbound.conf << EOT
@@ -65,6 +70,7 @@ server:
   local-zone: "local." static
   local-zone: "localdomain." static
   local-zone: "test." static
+  local-zone: "@PROVIDER_NAME@." refuse
 EOT
 
 mkdir -p /opt/unbound/etc/unbound/dev && \
