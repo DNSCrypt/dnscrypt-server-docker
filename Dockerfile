@@ -2,7 +2,7 @@ FROM caleblloyd/phusion-baseimage-docker-15.04
 MAINTAINER Frank Denis
 ENV SERIAL 1
 
-ENV BUILD_DEPS autoconf gcc libc-dev make pkg-config git
+ENV BUILD_DEPS autoconf file gcc git libc-dev make pkg-config
 
 RUN set -x && \
     apt-get update && apt-get install -y \
