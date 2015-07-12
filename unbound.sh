@@ -2,7 +2,7 @@
 
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 
-reserved=8388608
+reserved=12582912
 availableMemory=$((1024 * $(fgrep MemAvailable /proc/meminfo | sed 's/[^0-9]//g') - $reserved))
 if [ $availableMemory -le 0 ]; then
     exit 1
@@ -56,6 +56,7 @@ server:
   outgoing-range: 8192
   msg-cache-size: @MSG_CACHE_SIZE@
   rrset-cache-size: @RR_CACHE_SIZE@
+  neg-cache-size: 4M
   access-control: 0.0.0.0/0 allow
   access-control: ::0/0 allow
 
