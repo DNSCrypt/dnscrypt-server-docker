@@ -73,7 +73,7 @@ compiled from source.
 - [dnscrypt-proxy](https://github.com/jedisct1/dnscrypt-proxy) - Latest stable version,
 compiled from source.
 
-Keys and certificate are automatically rotated every 12 hour.
+Keys and certificates are automatically rotated every 12 hour.
 
 Coming up next
 ==============
