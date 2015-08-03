@@ -1,4 +1,4 @@
-FROM caleblloyd/phusion-baseimage-docker-15.04
+FROM jedisct1/baseimage-docker-latest:15.04
 MAINTAINER Frank Denis
 ENV SERIAL 1
 
