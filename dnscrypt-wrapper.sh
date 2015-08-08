@@ -4,14 +4,14 @@ KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 STKEYS_DIR="${KEYS_DIR}/short-term"
 
 prune() {
-    find "$STKEYS_DIR" -type f -cmin +86400 -exec rm -f {} \;
+    find "$STKEYS_DIR" -type f -cmin +1440 -exec rm -f {} \;
 }
 
 rotation_needed() {
     if [ ! -f "${STKEYS_DIR}/dnscrypt.cert" ]; then
         echo true
     else
-        if [ $(find "$STKEYS_DIR" -type f -cmin -43200 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
+        if [ $(find "$STKEYS_DIR" -type f -cmin -720 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
             echo true
         else
             echo false
