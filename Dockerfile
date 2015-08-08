@@ -101,8 +101,8 @@ RUN set -x && \
     rm -fr /opt/dnscrypt-proxy/share && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV DNSCRYPT_WRAPPER_VERSION 0.1.17
-ENV DNSCRYPT_WRAPPER_SHA256 972fc603be2af6653cff8f849aacb719d48c0559a9dec87ad3d23e7e670e383e
+ENV DNSCRYPT_WRAPPER_VERSION 0.2
+ENV DNSCRYPT_WRAPPER_SHA256 d26f9d6329653b71bed5978885385b45f16596021f219f46e49da60d5813054e
 ENV DNSCRYPT_WRAPPER_DOWNLOAD_URL https://github.com/Cofyc/dnscrypt-wrapper/releases/download/v${DNSCRYPT_WRAPPER_VERSION}/dnscrypt-wrapper-v${DNSCRYPT_WRAPPER_VERSION}.tar.bz2
 
 RUN set -x && \
