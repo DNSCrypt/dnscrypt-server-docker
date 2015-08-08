@@ -1,3 +1,5 @@
+[![DNSCrypt](https://raw.github.com/jedisct1/dnscrypt-server-docker/master/dnscrypt-small.png)](https://dnscrypt.org)
+
 DNSCrypt server Docker image
 ============================
 
