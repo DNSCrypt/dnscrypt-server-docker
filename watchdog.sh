@@ -1,13 +1,13 @@
 #! /bin/sh
 
-sleep 600
+sleep 300
 
 for service in unbound dnscrypt-wrapper; do
     sv check "$service" || sv force-restart "$service"
 done
 
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
-GRACE_PERIOD=600
+GRACE_PERIOD=60
 
 provider_key=$(cat "${KEYS_DIR}/public.key.txt")
 provider_name=$(cat "${KEYS_DIR}/provider_name")
