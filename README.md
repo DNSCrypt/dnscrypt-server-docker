@@ -22,13 +22,13 @@ Let's pick `example.com` here.
 
 Download, create and initialize the container, once and for all:
 
-    $ docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp \
+    $ docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
         jedisct1/unbound-dnscrypt-server init -N example.com
 
-This will only accept connections via DNSCrypt. Containers on the same virtual
-network can directly access the DNS cache on the standard DNS port (53), but
-to create a regular, non-authenticated public DNS resolver, this extra port
-has to be explicitly exposed (`-p 53:53/udp -p 53:53/tcp`).
+This will only accept connections via DNSCrypt on the standard port (443).
+
+`--net=host` provides the best network performance, but may have to be
+removed on some shared containers hosting services.
 
 Now, to start the whole stack:
 

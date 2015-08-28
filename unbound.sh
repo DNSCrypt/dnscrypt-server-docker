@@ -27,7 +27,7 @@ sed \
 server:
   verbosity: 1
   num-threads: @THREADS@
-  interface: 0.0.0.0@53
+  interface: 127.0.0.1@53
   so-reuseport: yes
   edns-buffer-size: 1252
   delay-close: 10000
