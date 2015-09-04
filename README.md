@@ -41,7 +41,7 @@ DNSCrypt client proxy on another host:
 
     # dnscrypt-proxy \
         --provider-key=<provider key, as displayed when the container was initialized> \
-        --resolver-address=<your resolver's public IP address> \
+        --resolver-address=<dnscrypt resolver public IP address> \
         --provider-name=2.dnscrypt-cert.example.com
 
 And try using `127.0.0.1` as a DNS resolver.
