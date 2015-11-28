@@ -73,6 +73,11 @@ server:
   local-zone: "localdomain." static
   local-zone: "test." static
   local-zone: "@PROVIDER_NAME@." refuse
+
+remote-control:
+  control-enable: yes
+  control-interface: 127.0.0.1
+  control-interface: ::1
 EOT
 
 mkdir -p /opt/unbound/etc/unbound/dev && \
