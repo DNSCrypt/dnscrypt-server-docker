@@ -87,4 +87,8 @@ mkdir -p -m 700 /opt/unbound/etc/unbound/var && \
 chown _unbound:_unbound /opt/unbound/etc/unbound/var && \
 /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
 
+if [ ! -f /opt/unbound/etc/unbound/unbound_control.pem ]; then
+  /opt/unbound/sbin/unbound-control-setup
+fi
+
 exec /opt/unbound/sbin/unbound
