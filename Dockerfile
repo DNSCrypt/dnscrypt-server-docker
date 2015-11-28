@@ -149,7 +149,7 @@ COPY watchdog.sh /etc/service/watchdog/run
 
 VOLUME ["/opt/dnscrypt-wrapper/etc/keys"]
 
-EXPOSE 53/udp 53/tcp 443/udp 443/tcp
+EXPOSE 443/udp 443/tcp
 
 CMD ["start"]
 

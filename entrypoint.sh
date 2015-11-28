@@ -86,8 +86,6 @@ This is supposed to be called only once.
 
 * start (default command): start the resolver and the dnscrypt server proxy.
 Ports 443/udp and 443/tcp have to be publicly exposed.
-Containers on the same virtual network can directly use this container's Unbound
-instance as a DNS resolver, on the standard DNS port (53).
 
 * provider-info: prints the provide name and provider public key.
 
