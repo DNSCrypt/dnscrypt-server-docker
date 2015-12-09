@@ -12,8 +12,8 @@ RUN set -x && \
         ldnsutils \
         --no-install-recommends
 
-ENV LIBRESSL_VERSION 2.2.4
-ENV LIBRESSL_SHA256 6b409859be8654afc3862549494e097017e64c8d167f12584383586306ef9a7e
+ENV LIBRESSL_VERSION 2.2.5
+ENV LIBRESSL_SHA256 e3caded0469d8dc64f4ca2fe8e499ada4dd014e84d1c5a71818d39e54e6c914b
 ENV LIBRESSL_DOWNLOAD_URL http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz
 
 RUN set -x && \
@@ -63,8 +63,8 @@ RUN set -x && \
     apt-get autoremove -y && apt-get clean && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV LIBSODIUM_VERSION 1.0.6
-ENV LIBSODIUM_SHA256 940d03ea7d2caa7940e24564bf6d9f66d6edd1df1e0111ff8e3655f3b864fb59
+ENV LIBSODIUM_VERSION 1.0.7
+ENV LIBSODIUM_SHA256 7ad1e78763510c163ca48f05133057726a825cf97386c581bf12b01d7654204a
 ENV LIBSODIUM_DOWNLOAD_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
 
 RUN set -x && \
@@ -75,7 +75,7 @@ RUN set -x && \
     tar xzf libsodium.tar.gz && \
     rm -f libsodium.tar.gz && \
     cd libsodium-${LIBSODIUM_VERSION} && \
-    ./configure --disable-dependency-tracking --enable-minimal --prefix=/opt/libsodium && \
+    ./configure --disable-dependency-tracking --enable-minimal --enable-opt --prefix=/opt/libsodium && \
     make check && make install && \
     echo /opt/libsodium/lib > /etc/ld.so.conf.d/libsodium.conf && ldconfig && \
     rm -fr /tmp/*
