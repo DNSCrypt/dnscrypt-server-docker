@@ -81,5 +81,4 @@ Coming up next
 ==============
 
 - Namecoin support, by linking a distinct image with namecore and ncdns.
-- Metrics
 - Better isolation of the certificate signing process, in a dedicated container.
