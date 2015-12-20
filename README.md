@@ -66,7 +66,7 @@ Details
 
 - Caching resolver: [Unbound](https://www.unbound.net/), with DNSSEC, prefetching,
 and no logs. The number of threads and memory usage are automatically adjusted.
-Latest stable version, compiled from source.
+Latest stable version, compiled from source. qname minimisation is enabled.
 - [LibreSSL](http://www.libressl.org/) - Latest stable version, compiled from source.
 - [libsodium](https://download.libsodium.org/doc/) - Latest stable version,
 minimal build compiled from source.
@@ -81,5 +81,4 @@ Coming up next
 ==============
 
 - Namecoin support, by linking a distinct image with namecore and ncdns.
-- Metrics
 - Better isolation of the certificate signing process, in a dedicated container.
