@@ -1,6 +1,11 @@
 #! /bin/sh
 
-cat > /opt/unbound/etc/unbound/unbound.conf << EOT
+KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
+provider_name=$(cat "$KEYS_DIR/provider_name")
+
+sed \
+    -e "s/@PROVIDER_NAME@/${provider_name}/" \
+    > /opt/unbound/etc/unbound/unbound.conf << EOT
 server:
   num-threads: 2
   msg-cache-slabs: 2
@@ -60,7 +65,7 @@ server:
   local-zone: "local." static
   local-zone: "localdomain." static
   local-zone: "test." static
-  local-zone: "2.dnscrypt-cert.dnscrypt.me." refuse
+  local-zone: "@PROVIDER_NAME@." refuse
 
 remote-control:
   control-enable: yes
