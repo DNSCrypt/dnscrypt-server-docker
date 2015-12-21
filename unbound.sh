@@ -7,10 +7,9 @@ sed \
     -e "s/@PROVIDER_NAME@/${provider_name}/" \
     > /opt/unbound/etc/unbound/unbound.conf << EOT
 server:
-  num-threads: 2
+  infra-cache-slabs: 2
   msg-cache-slabs: 2
   rrset-cache-slabs: 2
-  infra-cache-slabs: 2
   key-cache-slabs: 2
   ratelimit-slabs: 2
   so-rcvbuf: 4m
@@ -18,7 +17,14 @@ server:
   key-cache-size: 16m
   infra-cache-numhosts: 50000
   extended-statistics: yes
+  do-ip4: yes
+  do-ip6: yes
+  do-udp: yes
+  do-tcp: yes
+  access-control: 127.0.0.1 allow
+  access-control: ::1 allow
   verbosity: 1
+  num-threads: 2
   interface: 127.0.0.1@553
   so-reuseport: yes
   edns-buffer-size: 1252
@@ -51,8 +57,6 @@ server:
   msg-cache-size: 512m
   rrset-cache-size: 1024m
   neg-cache-size: 4m
-  access-control: 127.0.0.1 allow
-  access-control: ::1 allow
 
   local-zone: "belkin." static
   local-zone: "corp." static
