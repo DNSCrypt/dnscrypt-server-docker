@@ -14,7 +14,7 @@ server:
   ratelimit-slabs: 2
   so-rcvbuf: 4m
   so-sndbuf: 4m
-  key-cache-size: 16m
+  key-cache-size: 32m
   infra-cache-numhosts: 50000
   extended-statistics: yes
   do-ip4: yes
@@ -56,7 +56,7 @@ server:
   outgoing-range: 8192
   msg-cache-size: 512m
   rrset-cache-size: 1024m
-  neg-cache-size: 4m
+  neg-cache-size: 8m
 
   local-zone: "belkin." static
   local-zone: "corp." static
