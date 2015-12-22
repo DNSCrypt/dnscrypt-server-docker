@@ -23,6 +23,7 @@ server:
   do-tcp: yes
   access-control: 127.0.0.1 allow
   access-control: ::1 allow
+  val-clean-additional: yes
   verbosity: 1
   num-threads: 2
   interface: 127.0.0.1@553
