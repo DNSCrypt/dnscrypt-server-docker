@@ -12,8 +12,8 @@ server:
   rrset-cache-slabs: 2
   key-cache-slabs: 2
   ratelimit-slabs: 2
-  so-rcvbuf: 4m
-  so-sndbuf: 4m
+  so-rcvbuf: 8m
+  so-sndbuf: 8m
   key-cache-size: 32m
   infra-cache-numhosts: 50000
   extended-statistics: yes
