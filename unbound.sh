@@ -71,13 +71,13 @@ server:
   local-zone: "localdomain." static
   local-zone: "test." static
   local-zone: "@PROVIDER_NAME@." refuse
+  
+  include: /opt/unbound/etc/unbound-ad-servers.txt
 
 remote-control:
   control-enable: yes
   control-interface: 127.0.0.1
   control-interface: ::1
-
-include: /opt/unbound/etc/unbound-ad-servers.txt
 EOT
 
 mkdir -p /opt/unbound/etc/unbound/dev && \
