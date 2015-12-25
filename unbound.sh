@@ -18,7 +18,7 @@ server:
   infra-cache-numhosts: 50000
   extended-statistics: yes
   do-ip4: yes
-  do-ip6: yes
+  do-ip6: no
   do-udp: yes
   do-tcp: yes
   access-control: 127.0.0.1 allow
