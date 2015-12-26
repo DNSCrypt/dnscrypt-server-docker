@@ -15,7 +15,8 @@ server:
   so-rcvbuf: 8m
   so-sndbuf: 8m
   key-cache-size: 32m
-  infra-cache-numhosts: 50000
+  infra-cache-numhosts: 100000
+  infra-host-ttl: 1800
   extended-statistics: yes
   do-ip4: yes
   do-ip6: no
