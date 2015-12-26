@@ -63,8 +63,8 @@ RUN set -x && \
     apt-get autoremove -y && apt-get clean && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV LIBSODIUM_VERSION 1.0.7
-ENV LIBSODIUM_SHA256 7ad1e78763510c163ca48f05133057726a825cf97386c581bf12b01d7654204a
+ENV LIBSODIUM_VERSION 1.0.8
+ENV LIBSODIUM_SHA256 c0f191d2527852641e0a996b7b106d2e04cbc76ea50731b2d0babd3409301926
 ENV LIBSODIUM_DOWNLOAD_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
 
 RUN set -x && \
