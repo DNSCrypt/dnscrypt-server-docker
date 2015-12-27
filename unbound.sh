@@ -1,37 +1,37 @@
 #! /bin/sh
 
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
-
-reserved=12582912
-availableMemory=$((1024 * $(fgrep MemAvailable /proc/meminfo | sed 's/[^0-9]//g') - $reserved))
-if [ $availableMemory -le 0 ]; then
-    exit 1
-fi
-msg_cache_size=$(($availableMemory / 3))
-rr_cache_size=$(($availableMemory / 3))
-nproc=$(nproc)
-if [ $nproc -gt 1 ]; then
-    threads=$(($nproc - 1))
-else
-    threads=1
-fi
-
 provider_name=$(cat "$KEYS_DIR/provider_name")
 
 sed \
-    -e "s/@MSG_CACHE_SIZE@/${msg_cache_size}/" \
     -e "s/@PROVIDER_NAME@/${provider_name}/" \
-    -e "s/@RR_CACHE_SIZE@/${rr_cache_size}/" \
-    -e "s/@THREADS@/${threads}/" \
     > /opt/unbound/etc/unbound/unbound.conf << EOT
 server:
+  infra-cache-slabs: 2
+  msg-cache-slabs: 2
+  rrset-cache-slabs: 2
+  key-cache-slabs: 2
+  ratelimit-slabs: 2
+  so-rcvbuf: 8m
+  so-sndbuf: 8m
+  key-cache-size: 32m
+  infra-cache-numhosts: 100000
+  infra-host-ttl: 1800
+  extended-statistics: yes
+  do-ip4: yes
+  do-ip6: no
+  do-udp: yes
+  do-tcp: yes
+  access-control: 127.0.0.1 allow
+  access-control: ::1 allow
+  val-clean-additional: yes
   verbosity: 1
-  num-threads: @THREADS@
+  num-threads: 2
   interface: 127.0.0.1@553
   so-reuseport: yes
   edns-buffer-size: 1252
   delay-close: 10000
-  cache-min-ttl: 60
+  cache-min-ttl: 3600
   cache-max-ttl: 86400
   do-daemonize: no
   username: "_unbound"
@@ -56,11 +56,9 @@ server:
   auto-trust-anchor-file: "var/root.key"
   num-queries-per-thread: 4096
   outgoing-range: 8192
-  msg-cache-size: @MSG_CACHE_SIZE@
-  rrset-cache-size: @RR_CACHE_SIZE@
-  neg-cache-size: 4M
-  access-control: 0.0.0.0/0 allow
-  access-control: ::0/0 allow
+  msg-cache-size: 512m
+  rrset-cache-size: 1024m
+  neg-cache-size: 8m
 
   local-zone: "belkin." static
   local-zone: "corp." static
@@ -74,6 +72,8 @@ server:
   local-zone: "localdomain." static
   local-zone: "test." static
   local-zone: "@PROVIDER_NAME@." refuse
+  
+  include: /opt/unbound/etc/unbound-ad-servers.txt
 
 remote-control:
   control-enable: yes
