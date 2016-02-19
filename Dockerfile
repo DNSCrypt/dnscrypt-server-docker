@@ -13,7 +13,7 @@ RUN set -x && \
         --no-install-recommends
 
 ENV LIBRESSL_VERSION 2.2.6
-ENV LIBRESSL_SHA256 5baa84080aec348ddb6008454b02dfe23ac82f32f9fdd0e29345d9830120e8be
+ENV LIBRESSL_SHA256 1ee19994cffd047d40f63ba149115dba18a681b0cc923beec301bf424b58d64f
 ENV LIBRESSL_DOWNLOAD_URL http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz
 
 RUN set -x && \
