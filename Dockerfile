@@ -32,7 +32,7 @@ RUN set -x && \
 
 ENV UNBOUND_VERSION 1.5.8
 ENV UNBOUND_SHA256 33567a20f73e288f8daa4ec021fbb30fe1824b346b34f12677ad77899ecd09be
-ENV UNBOUND_DOWNLOAD_URL http://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz
+ENV UNBOUND_DOWNLOAD_URL https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz
 
 RUN set -x && \
     apt-get update && \
@@ -63,8 +63,8 @@ RUN set -x && \
     apt-get autoremove -y && apt-get clean && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV LIBSODIUM_VERSION 1.0.8
-ENV LIBSODIUM_SHA256 c0f191d2527852641e0a996b7b106d2e04cbc76ea50731b2d0babd3409301926
+ENV LIBSODIUM_VERSION 1.0.10
+ENV LIBSODIUM_SHA256 71b786a96dd03693672b0ca3eb77f4fb08430df307051c0d45df5353d22bc4be
 ENV LIBSODIUM_DOWNLOAD_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
 
 RUN set -x && \
@@ -75,14 +75,14 @@ RUN set -x && \
     tar xzf libsodium.tar.gz && \
     rm -f libsodium.tar.gz && \
     cd libsodium-${LIBSODIUM_VERSION} && \
-    ./configure --disable-dependency-tracking --enable-minimal --enable-opt --prefix=/opt/libsodium && \
+    ./configure --disable-dependency-tracking --enable-minimal --prefix=/opt/libsodium && \
     make check && make install && \
     echo /opt/libsodium/lib > /etc/ld.so.conf.d/libsodium.conf && ldconfig && \
     rm -fr /tmp/*
 
 ENV DNSCRYPT_PROXY_VERSION 1.6.0
 ENV DNSCRYPT_PROXY_SHA256 7703a41a1040fc30b19fdfbbaba36b411e66d998584b0e2fa5088f734f4f86be
-ENV DNSCRYPT_PROXY_DOWNLOAD_URL http://download.dnscrypt.org/dnscrypt-proxy/dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION}.tar.gz
+ENV DNSCRYPT_PROXY_DOWNLOAD_URL https://download.dnscrypt.org/dnscrypt-proxy/dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION}.tar.gz
 
 RUN set -x && \
     mkdir -p /tmp/src && \
