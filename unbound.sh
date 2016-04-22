@@ -3,7 +3,7 @@
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 
 reserved=12582912
-availableMemory=$((1024 * $((fgrep MemAvailable /proc/meminfo || fgrep MemTotal /proc/meminfo) | sed 's/[^0-9]//g')))
+availableMemory=$((1024 * $( (fgrep MemAvailable /proc/meminfo || fgrep MemTotal /proc/meminfo) | sed 's/[^0-9]//g' ) ))
 if [ $availableMemory -le $(($reserved * 2)) ]; then
     echo "Not enough memory" >&2
     exit 1
