@@ -61,6 +61,46 @@ edit the [dnscrypt.csv](https://github.com/jedisct1/dnscrypt-proxy/blob/master/d
 file to add your resolver's informations, and submit a pull request to have it
 included in the list of public DNSCrypt resolvers!
 
+Customization
+=============
+
+Serve Custom DNS Records for Local Network
+------------------------------------------
+While Unbound is not a full authoritative name server, it supports resolving
+custom entries on a small, private LAN. In other words, you can use Unbound to
+resolve fake names such as your-computer.local within your LAN. 
+
+To support such custom entries using this DNSCrypt server, you need to create
+your own Docker image based off of this one and also provide an `a-records.conf`
+file. The conf file is where you will define your custom entries for forward and
+reverse resolution. 
+
+Your custom Dockerfile should use the following format: 
+```Dockerfile
+FROM jedisct1/unbound-dnscrypt-server:latest 
+COPY a-records.conf /opt/unbound/etc/unbound/
+```
+
+The `a-records.conf` file should use the following format:
+
+```
+# A Record
+  #local-data: "somecomputer.local. A 192.168.1.1"
+  local-data: "laptop.local. A 192.168.1.2"
+
+# PTR Record
+  #local-data-ptr: "192.168.1.1 somecomputer.local."
+  local-data-ptr: "192.168.1.2 laptop.local."
+```
+
+After the above files have been saved to an empty directory, build your Docker
+image:
+`docker build -t your-id/your-image-name:tag .`
+
+After your custom image has been built, create, initialize, and start the
+container using the method described in the Installation section of this
+document. 
+
 Details
 =======
 
@@ -75,7 +115,7 @@ compiled from source.
 - [dnscrypt-proxy](https://github.com/jedisct1/dnscrypt-proxy) - Latest stable version,
 compiled from source.
 
-Keys and certificates are automatically rotated every 12 hour.
+Keys and certificates are automatically rotated every 12 hours.
 
 Coming up next
 ==============
