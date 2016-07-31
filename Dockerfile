@@ -80,8 +80,8 @@ RUN set -x && \
     echo /opt/libsodium/lib > /etc/ld.so.conf.d/libsodium.conf && ldconfig && \
     rm -fr /tmp/*
 
-ENV DNSCRYPT_PROXY_VERSION 1.6.0
-ENV DNSCRYPT_PROXY_SHA256 7703a41a1040fc30b19fdfbbaba36b411e66d998584b0e2fa5088f734f4f86be
+ENV DNSCRYPT_PROXY_VERSION 1.7.0
+ENV DNSCRYPT_PROXY_SHA256 be9827f66401f38fd4bdb372046eff9b5802ab5f3d188878a0dcd7bd20074c09
 ENV DNSCRYPT_PROXY_DOWNLOAD_URL https://download.dnscrypt.org/dnscrypt-proxy/dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION}.tar.gz
 
 RUN set -x && \
@@ -96,7 +96,7 @@ RUN set -x && \
     groupadd _dnscrypt-proxy && \
     useradd -g _dnscrypt-proxy -s /etc -d /opt/dnscrypt-proxy/empty _dnscrypt-proxy && \
     env CPPFLAGS=-I/opt/libsodium/include LDFLAGS=-L/opt/libsodium/lib \
-        ./configure --disable-dependency-tracking --prefix=/opt/dnscrypt-proxy && \
+        ./configure --disable-dependency-tracking --prefix=/opt/dnscrypt-proxy --disable-plugins && \
     make install && \
     rm -fr /opt/dnscrypt-proxy/share && \
     rm -fr /tmp/* /var/tmp/*
