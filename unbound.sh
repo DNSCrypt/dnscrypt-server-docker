@@ -77,6 +77,8 @@ server:
   local-zone: "test." static
   local-zone: "@PROVIDER_NAME@." refuse
 
+  include: "/opt/unbound/etc/unbound/zones/*.conf"
+
 remote-control:
   control-enable: yes
   control-interface: 127.0.0.1
