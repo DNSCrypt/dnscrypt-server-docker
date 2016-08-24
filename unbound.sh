@@ -1,6 +1,7 @@
 #! /bin/sh
 
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
+ZONES_DIR="/opt/unbound/etc/unbound/zones"
 
 reserved=12582912
 availableMemory=$((1024 * $( (fgrep MemAvailable /proc/meminfo || fgrep MemTotal /proc/meminfo) | sed 's/[^0-9]//g' ) ))
@@ -25,6 +26,7 @@ sed \
     -e "s/@PROVIDER_NAME@/${provider_name}/" \
     -e "s/@RR_CACHE_SIZE@/${rr_cache_size}/" \
     -e "s/@THREADS@/${threads}/" \
+    -e "s/@ZONES_DIR@/${ZONES_DIR}" \
     > /opt/unbound/etc/unbound/unbound.conf << EOT
 server:
   verbosity: 1
@@ -77,7 +79,7 @@ server:
   local-zone: "test." static
   local-zone: "@PROVIDER_NAME@." refuse
 
-  include: "/opt/unbound/etc/unbound/zones/*.conf"
+  include: "@ZONES_DIR@/*.conf"
 
 remote-control:
   control-enable: yes
@@ -95,5 +97,7 @@ chown _unbound:_unbound /opt/unbound/etc/unbound/var && \
 if [ ! -f /opt/unbound/etc/unbound/unbound_control.pem ]; then
   /opt/unbound/sbin/unbound-control-setup
 fi
+
+mkdir -p /opt/unbound/etc/unbound/zones
 
 exec /opt/unbound/sbin/unbound

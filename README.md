@@ -61,6 +61,53 @@ edit the [dnscrypt.csv](https://github.com/jedisct1/dnscrypt-proxy/blob/master/d
 file to add your resolver's informations, and submit a pull request to have it
 included in the list of public DNSCrypt resolvers!
 
+Customizing Unbound
+============
+
+To add new configuration to Unbound, add files to the `/opt/unbound/etc/unbound/zones`
+directory. All files ending in `.conf` will be processed. In this manner, you
+can add any directives to the `server:` section of the Unbound configuration.
+
+Serve custom DNS records on a local network
+------------------------------------------
+While Unbound is not a full authoritative name server, it supports resolving
+custom entries in a way that is serviceable on a small, private LAN. You can use
+unbound to resolve private hostnames such as `my-computer.example.com` within
+your LAN.
+
+To support such custom entries using this image, first map a volume to the zones
+directory. Add this to your `docker run` line:
+
+    -v /myconfig/zones:/opt/unbound/etc/unbound/zones
+
+The whole command to create and initialize a container would look something like
+this:
+
+    $ docker run --name=dnscrypt-server \
+        -v /myconfig/zones:/opt/unbound/etc/unbound/zones \
+        -p 443:443/udp -p 443:443/tcp --net=host \
+        jedisct1/unbound-dnscrypt-server init -N example.com
+
+Create a new `.conf` file:
+
+    $ touch /myconfig/zones/example.conf
+
+Now, add one or more unbound directives to the file, such as:
+
+    local-zone: "example.com." static
+    local-data: "my-computer.example.com. IN A 10.0.0.1"
+    local-data: "other-computer.example.com. IN A 10.0.0.2"
+
+Troubleshooting
+---------------
+
+If Unbound doesn't like one of the newly added directives, it
+will probably not respond over the network. In that case, here are some commands
+to work out what is wrong:
+
+    $ docker logs dnscrypt
+    $ docker exec dnscrypt /opt/unbound/sbin/unbound-checkconf
+
 Details
 =======
 
