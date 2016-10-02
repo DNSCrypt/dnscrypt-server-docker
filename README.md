@@ -105,8 +105,8 @@ If Unbound doesn't like one of the newly added directives, it
 will probably not respond over the network. In that case, here are some commands
 to work out what is wrong:
 
-    $ docker logs dnscrypt
-    $ docker exec dnscrypt /opt/unbound/sbin/unbound-checkconf
+    $ docker logs dnscrypt-server
+    $ docker exec dnscrypt-server /opt/unbound/sbin/unbound-checkconf
 
 Details
 =======
