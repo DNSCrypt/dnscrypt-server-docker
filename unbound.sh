@@ -26,7 +26,7 @@ sed \
     -e "s/@PROVIDER_NAME@/${provider_name}/" \
     -e "s/@RR_CACHE_SIZE@/${rr_cache_size}/" \
     -e "s/@THREADS@/${threads}/" \
-    -e "s/@ZONES_DIR@/${ZONES_DIR}" \
+    -e "s#@ZONES_DIR@#${ZONES_DIR}#" \
     > /opt/unbound/etc/unbound/unbound.conf << EOT
 server:
   verbosity: 1
