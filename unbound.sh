@@ -63,6 +63,7 @@ server:
   msg-cache-size: @MSG_CACHE_SIZE@
   rrset-cache-size: @RR_CACHE_SIZE@
   neg-cache-size: 4M
+  serve-expired: yes
   access-control: 0.0.0.0/0 allow
   access-control: ::0/0 allow
 
