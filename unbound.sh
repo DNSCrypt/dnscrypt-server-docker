@@ -72,7 +72,6 @@ server:
   local-zone: "domain." static
   local-zone: "example." static
   local-zone: "home." static
-  local-zone: "host." static
   local-zone: "invalid." static
   local-zone: "lan." static
   local-zone: "local." static
