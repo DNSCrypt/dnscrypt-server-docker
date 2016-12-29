@@ -80,8 +80,8 @@ RUN set -x && \
     echo /opt/libsodium/lib > /etc/ld.so.conf.d/libsodium.conf && ldconfig && \
     rm -fr /tmp/*
 
-ENV DNSCRYPT_PROXY_VERSION 1.8.0
-ENV DNSCRYPT_PROXY_SHA256 0e749b7bcd3ff0ef50e2fa8da6d41c0ca12b668c0022d61b771e1934e07934d3
+ENV DNSCRYPT_PROXY_VERSION 1.9.0
+ENV DNSCRYPT_PROXY_SHA256 c9087ce802b76f4266c97235d4888420df9a0193bbbe47733701305535ef9baa
 ENV DNSCRYPT_PROXY_DOWNLOAD_URL https://download.dnscrypt.org/dnscrypt-proxy/dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION}.tar.gz
 
 RUN set -x && \
