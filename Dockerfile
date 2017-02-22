@@ -30,8 +30,8 @@ RUN set -x && \
     echo /opt/libressl/lib > /etc/ld.so.conf.d/libressl.conf && ldconfig && \
     rm -fr /tmp/*
 
-ENV UNBOUND_VERSION 1.6.0
-ENV UNBOUND_SHA256 6b7db874e6debda742fee8869d722e5a17faf1086e93c911b8564532aeeffab7
+ENV UNBOUND_VERSION 1.6.1
+ENV UNBOUND_SHA256 42df63f743c0fe8424aeafcf003ad4b880b46c14149d696057313f5c1ef51400
 ENV UNBOUND_DOWNLOAD_URL https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz
 
 RUN set -x && \
