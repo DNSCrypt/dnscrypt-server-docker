@@ -127,5 +127,4 @@ Keys and certificates are automatically rotated every 12 hour.
 Coming up next
 ==============
 
-- Namecoin support, by linking a distinct image with namecore and ncdns.
 - Better isolation of the certificate signing process, in a dedicated container.
