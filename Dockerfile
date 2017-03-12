@@ -64,7 +64,7 @@ RUN set -x && \
     rm -fr /tmp/* /var/tmp/*
 
 ENV LIBSODIUM_VERSION 1.0.12
-ENV LIBSODIUM_SHA256 db6e2a45682dfa83ec9a3e5f44121fde8cf6b962edea227318e5d00962aef14a
+ENV LIBSODIUM_SHA256 b8648f1bb3a54b0251cf4ffa4f0d76ded13977d4fa7517d988f4c902dd8e2f95
 ENV LIBSODIUM_DOWNLOAD_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
 
 RUN set -x && \
