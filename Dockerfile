@@ -63,8 +63,8 @@ RUN set -x && \
     apt-get autoremove -y && apt-get clean && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV LIBSODIUM_VERSION 1.0.11
-ENV LIBSODIUM_SHA256 a14549db3c49f6ae2170cbbf4664bd48ace50681045e8dbea7c8d9fb96f9c765
+ENV LIBSODIUM_VERSION 1.0.12
+ENV LIBSODIUM_SHA256 db6e2a45682dfa83ec9a3e5f44121fde8cf6b962edea227318e5d00962aef14a
 ENV LIBSODIUM_DOWNLOAD_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
 
 RUN set -x && \
@@ -75,13 +75,13 @@ RUN set -x && \
     tar xzf libsodium.tar.gz && \
     rm -f libsodium.tar.gz && \
     cd libsodium-${LIBSODIUM_VERSION} && \
-    ./configure --disable-dependency-tracking --enable-minimal --prefix=/opt/libsodium && \
+    ./configure --disable-dependency-tracking --prefix=/opt/libsodium && \
     make check && make install && \
     echo /opt/libsodium/lib > /etc/ld.so.conf.d/libsodium.conf && ldconfig && \
     rm -fr /tmp/*
 
-ENV DNSCRYPT_PROXY_VERSION 1.9.1
-ENV DNSCRYPT_PROXY_SHA256 3a319e8bfff5ac15a1c5a80af71755380b1fb869cb8fd86b33b7ed928db65195
+ENV DNSCRYPT_PROXY_VERSION 1.9.4
+ENV DNSCRYPT_PROXY_SHA256 40543efbcd56033ac03a1edf4581305e8c9bed4579ac55e6279644f07c315307
 ENV DNSCRYPT_PROXY_DOWNLOAD_URL https://download.dnscrypt.org/dnscrypt-proxy/dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION}.tar.gz
 
 RUN set -x && \
