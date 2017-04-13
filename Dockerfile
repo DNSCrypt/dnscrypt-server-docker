@@ -1,4 +1,4 @@
-FROM jedisct1/phusion-baseimage-latest:16.10
+FROM jedisct1/phusion-baseimage-latest:17.04
 MAINTAINER Frank Denis
 ENV SERIAL 1
 
