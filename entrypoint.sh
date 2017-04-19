@@ -73,7 +73,7 @@ start() {
     ensure_initialized
     echo "Starting DNSCrypt service for provider: "
     cat "${KEYS_DIR}/provider_name"
-    exec /sbin/my_init
+    exec /sbin/start_runit
 }
 
 usage() {
