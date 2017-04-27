@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /usr/bin/env bash
 
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 ZONES_DIR="/opt/unbound/etc/unbound/zones"

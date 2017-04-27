@@ -3,7 +3,7 @@ MAINTAINER Frank Denis
 ENV SERIAL 1
 
 ENV BUILD_DEPS   make gcc musl-dev git ldns-dev libevent-dev expat-dev shadow autoconf file libexecinfo-dev
-ENV RUNTIME_DEPS libressl ldns ldns-tools libevent expat libtool libexecinfo coreutils drill
+ENV RUNTIME_DEPS libressl ldns ldns-tools libevent expat libtool libexecinfo coreutils drill findutils bash
 
 RUN set -x && \
     apk --update upgrade && apk add $RUNTIME_DEPS $BUILD_DEPS
