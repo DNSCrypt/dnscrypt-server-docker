@@ -46,8 +46,8 @@ RUN set -x && \
     ldconfig /usr/local/lib && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV DNSCRYPT_PROXY_VERSION 1.9.4
-ENV DNSCRYPT_PROXY_SHA256 40543efbcd56033ac03a1edf4581305e8c9bed4579ac55e6279644f07c315307
+ENV DNSCRYPT_PROXY_VERSION 1.9.5
+ENV DNSCRYPT_PROXY_SHA256 64021fabb7d5bab0baf681796d90ecd2095fb81381e6fb317a532039025a9399
 ENV DNSCRYPT_PROXY_DOWNLOAD_URL https://download.dnscrypt.org/dnscrypt-proxy/dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION}.tar.gz
 
 RUN set -x && \
