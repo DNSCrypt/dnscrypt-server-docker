@@ -29,7 +29,15 @@ new_key() {
         --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
         --provider-cert-file="${STKEYS_DIR}/${ts}.cert" \
         --cert-file-expire-days=1 && \
-    mv -f "${STKEYS_DIR}/${ts}.cert" "${STKEYS_DIR}/dnscrypt.cert"
+    mv -f "${STKEYS_DIR}/${ts}.cert" "${STKEYS_DIR}/dnscrypt.cert" && \
+    /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper --gen-cert-file \
+        --xchacha20 \
+        --provider-publickey-file="${KEYS_DIR}/public.key" \
+        --provider-secretkey-file="${KEYS_DIR}/secret.key" \
+        --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
+        --provider-cert-file="${STKEYS_DIR}/${ts}-xchacha20.cert" \
+        --cert-file-expire-days=1 && \
+    mv -f "${STKEYS_DIR}/${ts}-xchacha20.cert" "${STKEYS_DIR}/dnscrypt-xchacha20.cert"
 }
 
 stkeys_files() {
