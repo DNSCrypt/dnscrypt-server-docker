@@ -62,5 +62,5 @@ exec /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper \
     --listen-address=0.0.0.0:443 \
     --resolver-address=127.0.0.1:553 \
     --provider-name="$provider_name" \
-    --provider-cert-file="${STKEYS_DIR}/dnscrypt.cert" \
+    --provider-cert-file="${STKEYS_DIR}/dnscrypt.cert,${STKEYS_DIR}/dnscrypt-xchacha20.cert" \
     --crypt-secretkey-file=$(stkeys_files)
