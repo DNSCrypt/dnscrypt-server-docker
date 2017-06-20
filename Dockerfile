@@ -84,7 +84,7 @@ RUN set -x && \
     groupadd _dnscrypt-signer && \
     useradd -g _dnscrypt-signer -G _dnscrypt-wrapper -s /etc -d /dev/null _dnscrypt-signer && \
     make configure && \
-    env CFLAGS=-Ofast ./configure --prefix=/opt/dnscrypt-wrapper && \
+    env CPPFLAGS=-DHAVE_CRYPTO_BOX_CURVE25519XCHACHA20POLY1305_OPEN_EASY CFLAGS=-Ofast ./configure --prefix=/opt/dnscrypt-wrapper && \
     make install && \
     rm -fr /tmp/* /var/tmp/*
 
