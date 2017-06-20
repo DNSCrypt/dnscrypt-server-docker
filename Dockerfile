@@ -66,19 +66,16 @@ RUN set -x && \
     rm -fr /opt/dnscrypt-proxy/share && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV DNSCRYPT_WRAPPER_VERSION 0.3
-ENV DNSCRYPT_WRAPPER_SHA256 ec5c290ba9b9a05536fa6ee827373ca9b3841508e6d075ae364405152446499c
-ENV DNSCRYPT_WRAPPER_DOWNLOAD_URL https://github.com/Cofyc/dnscrypt-wrapper/releases/download/v${DNSCRYPT_WRAPPER_VERSION}/dnscrypt-wrapper-v${DNSCRYPT_WRAPPER_VERSION}.tar.bz2
+ENV DNSCRYPT_WRAPPER_GIT_URL https://github.com/jedisct1/dnscrypt-wrapper.git
+ENV DNSCRYPT_WRAPPER_GIT_BRANCH xchacha20
 
 COPY queue.h /tmp
 
 RUN set -x && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    wget -O dnscrypt-wrapper.tar.bz2 $DNSCRYPT_WRAPPER_DOWNLOAD_URL && \
-    echo "${DNSCRYPT_WRAPPER_SHA256} *dnscrypt-wrapper.tar.bz2" | sha256sum -c - && \
-    tar xjf dnscrypt-wrapper.tar.bz2 && \
-    cd dnscrypt-wrapper-v${DNSCRYPT_WRAPPER_VERSION} && \
+    git clone --branch=${DNSCRYPT_WRAPPER_GIT_BRANCH} ${DNSCRYPT_WRAPPER_GIT_URL} && \
+    cd dnscrypt-wrapper && \
     sed -i 's#<sys/queue.h>#"/tmp/queue.h"#' compat.h && \
     sed -i 's#HAVE_BACKTRACE#NO_BACKTRACE#' compat.h && \
     mkdir -p /opt/dnscrypt-wrapper/empty && \
