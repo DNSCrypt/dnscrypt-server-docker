@@ -1,6 +1,6 @@
 FROM jedisct1/alpine-runit:latest
 MAINTAINER Frank Denis
-ENV SERIAL 1
+ENV SERIAL 2
 
 ENV BUILD_DEPS   make gcc musl-dev git ldns-dev libevent-dev expat-dev shadow autoconf file libexecinfo-dev
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libressl ldns ldns-tools libevent expat libtool libexecinfo coreutils drill
@@ -8,8 +8,8 @@ ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libressl ldns ldns-too
 RUN set -x && \
     apk --update upgrade && apk add $RUNTIME_DEPS $BUILD_DEPS
 
-ENV UNBOUND_VERSION 1.6.3
-ENV UNBOUND_SHA256 4c7e655c1d0d2d133fdeb81bc1ab3aa5c155700f66c9f5fb53fa6a5c3ea9845f
+ENV UNBOUND_VERSION 1.6.4
+ENV UNBOUND_SHA256 df0a88816ec31ccb8284c9eb132e1166fbf6d9cde71fbc4b8cd08a91ee777fed
 ENV UNBOUND_DOWNLOAD_URL https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz
 
 RUN set -x && \
