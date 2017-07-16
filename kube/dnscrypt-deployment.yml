@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: default
+  labels:
+    service: dnscrypt
+  name: dnscrypt
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: dnscrypt
+    spec:
+      containers:
+      - env:
+        image: jedisct1/unbound-dnscrypt-server
+        name: dnscrypt
+        volumeMounts:
+          - name: dnscrypt-keys
+            mountPath: /opt/dnscrypt-wrapper/etc/keys
+        command: ["/entrypoint.sh", "start"]
+        resources:
+          requests:
+            memory: "1Gi"
+      restartPolicy: Always
+      volumes:
+        - name: dnscrypt-keys
+          gcePersistentDisk:
+            pdName: dnscrypt-keys
+            fsType: ext4

@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dnscrypt-init
+spec:
+  template:
+    metadata:
+      name: dnscrypt-init
+    spec:
+      containers:
+      - name: dnscrypt-init
+        image: jedisct1/unbound-dnscrypt-server
+        command: ["/entrypoint.sh", "init",  "-N", "example.com"]
+        volumeMounts:
+          - name: dnscrypt-keys
+            mountPath: /opt/dnscrypt-wrapper/etc/keys
+      restartPolicy: Never
+      volumes:
+        - name: dnscrypt-keys
+          gcePersistentDisk:
+            pdName: dnscrypt-keys
+            fsType: ext4
