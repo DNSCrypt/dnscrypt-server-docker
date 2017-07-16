@@ -124,6 +124,22 @@ compiled from source.
 
 Keys and certificates are automatically rotated every 12 hour.
 
+Kubernetes
+==========
+
+Kubernetes configurations are located in the `kube` directory. Currently these assume
+a persistent disk named `dnscrypt-keys` on GCE. You will need to adjust the volumes
+definition on other platforms. Once that is setup, you can have a dnscrypt server up
+in minutes.
+
+* Edit `kube/dnscrypt-init-job.yml` and change `example.com` to your desired hostname.
+* Run `kubectl create -f kube/dnscrypt-init-job.yml` to setup your keys.
+* Run `kubectl create -f kube/dnscrypt-deployment.yml` to deploy the dnscrypt server.
+* Run `kubectl create -f kube/dnscrypt-srv.yml` to expose your server to the world.
+
+To get your public key just view the logs for the `dnscrypt-init` job. The public
+IP for your server is merely the `dnscrypt` service address.
+
 Coming up next
 ==============
 
