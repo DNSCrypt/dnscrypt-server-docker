@@ -1,12 +1,29 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: dnscrypt
+  name: dnscrypt-tcp
   namespace: default
 spec:
   ports:
-    - port: 443
+    - protocol: TCP
+      port: 443
       targetPort: 443
   selector:
     service: dnscrypt
   type: LoadBalancer
+  loadBalancerIP: 0.0.0.0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dnscrypt-udp
+  namespace: default
+spec:
+  ports:
+    - protocol: UDP
+      port: 443
+      targetPort: 443
+  selector:
+    service: dnscrypt
+  type: LoadBalancer
+  loadBalancerIP: 0.0.0.0
