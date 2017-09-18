@@ -8,8 +8,8 @@ ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libressl ldns ldns-too
 RUN set -x && \
     apk --update upgrade && apk add $RUNTIME_DEPS $BUILD_DEPS
 
-ENV UNBOUND_VERSION 1.6.4
-ENV UNBOUND_SHA256 df0a88816ec31ccb8284c9eb132e1166fbf6d9cde71fbc4b8cd08a91ee777fed
+ENV UNBOUND_VERSION 1.6.6
+ENV UNBOUND_SHA256 972b14dc33093e672652a7b2b5f159bab2198b0fe9c9e1c5707e1895d4d4b390
 ENV UNBOUND_DOWNLOAD_URL https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz
 
 RUN set -x && \
@@ -29,8 +29,8 @@ RUN set -x && \
     rm -fr /opt/unbound/share/man && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV LIBSODIUM_VERSION 1.0.12
-ENV LIBSODIUM_SHA256 b8648f1bb3a54b0251cf4ffa4f0d76ded13977d4fa7517d988f4c902dd8e2f95
+ENV LIBSODIUM_VERSION 1.0.13
+ENV LIBSODIUM_SHA256 9c13accb1a9e59ab3affde0e60ef9a2149ed4d6e8f99c93c7a5b97499ee323fd
 ENV LIBSODIUM_DOWNLOAD_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
 
 RUN set -x && \
