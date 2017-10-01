@@ -29,8 +29,8 @@ RUN set -x && \
     rm -fr /opt/unbound/share/man && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV LIBSODIUM_VERSION 1.0.14
-ENV LIBSODIUM_SHA256 3cfc84d097fdc891b40d291f2ac2c3f99f71a87e36b20cc755c6fa0e97a77ee7
+ENV LIBSODIUM_VERSION 1.0.15
+ENV LIBSODIUM_SHA256 fb6a9e879a2f674592e4328c5d9f79f082405ee4bb05cb6e679b90afe9e178f4
 ENV LIBSODIUM_DOWNLOAD_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
 
 RUN set -x && \
