@@ -8,8 +8,8 @@ ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libressl ldns ldns-too
 RUN set -x && \
     apk --update upgrade && apk add $RUNTIME_DEPS $BUILD_DEPS
 
-ENV UNBOUND_VERSION 1.6.6
-ENV UNBOUND_SHA256 972b14dc33093e672652a7b2b5f159bab2198b0fe9c9e1c5707e1895d4d4b390
+ENV UNBOUND_VERSION 1.6.7
+ENV UNBOUND_SHA256 4e7bd43d827004c6d51bef73adf941798e4588bdb40de5e79d89034d69751c9f
 ENV UNBOUND_DOWNLOAD_URL https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz
 
 RUN set -x && \
