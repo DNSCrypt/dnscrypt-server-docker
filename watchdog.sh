@@ -12,11 +12,5 @@ GRACE_PERIOD=60
 provider_key=$(cat "${KEYS_DIR}/public.key.txt")
 provider_name=$(cat "${KEYS_DIR}/provider_name")
 
-(/opt/dnscrypt-proxy/sbin/dnscrypt-proxy \
-    --user=_dnscrypt-proxy \
-    --provider-key="$provider_key" \
-    --provider-name="$provider_name" \
-    --resolver-address=127.0.0.1:443 \
-    --test="$GRACE_PERIOD" && \
-drill -p 443 -Q TXT "$provider_name" @127.0.0.1) || \
+drill -p 443 -Q TXT "$provider_name" @127.0.0.1 || \
 sv force-restart dnscrypt-wrapper

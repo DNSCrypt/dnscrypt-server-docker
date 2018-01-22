@@ -8,8 +8,8 @@ ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libressl ldns ldns-too
 RUN set -x && \
     apk --update upgrade && apk add $RUNTIME_DEPS $BUILD_DEPS
 
-ENV UNBOUND_VERSION 1.6.7
-ENV UNBOUND_SHA256 4e7bd43d827004c6d51bef73adf941798e4588bdb40de5e79d89034d69751c9f
+ENV UNBOUND_VERSION 1.6.8
+ENV UNBOUND_SHA256 e3b428e33f56a45417107448418865fe08d58e0e7fea199b855515f60884dd49
 ENV UNBOUND_DOWNLOAD_URL https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz
 
 RUN set -x && \
@@ -23,7 +23,7 @@ RUN set -x && \
     groupadd _unbound && \
     useradd -g _unbound -s /etc -d /dev/null _unbound && \
     ./configure --prefix=/opt/unbound --with-pthreads \
-        --with-username=_unbound --with-libevent --enable-event-api && \
+    --with-username=_unbound --with-libevent --enable-event-api && \
     make install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
     rm -fr /opt/unbound/share/man && \
@@ -44,26 +44,6 @@ RUN set -x && \
     env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
     make check && make install && \
     ldconfig /usr/local/lib && \
-    rm -fr /tmp/* /var/tmp/*
-
-ENV DNSCRYPT_PROXY_VERSION 1.9.5
-ENV DNSCRYPT_PROXY_SHA256 64021fabb7d5bab0baf681796d90ecd2095fb81381e6fb317a532039025a9399
-ENV DNSCRYPT_PROXY_DOWNLOAD_URL https://download.dnscrypt.org/dnscrypt-proxy/dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION}.tar.gz
-
-RUN set -x && \
-    mkdir -p /tmp/src && \
-    cd /tmp/src && \
-    wget -O dnscrypt-proxy.tar.gz $DNSCRYPT_PROXY_DOWNLOAD_URL && \
-    echo "${DNSCRYPT_PROXY_SHA256} *dnscrypt-proxy.tar.gz" | sha256sum -c - && \
-    tar xzf dnscrypt-proxy.tar.gz && \
-    rm -f dnscrypt-proxy.tar.gz && \
-    cd dnscrypt-proxy-${DNSCRYPT_PROXY_VERSION} && \
-    mkdir -p /opt/dnscrypt-proxy/empty && \
-    groupadd _dnscrypt-proxy && \
-    useradd -g _dnscrypt-proxy -s /etc -d /opt/dnscrypt-proxy/empty _dnscrypt-proxy && \
-    env CFLAGS=-Os ./configure --disable-dependency-tracking --prefix=/opt/dnscrypt-proxy --disable-plugins && \
-    make install && \
-    rm -fr /opt/dnscrypt-proxy/share && \
     rm -fr /tmp/* /var/tmp/*
 
 ENV DNSCRYPT_WRAPPER_GIT_URL https://github.com/jedisct1/dnscrypt-wrapper.git
