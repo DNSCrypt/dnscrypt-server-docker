@@ -98,7 +98,7 @@ initialize the container for a server accessible at ip <external ip> on port
 * start (default command): start the resolver and the dnscrypt server proxy.
 Ports 443/udp and 443/tcp have to be publicly exposed.
 
-* provider-info: prints the provide namer and provider public key.
+* provider-info: prints the provider name and provider public key.
 
 This container has a single volume that you might want to securely keep a
 backup of: /opt/dnscrypt-wrapper/etc/keys
