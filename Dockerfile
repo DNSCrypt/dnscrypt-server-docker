@@ -2,7 +2,7 @@ FROM jedisct1/alpine-runit:latest
 MAINTAINER Frank Denis
 ENV SERIAL 1
 
-ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf file
+ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf file libressl-dev
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libressl ldns ldns-tools libevent expat libexecinfo coreutils drill
 
 RUN set -x && \
@@ -47,7 +47,7 @@ RUN set -x && \
     rm -fr /tmp/* /var/tmp/*
 
 ENV DNSCRYPT_WRAPPER_GIT_URL https://github.com/jedisct1/dnscrypt-wrapper.git
-ENV DNSCRYPT_WRAPPER_GIT_BRANCH xchacha20-stamps
+ENV DNSCRYPT_WRAPPER_GIT_BRANCH xchacha-stamps
 
 COPY queue.h /tmp
 
@@ -69,8 +69,8 @@ RUN set -x && \
     rm -fr /tmp/* /var/tmp/*
 
 RUN set -x && \
-    apk del --purge $BUILD_DEPS && \
-    rm -rf /tmp/* /var/tmp/* /usr/local/include
+    echo apk del --purge $BUILD_DEPS && \
+    echo rm -rf /tmp/* /var/tmp/* /usr/local/include
 
 RUN mkdir -p \
     /etc/service/unbound \
