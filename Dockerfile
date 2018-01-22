@@ -47,7 +47,7 @@ RUN set -x && \
     rm -fr /tmp/* /var/tmp/*
 
 ENV DNSCRYPT_WRAPPER_GIT_URL https://github.com/jedisct1/dnscrypt-wrapper.git
-ENV DNSCRYPT_WRAPPER_GIT_BRANCH xchacha20
+ENV DNSCRYPT_WRAPPER_GIT_BRANCH xchacha20-stamps
 
 COPY queue.h /tmp
 

@@ -23,9 +23,11 @@ Let's pick `example.com` here.
 Download, create and initialize the container, once and for all:
 
     $ docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
-        jedisct1/unbound-dnscrypt-server init -N example.com
+        jedisct1/unbound-dnscrypt-server init -N example.com -L 192.168.1.1:443
 
-This will only accept connections via DNSCrypt on the standard port (443).
+This will only accept connections via DNSCrypt on the standard port (443). Replace
+`192.168.1.1` with the actual external IP address (not the internal Docker one)
+clients will connect to.
 
 `--net=host` provides the best network performance, but may have to be
 removed on some shared containers hosting services.
