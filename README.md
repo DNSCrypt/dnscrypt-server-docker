@@ -51,7 +51,7 @@ directory. All files ending in `.conf` will be processed. In this manner, you
 can add any directives to the `server:` section of the Unbound configuration.
 
 Serve custom DNS records on a local network
-------------------------------------------
+-------------------------------------------
 While Unbound is not a full authoritative name server, it supports resolving
 custom entries in a way that is serviceable on a small, private LAN. You can use
 unbound to resolve private hostnames such as `my-computer.example.com` within
