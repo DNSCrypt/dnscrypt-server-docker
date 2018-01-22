@@ -36,33 +36,13 @@ Now, to start the whole stack:
 
 Done.
 
-To check that your DNSCrypt-enabled DNS resolver is accessible, run the
-DNSCrypt client proxy on another host:
-
-    # dnscrypt-proxy \
-        --provider-key=<provider key, as displayed when the container was initialized> \
-        --resolver-address=<dnscrypt resolver public IP address> \
-        --provider-name=2.dnscrypt-cert.example.com
-
-And try using `127.0.0.1` as a DNS resolver.
-
 Note that the actual provider name for DNSCrypt is `2.dnscrypt-cert.example.com`,
 not just `example.com` as initially entered. The full name has to start with
 `2.dnscrypt-cert.` for the client and the server to use the same version of the
 protocol.
 
-Let the world know about your server
-====================================
-
-Is your brand new DNS resolver publicly accessible?
-
-Fork the [dnscrypt-proxy repository](https://github.com/jedisct1/dnscrypt-proxy),
-edit the [dnscrypt.csv](https://github.com/jedisct1/dnscrypt-proxy/blob/master/dnscrypt-resolvers.csv)
-file to add your resolver's informations, and submit a pull request to have it
-included in the list of public DNSCrypt resolvers!
-
 Customizing Unbound
-============
+===================
 
 To add new configuration to Unbound, add files to the `/opt/unbound/etc/unbound/zones`
 directory. All files ending in `.conf` will be processed. In this manner, you
@@ -118,8 +98,6 @@ Latest stable version, compiled from source. qname minimisation is enabled.
 - [libsodium](https://download.libsodium.org/doc/) - Latest stable version,
 minimal build compiled from source.
 - [dnscrypt-wrapper](https://github.com/Cofyc/dnscrypt-wrapper) - Latest stable version,
-compiled from source.
-- [dnscrypt-proxy](https://github.com/jedisct1/dnscrypt-proxy) - Latest stable version,
 compiled from source.
 
 Keys and certificates are automatically rotated every 12 hour.
