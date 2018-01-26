@@ -26,6 +26,7 @@ new_key() {
         --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
         --provider-cert-file="${STKEYS_DIR}/${ts}.cert" \
         --cert-file-expire-days=1
+    [ $? -ne 0 ] && rm -f "${STKEYS_DIR}/${ts}.key" "${STKEYS_DIR}/${ts}.cert"
 }
 
 stkeys_files() {
