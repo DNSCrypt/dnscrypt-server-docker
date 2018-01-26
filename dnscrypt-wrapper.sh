@@ -29,20 +29,26 @@ new_key() {
         --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
         --provider-cert-file="${STKEYS_DIR}/${ts}.cert" \
         --cert-file-expire-days=1 && \
-    mv -f "${STKEYS_DIR}/${ts}.cert" "${STKEYS_DIR}/dnscrypt.cert" && \
     /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper --gen-cert-file \
         --xchacha20 \
         --provider-publickey-file="${KEYS_DIR}/public.key" \
         --provider-secretkey-file="${KEYS_DIR}/secret.key" \
         --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
         --provider-cert-file="${STKEYS_DIR}/${ts}-xchacha20.cert" \
-        --cert-file-expire-days=1 && \
-    mv -f "${STKEYS_DIR}/${ts}-xchacha20.cert" "${STKEYS_DIR}/dnscrypt-xchacha20.cert"
+        --cert-file-expire-days=1
 }
 
 stkeys_files() {
     res=""
     for file in $(ls "$STKEYS_DIR"/[0-9]*.key); do
+        res="${res}${file},"
+    done
+    echo "$res"
+}
+
+stcerts_files() {
+    res=""
+    for file in $(ls "$STKEYS_DIR"/[0-9]*.cert); do
         res="${res}${file},"
     done
     echo "$res"
@@ -62,5 +68,5 @@ exec /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper \
     --listen-address=0.0.0.0:443 \
     --resolver-address=127.0.0.1:553 \
     --provider-name="$provider_name" \
-    --provider-cert-file="${STKEYS_DIR}/dnscrypt.cert,${STKEYS_DIR}/dnscrypt-xchacha20.cert" \
+    --provider-cert-file="$(stcerts_files)" \
     --crypt-secretkey-file=$(stkeys_files)
