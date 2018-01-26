@@ -8,14 +8,10 @@ prune() {
 }
 
 rotation_needed() {
-    if [ ! -f "${STKEYS_DIR}/dnscrypt.cert" ]; then
+    if [ $(/usr/bin/find "$STKEYS_DIR" -type f -cmin -720 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
         echo true
     else
-        if [ $(/usr/bin/find "$STKEYS_DIR" -type f -cmin -720 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
-            echo true
-        else
-            echo false
-        fi
+        echo false
     fi
 }
 
@@ -24,17 +20,11 @@ new_key() {
     /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper --gen-crypt-keypair \
         --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" &&
     /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper --gen-cert-file \
-        --provider-publickey-file="${KEYS_DIR}/public.key" \
-        --provider-secretkey-file="${KEYS_DIR}/secret.key" \
-        --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
-        --provider-cert-file="${STKEYS_DIR}/${ts}.cert" \
-        --cert-file-expire-days=1 && \
-    /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper --gen-cert-file \
         --xchacha20 \
         --provider-publickey-file="${KEYS_DIR}/public.key" \
         --provider-secretkey-file="${KEYS_DIR}/secret.key" \
         --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
-        --provider-cert-file="${STKEYS_DIR}/${ts}-xchacha20.cert" \
+        --provider-cert-file="${STKEYS_DIR}/${ts}.cert" \
         --cert-file-expire-days=1
 }
 
