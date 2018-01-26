@@ -8,7 +8,7 @@ prune() {
 }
 
 rotation_needed() {
-    if [ $(/usr/bin/find "$STKEYS_DIR" -type f -cmin -720 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
+    if [ $(/usr/bin/find "$STKEYS_DIR" -name '*.cert' -type f -cmin -720 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
         echo true
     else
         echo false
