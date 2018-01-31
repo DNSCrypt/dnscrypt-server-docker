@@ -36,7 +36,7 @@ init() {
     echo "Provider name: [$provider_name]"
     cd "$KEYS_DIR"
     /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper \
-        --gen-provider-keypair --nolog --dnssec \
+        --gen-provider-keypair --nolog --dnssec --nofilter \
         --provider-name="$provider_name" --ext-address="$ext_address" | \
         tee "${KEYS_DIR}/provider-info.txt"
     chmod 640 "${KEYS_DIR}/secret.key"
