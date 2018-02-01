@@ -9,6 +9,12 @@ Run your own caching, non-censoring, non-logging, DNSSEC-capable,
 If you are already familiar with Docker, it shouldn't take more than 5 minutes
 to get your resolver up and running.
 
+Quickstart
+==========
+
+* [How to setup your own DNSCrypt server in less than 10 minutes on Scaleway](https://github.com/jedisct1/dnscrypt-proxy/wiki/How-to-setup-your-own-DNSCrypt-server-in-less-than-10-minutes)
+* [DNSCrypt server with vultr.com](https://github.com/jedisct1/dnscrypt-proxy/wiki/DNSCrypt-server-with-vultr.com)
+
 Installation
 ============
 
