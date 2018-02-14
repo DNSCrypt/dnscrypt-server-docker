@@ -1,0 +1,17 @@
+version: "3"
+services:
+  dnscrypt:
+    image: zquestz/dnscrypt-server:latest
+    container_name: dnscrypt
+    restart: always
+    command: "init -N example.com -E '127.0.0.1:5443'"
+    # command: "start"
+    ports:
+        - '5443:5443/udp'
+        - '5443:5443/tcp'
+    volumes:
+      - keys:/opt/encrypted-dns/etc/keys
+    environment:
+    - TZ='UTC'
+volumes:
+  keys:
