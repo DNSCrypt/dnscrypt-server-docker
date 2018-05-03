@@ -2,6 +2,8 @@
 
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 STKEYS_DIR="${KEYS_DIR}/short-term"
+LISTS_DIR="/opt/dnscrypt-wrapper/etc/lists"
+BLACKLIST="${LISTS_DIR}/blacklist.txt"
 
 prune() {
     /usr/bin/find "$STKEYS_DIR" -type f -cmin +1440 -exec rm -f {} \;
@@ -54,10 +56,13 @@ mkdir -p "$STKEYS_DIR"
 prune
 [ $(rotation_needed) = true ] && new_key
 
+[ -r "$BLACKLIST" ] && blacklist_opt="--blacklist-file=${BLACKLIST}"
+
 exec /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper \
     --user=_dnscrypt-wrapper \
     --listen-address=0.0.0.0:443 \
     --resolver-address=127.0.0.1:553 \
     --provider-name="$provider_name" \
     --provider-cert-file="$(stcerts_files)" \
-    --crypt-secretkey-file=$(stkeys_files)
+    --crypt-secretkey-file=$(stkeys_files) \
+    $blacklist_opt
