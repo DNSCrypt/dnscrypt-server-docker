@@ -15,8 +15,8 @@ RUN set -x && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
     git clone "$UNBOUND_GIT_URL" && \
-    git checkout "$UNBOUND_GIT_REVISION" && \
     cd unbound && \
+    git checkout "$UNBOUND_GIT_REVISION" && \
     groupadd _unbound && \
     useradd -g _unbound -s /etc -d /dev/null _unbound && \
     ./configure --prefix=/opt/unbound --with-pthreads \
