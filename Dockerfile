@@ -8,18 +8,15 @@ ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libressl ldns ldns-too
 RUN set -x && \
     apk --update upgrade && apk add $RUNTIME_DEPS $BUILD_DEPS
 
-ENV UNBOUND_VERSION 1.8.2
-ENV UNBOUND_SHA256 19f2235a8936d89e7dc919bbfcef355de759f220e36bb5e1e931ac000ed04993
-ENV UNBOUND_DOWNLOAD_URL https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz
+ENV UNBOUND_GIT_URL https://github.com/jedisct1/unbound.git
+ENV UNBOUND_GIT_REVISION 64c4e69b073db13236d278cc98251b4f51cacc0c
 
 RUN set -x && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    wget -O unbound.tar.gz $UNBOUND_DOWNLOAD_URL && \
-    echo "${UNBOUND_SHA256} *unbound.tar.gz" | sha256sum -c - && \
-    tar xzf unbound.tar.gz && \
-    rm -f unbound.tar.gz && \
-    cd unbound-${UNBOUND_VERSION} && \
+    git clone "$UNBOUND_GIT_URL" && \
+    git checkout "$UNBOUND_GIT_REVISION" && \
+    cd unbound && \
     groupadd _unbound && \
     useradd -g _unbound -s /etc -d /dev/null _unbound && \
     ./configure --prefix=/opt/unbound --with-pthreads \
