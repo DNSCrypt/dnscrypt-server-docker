@@ -1,15 +1,16 @@
 FROM jedisct1/alpine-runit:latest
 MAINTAINER Frank Denis
-ENV SERIAL 2
+ENV SERIAL 1
 
-ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf file libressl-dev
-ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libressl ldns ldns-tools libevent expat libexecinfo coreutils drill
+ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf file openssl-dev
+ENV RUNTIME_DEPS bash util-linux coreutils findutils grep openssl ldns ldns-tools libevent expat libexecinfo coreutils drill ca-certificates
 
 RUN set -x && \
-    apk --update upgrade && apk add $RUNTIME_DEPS $BUILD_DEPS
+    apk --update upgrade && apk add --no-cache $RUNTIME_DEPS $BUILD_DEPS && \
+    update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/jedisct1/unbound.git
-ENV UNBOUND_GIT_REVISION 64c4e69b073db13236d278cc98251b4f51cacc0c
+ENV UNBOUND_GIT_REVISION 7bd08b7a9987a0780892131f8590b6e384194bbc
 
 RUN set -x && \
     mkdir -p /tmp/src && \
@@ -26,18 +27,14 @@ RUN set -x && \
     rm -fr /opt/unbound/share/man && \
     rm -fr /tmp/* /var/tmp/*
 
-ENV LIBSODIUM_VERSION 1.0.17
-ENV LIBSODIUM_SHA256 0cc3dae33e642cc187b5ceb467e0ad0e1b51dcba577de1190e9ffa17766ac2b1
-ENV LIBSODIUM_DOWNLOAD_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
+ENV LIBSODIUM_GIT_URL https://github.com/jedisct1/libsodium.git
 
 RUN set -x && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    wget -O libsodium.tar.gz $LIBSODIUM_DOWNLOAD_URL && \
-    echo "${LIBSODIUM_SHA256} *libsodium.tar.gz" | sha256sum -c - && \
-    tar xzf libsodium.tar.gz && \
-    rm -f libsodium.tar.gz && \
-    cd libsodium-${LIBSODIUM_VERSION} && \
+    git clone "$LIBSODIUM_GIT_URL" && \
+    cd libsodium && \
+    git checkout stable && \
     env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
     make check && make install && \
     ldconfig /usr/local/lib && \
