@@ -99,10 +99,10 @@ to work out what is wrong:
 Details
 =======
 
+- Alpine Linux as a base image.
 - Caching resolver: [Unbound](https://www.unbound.net/), with DNSSEC, prefetching,
 and no logs. The number of threads and memory usage are automatically adjusted.
 Latest stable version, compiled from source. qname minimisation is enabled.
-- [LibreSSL](http://www.libressl.org/)
 - [libsodium](https://download.libsodium.org/doc/) - Latest stable version,
 minimal build compiled from source.
 - [dnscrypt-wrapper](https://github.com/Cofyc/dnscrypt-wrapper) - Latest stable version,
