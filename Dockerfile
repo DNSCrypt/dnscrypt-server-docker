@@ -1,6 +1,6 @@
 FROM jedisct1/alpine-runit:latest
 MAINTAINER Frank Denis
-ENV SERIAL 1
+ENV SERIAL 2
 
 ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf file openssl-dev byacc
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep openssl ldns ldns-tools libevent expat libexecinfo coreutils drill ca-certificates
