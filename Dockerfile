@@ -15,7 +15,7 @@ ENV UNBOUND_GIT_REVISION 7bd08b7a9987a0780892131f8590b6e384194bbc
 RUN set -x && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    git clone "$UNBOUND_GIT_URL" && \
+    git clone --depth=1000 "$UNBOUND_GIT_URL" && \
     cd unbound && \
     git checkout "$UNBOUND_GIT_REVISION" && \
     groupadd _unbound && \
@@ -32,7 +32,7 @@ ENV LIBSODIUM_GIT_URL https://github.com/jedisct1/libsodium.git
 RUN set -x && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    git clone --branch stable "$LIBSODIUM_GIT_URL" && \
+    git clone --depth=1 --branch stable "$LIBSODIUM_GIT_URL" && \
     cd libsodium && \
     env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
     make check && make install && \
@@ -47,7 +47,7 @@ COPY queue.h /tmp
 RUN set -x && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    git clone --branch=${DNSCRYPT_WRAPPER_GIT_BRANCH} ${DNSCRYPT_WRAPPER_GIT_URL} && \
+    git clone --depth=1 --branch=${DNSCRYPT_WRAPPER_GIT_BRANCH} ${DNSCRYPT_WRAPPER_GIT_URL} && \
     cd dnscrypt-wrapper && \
     sed -i 's#<sys/queue.h>#"/tmp/queue.h"#' compat.h && \
     sed -i 's#HAVE_BACKTRACE#NO_BACKTRACE#' compat.h && \
