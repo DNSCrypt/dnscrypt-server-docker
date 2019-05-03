@@ -6,7 +6,7 @@ ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf fi
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep openssl ldns ldns-tools libevent expat libexecinfo coreutils drill ca-certificates
 
 RUN set -x && \
-    apk --update upgrade && apk add --no-cache $RUNTIME_DEPS $BUILD_DEPS && \
+    apk --no-cache upgrade && apk add --no-cache $RUNTIME_DEPS $BUILD_DEPS && \
     update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/jedisct1/unbound.git
