@@ -6,13 +6,14 @@ ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf fi
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep openssl ldns ldns-tools libevent expat libexecinfo coreutils drill ca-certificates
 
 RUN set -x && \
-    apk --no-cache upgrade && apk add --no-cache $RUNTIME_DEPS $BUILD_DEPS && \
+    apk --no-cache upgrade && apk add --no-cache $RUNTIME_DEPS && \
     update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/jedisct1/unbound.git
 ENV UNBOUND_GIT_REVISION 7bd08b7a9987a0780892131f8590b6e384194bbc
 
 RUN set -x && \
+    apk add --no-cache $BUILD_DEPS && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
     git clone --depth=1000 "$UNBOUND_GIT_URL" && \
@@ -24,12 +25,14 @@ RUN set -x && \
     --with-username=_unbound --with-libevent --enable-event-api && \
     make -j$(getconf _NPROCESSORS_ONLN) install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
+    apk del --purge $BUILD_DEPS && \
     rm -fr /opt/unbound/share/man && \
     rm -fr /tmp/* /var/tmp/*
 
 ENV LIBSODIUM_GIT_URL https://github.com/jedisct1/libsodium.git
 
 RUN set -x && \
+    apk add --no-cache $BUILD_DEPS && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
     git clone --depth=1 --branch stable "$LIBSODIUM_GIT_URL" && \
@@ -37,6 +40,7 @@ RUN set -x && \
     env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
     make -j$(getconf _NPROCESSORS_ONLN) check && make -j$(getconf _NPROCESSORS_ONLN) install && \
     ldconfig /usr/local/lib && \
+    apk del --purge $BUILD_DEPS && \
     rm -fr /tmp/* /var/tmp/*
 
 ENV DNSCRYPT_WRAPPER_GIT_URL https://github.com/jedisct1/dnscrypt-wrapper.git
@@ -45,6 +49,7 @@ ENV DNSCRYPT_WRAPPER_GIT_BRANCH xchacha-stamps
 COPY queue.h /tmp
 
 RUN set -x && \
+    apk add --no-cache $BUILD_DEPS && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
     git clone --depth=1 --branch=${DNSCRYPT_WRAPPER_GIT_BRANCH} ${DNSCRYPT_WRAPPER_GIT_URL} && \
@@ -59,10 +64,10 @@ RUN set -x && \
     make -j$(getconf _NPROCESSORS_ONLN) configure && \
     env CFLAGS=-Ofast ./configure --prefix=/opt/dnscrypt-wrapper && \
     make -j$(getconf _NPROCESSORS_ONLN) install && \
+    apk del --purge $BUILD_DEPS && \
     rm -fr /tmp/* /var/tmp/*
 
 RUN set -x && \
-    echo apk del --purge $BUILD_DEPS && \
     echo rm -rf /tmp/* /var/tmp/* /usr/local/include
 
 RUN mkdir -p \
