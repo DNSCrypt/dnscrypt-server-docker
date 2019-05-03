@@ -22,7 +22,7 @@ RUN set -x && \
     useradd -g _unbound -s /etc -d /dev/null _unbound && \
     ./configure --prefix=/opt/unbound --with-pthreads \
     --with-username=_unbound --with-libevent --enable-event-api && \
-    make install && \
+    make -j$(getconf _NPROCESSORS_ONLN) install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
     rm -fr /opt/unbound/share/man && \
     rm -fr /tmp/* /var/tmp/*
@@ -35,7 +35,7 @@ RUN set -x && \
     git clone --depth=1 --branch stable "$LIBSODIUM_GIT_URL" && \
     cd libsodium && \
     env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
-    make check && make install && \
+    make -j$(getconf _NPROCESSORS_ONLN) check && make -j$(getconf _NPROCESSORS_ONLN) install && \
     ldconfig /usr/local/lib && \
     rm -fr /tmp/* /var/tmp/*
 
@@ -56,9 +56,9 @@ RUN set -x && \
     useradd -g _dnscrypt-wrapper -s /etc -d /opt/dnscrypt-wrapper/empty _dnscrypt-wrapper && \
     groupadd _dnscrypt-signer && \
     useradd -g _dnscrypt-signer -G _dnscrypt-wrapper -s /etc -d /dev/null _dnscrypt-signer && \
-    make configure && \
+    make -j$(getconf _NPROCESSORS_ONLN) configure && \
     env CFLAGS=-Ofast ./configure --prefix=/opt/dnscrypt-wrapper && \
-    make install && \
+    make -j$(getconf _NPROCESSORS_ONLN) install && \
     rm -fr /tmp/* /var/tmp/*
 
 RUN set -x && \
