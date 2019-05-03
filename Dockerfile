@@ -32,9 +32,8 @@ ENV LIBSODIUM_GIT_URL https://github.com/jedisct1/libsodium.git
 RUN set -x && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    git clone "$LIBSODIUM_GIT_URL" && \
+    git clone --branch stable "$LIBSODIUM_GIT_URL" && \
     cd libsodium && \
-    git checkout stable && \
     env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
     make check && make install && \
     ldconfig /usr/local/lib && \
