@@ -1,4 +1,5 @@
-[![DNSCrypt](https://raw.github.com/jedisct1/dnscrypt-server-docker/master/dnscrypt-small.png)](https://dnscrypt.org)
+[![Travis Status](https://travis-ci.org/DNSCrypt/dnscrypt-server-docker.svg?branch=master)](https://travis-ci.org/DNSCrypt/dnscrypt-server-docker/builds/)
+[![DNSCrypt](https://raw.github.com/jedisct1/dnscrypt-server-docker/master/dnscrypt-small.png)](https://dnscrypt.info)
 
 DNSCrypt server Docker image
 ============================
