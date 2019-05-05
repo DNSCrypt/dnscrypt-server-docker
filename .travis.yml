@@ -1,0 +1,14 @@
+---
+
+dist: xenial
+
+language: minimal
+
+git:
+  depth: 5
+
+script:
+  - docker build -t dnscrypt-server-docker-ci-test .
+
+services:
+  - docker
