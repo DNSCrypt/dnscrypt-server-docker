@@ -14,5 +14,5 @@ rotation_needed() {
 }
 
 [ "$(rotation_needed)" = true ] || exit 0
-sv status dnscrypt-wrapper | egrep -q '^run:' || exit 0
+sv status dnscrypt-wrapper | grep -E -q '^run:' || exit 0
 sv restart dnscrypt-wrapper
