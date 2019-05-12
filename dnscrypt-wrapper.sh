@@ -10,7 +10,7 @@ prune() {
 }
 
 rotation_needed() {
-    if [ $(/usr/bin/find "$STKEYS_DIR" -name '*.cert' -type f -cmin -720 -print -quit | wc -l | sed 's/[^0-9]//g') -le 0 ]; then
+    if [ "$(/usr/bin/find "$STKEYS_DIR" -name '*.cert' -type f -cmin -720 -print -quit | wc -l | sed 's/[^0-9]//g')" -le 0 ]; then
         echo true
     else
         echo false
@@ -54,7 +54,7 @@ provider_name=$(cat "$KEYS_DIR/provider_name")
 
 mkdir -p "$STKEYS_DIR"
 prune
-[ $(rotation_needed) = true ] && new_key
+[ "$(rotation_needed)" = true ] && new_key
 
 [ -r "$BLACKLIST" ] && blacklist_opt="--blacklist-file=${BLACKLIST}"
 
@@ -64,5 +64,5 @@ exec /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper \
     --resolver-address=127.0.0.1:553 \
     --provider-name="$provider_name" \
     --provider-cert-file="$(stcerts_files)" \
-    --crypt-secretkey-file=$(stkeys_files) \
+    --crypt-secretkey-file="$(stkeys_files)" \
     $blacklist_opt

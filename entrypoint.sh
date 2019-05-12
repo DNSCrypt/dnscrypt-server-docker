@@ -9,7 +9,7 @@ KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 # -N provider-name -E external-ip-address:port
 
 init() {
-    if [ $(is_initialized) = yes ]; then
+    if [ "$(is_initialized)" = yes ]; then
         start
         exit $?
     fi
@@ -73,7 +73,7 @@ is_initialized() {
 }
 
 ensure_initialized() {
-    if [ $(is_initialized) = no ]; then
+    if [ "$(is_initialized)" = no ]; then
         echo "Please provide an initial configuration (init -N <provider_name> -E <external IP>)" >&2
         exit 1
     fi

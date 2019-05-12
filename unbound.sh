@@ -13,7 +13,7 @@ availableMemory=$(($availableMemory - $reserved))
 msg_cache_size=$(($availableMemory / 3))
 rr_cache_size=$(($availableMemory / 3))
 nproc=$(nproc)
-if [ $nproc -gt 1 ]; then
+if [ "$nproc" -gt 1 ]; then
     threads=$(($nproc - 1))
 else
     threads=1
