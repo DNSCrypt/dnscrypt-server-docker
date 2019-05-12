@@ -65,7 +65,7 @@ provider_info() {
 }
 
 is_initialized() {
-    if [ ! -f "${KEYS_DIR}/public.key" -a ! -f "${KEYS_DIR}/secret.key" -a ! -f "${KEYS_DIR}/provider_name" ]; then
+    if [ ! -f "${KEYS_DIR}/public.key" ] && [ ! -f "${KEYS_DIR}/secret.key" ] && [ ! -f "${KEYS_DIR}/provider_name" ]; then
         echo no
     else
         echo yes
