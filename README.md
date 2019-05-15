@@ -50,6 +50,49 @@ not just `example.com` as initially entered. The full name has to start with
 `2.dnscrypt-cert.` for the client and the server to use the same version of the
 protocol.
 
+Customizing Ports
+===================
+To customize the default port, pull the repo first:
+
+`git clone https://github.com/DNSCrypt/dnscrypt-server-docker.git`
+
+**Step 1**
+Open `dnscrypt-wrapper.sh`
+and change: `--listen-address=0.0.0.0:443`
+To: `--listen-address=0.0.0.0:your_port_here`
+
+**Step 2**
+Open `Dockerfile`
+and change: `EXPOSE 443/udp 443/tcp`
+To: `EXPOSE your_port_here/udp your_port_here/tcp`
+
+**Step 3**
+Open `watchdog.sh`
+and change: `drill -p 888 -Q TXT "$provider_name" @127.0.0.1 || \`
+To: `drill -p your_port_here -Q TXT "$provider_name" @127.0.0.1 || \`
+
+**Step 4**
+Build: `docker build -t dnscrypt-server:yourbuildname .`
+(do not forget the . at the end)
+You are free to change `yourbuildname` to your liking.
+
+**Step 5**
+Run: `sudo docker run -d --name=dnscrypt-server -p yourport:yourport udp -p yourport:yourport/tcp \
+    dnscrypt-server:yourbuildname init -N your_server_name -E your_external_ip_here:your_port_here`
+
+replace `yourport` with the custom port you specified earlier.
+replace `yourbuildname` if you changed it earlier.
+replace `your_server_name` with your server name ie. dnscrypt.info
+replace `your_external_ip_here` with your server **external** ip address
+
+** Do not use --net=host with a custom port.
+
+**Step 6**
+
+Run: `docker start dnscrypt-server`
+
+To preserve keys during update see: https://github.com/DNSCrypt/dnscrypt-server-docker/wiki/Update-Docker-image
+
 Customizing Unbound
 ===================
 
