@@ -3,7 +3,7 @@
 KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 ZONES_DIR="/opt/unbound/etc/unbound/zones"
 
-reserved=12582912
+reserved=134217728
 availableMemory=$((1024 * $( (grep -F MemAvailable /proc/meminfo || grep -F MemTotal /proc/meminfo) | sed 's/[^0-9]//g' ) ))
 if [ $availableMemory -le $((reserved * 2)) ]; then
     echo "Not enough memory" >&2
