@@ -51,7 +51,7 @@ server:
   do-not-query-localhost: no
   prefetch: yes
   prefetch-key: yes
-  qname-minimisation: no
+  qname-minimisation: yes
   ratelimit: 1000
   rrset-roundrobin: yes
   minimal-responses: yes
