@@ -1,6 +1,6 @@
 FROM jedisct1/alpine-runit:latest
 MAINTAINER Frank Denis
-ENV SERIAL 2
+ENV SERIAL 3
 
 ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf file openssl-dev byacc linux-headers
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep openssl ldns ldns-tools libevent expat libexecinfo coreutils drill ca-certificates
@@ -10,7 +10,7 @@ RUN set -x && \
     update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/jedisct1/unbound.git
-ENV UNBOUND_GIT_REVISION 7bd08b7a9987a0780892131f8590b6e384194bbc
+ENV UNBOUND_GIT_REVISION b3be81b6ef13b8f35f39811ef86df4a0ba3854fc
 
 RUN set -x && \
     apk add --no-cache $BUILD_DEPS && \
