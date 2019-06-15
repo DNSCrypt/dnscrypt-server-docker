@@ -10,7 +10,7 @@ RUN set -x && \
     update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/jedisct1/unbound.git
-ENV UNBOUND_GIT_REVISION b3be81b6ef13b8f35f39811ef86df4a0ba3854fc
+ENV UNBOUND_GIT_REVISION f5e3a85e960c2574be87f75a2b2c894d6995e0e2
 
 RUN set -x && \
     apk add --no-cache $BUILD_DEPS && \
