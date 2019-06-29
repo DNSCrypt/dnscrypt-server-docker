@@ -99,4 +99,6 @@ fi
 
 mkdir -p /opt/unbound/etc/unbound/zones
 
+echo 3 > /proc/sys/vm/drop_caches 2> /dev/null
+
 exec /opt/unbound/sbin/unbound
