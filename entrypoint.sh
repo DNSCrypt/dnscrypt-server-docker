@@ -15,7 +15,7 @@ init() {
     fi
     while getopts "h?N:E:" opt; do
         case "$opt" in
-            h|\?) usage ;;
+            h | \?) usage ;;
             N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
             E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         esac
@@ -24,20 +24,23 @@ init() {
     case "$provider_name" in
         .*) usage ;;
         2.dnscrypt-cert.*) ;;
-        *) provider_name="2.dnscrypt-cert.${provider_name}"
+        *) provider_name="2.dnscrypt-cert.${provider_name}" ;;
     esac
 
     [ -z "$ext_address" ] && usage
     case "$ext_address" in
         .*) usage ;;
-        0.*) echo "Do not use 0.0.0.0, use an actual external IP address" >&2 ; exit 1 ;;
+        0.*)
+            echo "Do not use 0.0.0.0, use an actual external IP address" >&2
+            exit 1
+            ;;
     esac
 
     echo "Provider name: [$provider_name]"
     cd "$KEYS_DIR"
     /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper \
         --gen-provider-keypair --nolog --dnssec --nofilter \
-        --provider-name="$provider_name" --ext-address="$ext_address" | \
+        --provider-name="$provider_name" --ext-address="$ext_address" |
         tee "${KEYS_DIR}/provider-info.txt"
     chmod 640 "${KEYS_DIR}/secret.key"
     chmod 644 "${KEYS_DIR}/public.key"
@@ -108,7 +111,10 @@ EOT
 
 case "$action" in
     start) start ;;
-    init) shift ; init $* ;;
+    init)
+        shift
+        init $*
+        ;;
     provider-info) provider_info ;;
     *) usage ;;
 esac

@@ -4,7 +4,7 @@ KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 ZONES_DIR="/opt/unbound/etc/unbound/zones"
 
 reserved=134217728
-availableMemory=$((1024 * $( (grep -F MemAvailable /proc/meminfo || grep -F MemTotal /proc/meminfo) | sed 's/[^0-9]//g' ) ))
+availableMemory=$((1024 * $( (grep -F MemAvailable /proc/meminfo || grep -F MemTotal /proc/meminfo) | sed 's/[^0-9]//g')))
 if [ $availableMemory -le $((reserved * 2)) ]; then
     echo "Not enough memory" >&2
     exit 1
@@ -86,15 +86,15 @@ remote-control:
   control-interface: 127.0.0.1
 EOT
 
-mkdir -p /opt/unbound/etc/unbound/dev && \
-cp -a /dev/random /dev/urandom /opt/unbound/etc/unbound/dev/
+mkdir -p /opt/unbound/etc/unbound/dev &&
+    cp -a /dev/random /dev/urandom /opt/unbound/etc/unbound/dev/
 
-mkdir -p -m 700 /opt/unbound/etc/unbound/var && \
-chown _unbound:_unbound /opt/unbound/etc/unbound/var && \
-/opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
+mkdir -p -m 700 /opt/unbound/etc/unbound/var &&
+    chown _unbound:_unbound /opt/unbound/etc/unbound/var &&
+    /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
 
 if [ ! -f /opt/unbound/etc/unbound/unbound_control.pem ]; then
-  /opt/unbound/sbin/unbound-control-setup
+    /opt/unbound/sbin/unbound-control-setup
 fi
 
 mkdir -p /opt/unbound/etc/unbound/zones

@@ -21,13 +21,13 @@ new_key() {
     ts=$(date '+%s')
     /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper --gen-crypt-keypair \
         --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" &&
-    /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper --gen-cert-file \
-        --xchacha20 \
-        --provider-publickey-file="${KEYS_DIR}/public.key" \
-        --provider-secretkey-file="${KEYS_DIR}/secret.key" \
-        --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
-        --provider-cert-file="${STKEYS_DIR}/${ts}.cert" \
-        --cert-file-expire-days=1
+        /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper --gen-cert-file \
+            --xchacha20 \
+            --provider-publickey-file="${KEYS_DIR}/public.key" \
+            --provider-secretkey-file="${KEYS_DIR}/secret.key" \
+            --crypt-secretkey-file="${STKEYS_DIR}/${ts}.key" \
+            --provider-cert-file="${STKEYS_DIR}/${ts}.cert" \
+            --cert-file-expire-days=1
     [ $? -ne 0 ] && rm -f "${STKEYS_DIR}/${ts}.key" "${STKEYS_DIR}/${ts}.cert"
 }
 
