@@ -12,9 +12,9 @@ RUN apk --no-cache upgrade && apk add --no-cache $RUNTIME_DEPS && \
 ENV UNBOUND_GIT_URL https://github.com/jedisct1/unbound.git
 ENV UNBOUND_GIT_REVISION 4edb15ba417c78710069a5be8be3a6b5d8bdba9c
 
+WORKDIR /tmp
+
 RUN apk add --no-cache $BUILD_DEPS && \
-    mkdir -p /tmp/src && \
-    cd /tmp/src && \
     git clone --depth=1000 "$UNBOUND_GIT_URL" && \
     cd unbound && \
     git checkout "$UNBOUND_GIT_REVISION" && \
@@ -31,8 +31,6 @@ RUN apk add --no-cache $BUILD_DEPS && \
 ENV LIBSODIUM_GIT_URL https://github.com/jedisct1/libsodium.git
 
 RUN apk add --no-cache $BUILD_DEPS && \
-    mkdir -p /tmp/src && \
-    cd /tmp/src && \
     git clone --depth=1 --branch stable "$LIBSODIUM_GIT_URL" && \
     cd libsodium && \
     env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
@@ -47,8 +45,6 @@ ENV DNSCRYPT_WRAPPER_GIT_BRANCH xchacha-stamps
 COPY queue.h /tmp
 
 RUN apk add --no-cache $BUILD_DEPS && \
-    mkdir -p /tmp/src && \
-    cd /tmp/src && \
     git clone --depth=1 --branch="${DNSCRYPT_WRAPPER_GIT_BRANCH}" "${DNSCRYPT_WRAPPER_GIT_URL}" && \
     cd dnscrypt-wrapper && \
     sed -i 's#<sys/queue.h>#"/tmp/queue.h"#' compat.h && \
