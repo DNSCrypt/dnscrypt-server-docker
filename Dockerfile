@@ -23,7 +23,7 @@ RUN set -x && \
     useradd -g _unbound -s /etc -d /dev/null _unbound && \
     ./configure --prefix=/opt/unbound --with-pthreads \
     --with-username=_unbound --with-libevent --enable-event-api && \
-    make -j$(getconf _NPROCESSORS_ONLN) install && \
+    make -j"$(getconf _NPROCESSORS_ONLN)" install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
     apk del --purge $BUILD_DEPS && \
     rm -fr /opt/unbound/share/man && \
@@ -38,7 +38,7 @@ RUN set -x && \
     git clone --depth=1 --branch stable "$LIBSODIUM_GIT_URL" && \
     cd libsodium && \
     env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
-    make -j$(getconf _NPROCESSORS_ONLN) check && make -j$(getconf _NPROCESSORS_ONLN) install && \
+    make -j"$(getconf _NPROCESSORS_ONLN)" check && make -j"$(getconf _NPROCESSORS_ONLN)" install && \
     ldconfig /usr/local/lib && \
     apk del --purge $BUILD_DEPS && \
     rm -fr /tmp/* /var/tmp/*
@@ -52,7 +52,7 @@ RUN set -x && \
     apk add --no-cache $BUILD_DEPS && \
     mkdir -p /tmp/src && \
     cd /tmp/src && \
-    git clone --depth=1 --branch=${DNSCRYPT_WRAPPER_GIT_BRANCH} ${DNSCRYPT_WRAPPER_GIT_URL} && \
+    git clone --depth=1 --branch="${DNSCRYPT_WRAPPER_GIT_BRANCH}" "${DNSCRYPT_WRAPPER_GIT_URL}" && \
     cd dnscrypt-wrapper && \
     sed -i 's#<sys/queue.h>#"/tmp/queue.h"#' compat.h && \
     sed -i 's#HAVE_BACKTRACE#NO_BACKTRACE#' compat.h && \
@@ -61,9 +61,9 @@ RUN set -x && \
     useradd -g _dnscrypt-wrapper -s /etc -d /opt/dnscrypt-wrapper/empty _dnscrypt-wrapper && \
     groupadd _dnscrypt-signer && \
     useradd -g _dnscrypt-signer -G _dnscrypt-wrapper -s /etc -d /dev/null _dnscrypt-signer && \
-    make -j$(getconf _NPROCESSORS_ONLN) configure && \
+    make -j"$(getconf _NPROCESSORS_ONLN)" configure && \
     env CFLAGS=-Ofast ./configure --prefix=/opt/dnscrypt-wrapper && \
-    make -j$(getconf _NPROCESSORS_ONLN) install && \
+    make -j"$(getconf _NPROCESSORS_ONLN)" install && \
     apk del --purge $BUILD_DEPS && \
     rm -fr /tmp/* /var/tmp/*
 
