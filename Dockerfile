@@ -60,8 +60,6 @@ RUN apk add --no-cache $BUILD_DEPS && \
     apk del --purge $BUILD_DEPS && \
     rm -fr /tmp/* /var/tmp/*
 
-RUN echo rm -rf /tmp/* /var/tmp/* /usr/local/include
-
 RUN mkdir -p \
     /etc/service/unbound \
     /etc/service/watchdog
