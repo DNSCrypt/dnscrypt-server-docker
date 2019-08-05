@@ -7,8 +7,8 @@ ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf file openssl-dev byacc linux-headers
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep openssl ldns ldns-tools libevent expat libexecinfo coreutils drill ca-certificates
 
-RUN apk --no-cache upgrade && apk add --no-cache $RUNTIME_DEPS && \
-    update-ca-certificates 2> /dev/null || true
+RUN apk --no-cache upgrade && apk add --no-cache $RUNTIME_DEPS
+RUN update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/jedisct1/unbound.git
 ENV UNBOUND_GIT_REVISION 4edb15ba417c78710069a5be8be3a6b5d8bdba9c
