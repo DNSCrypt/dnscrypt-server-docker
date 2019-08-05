@@ -3,6 +3,7 @@ MAINTAINER Frank Denis
 SHELL ["/bin/sh", "-x", "-c"]
 ENV SERIAL 3
 
+ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   make gcc musl-dev git libevent-dev expat-dev shadow autoconf file openssl-dev byacc linux-headers
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep openssl ldns ldns-tools libevent expat libexecinfo coreutils drill ca-certificates
 
@@ -33,7 +34,7 @@ ENV LIBSODIUM_GIT_URL https://github.com/jedisct1/libsodium.git
 RUN apk add --no-cache $BUILD_DEPS && \
     git clone --depth=1 --branch stable "$LIBSODIUM_GIT_URL" && \
     cd libsodium && \
-    env CFLAGS=-Ofast ./configure --disable-dependency-tracking && \
+    ./configure --disable-dependency-tracking && \
     make -j"$(getconf _NPROCESSORS_ONLN)" check && make -j"$(getconf _NPROCESSORS_ONLN)" install && \
     ldconfig /usr/local/lib && \
     apk del --purge $BUILD_DEPS && \
@@ -55,7 +56,7 @@ RUN apk add --no-cache $BUILD_DEPS && \
     groupadd _dnscrypt-signer && \
     useradd -g _dnscrypt-signer -G _dnscrypt-wrapper -s /etc -d /dev/null _dnscrypt-signer && \
     make -j"$(getconf _NPROCESSORS_ONLN)" configure && \
-    env CFLAGS=-Ofast ./configure --prefix=/opt/dnscrypt-wrapper && \
+    ./configure --prefix=/opt/dnscrypt-wrapper && \
     make -j"$(getconf _NPROCESSORS_ONLN)" install && \
     apk del --purge $BUILD_DEPS && \
     rm -fr /tmp/* /var/tmp/*
