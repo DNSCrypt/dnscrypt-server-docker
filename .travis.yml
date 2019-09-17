@@ -7,8 +7,18 @@ language: minimal
 git:
   depth: 5
 
-script:
-  - docker build -t dnscrypt-server-docker-ci-test .
+jobs:
+  include:
+    - stage: Test
+      name: Docker build
+      script:
+        - docker build -t dnscrypt-server-docker-ci-test .
+    - stage: Test
+      name: Check shell script format
+      script:
+        - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.4 shfmt -sr -i 4 -l -w -ci .
+        - git diff --color
+        - git diff --stat=220 --color --exit-code
 
 services:
   - docker
