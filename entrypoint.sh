@@ -86,7 +86,6 @@ ensure_initialized() {
 
 start() {
     ensure_initialized
-    cat "${KEYS_DIR}/provider-info.txt"
     exec /etc/runit/2
 }
 
