@@ -20,7 +20,7 @@ spec:
         name: dnscrypt
         volumeMounts:
           - name: dnscrypt-keys
-            mountPath: /opt/dnscrypt-wrapper/etc/keys
+            mountPath: /opt/encrypted-dns/etc/keys
         command: ["/entrypoint.sh", "start"]
         resources:
           requests:

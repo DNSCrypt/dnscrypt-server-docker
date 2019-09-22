@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
+KEYS_DIR="/opt/encrypted-dns/etc/keys"
 ZONES_DIR="/opt/unbound/etc/unbound/zones"
 
 reserved=134217728

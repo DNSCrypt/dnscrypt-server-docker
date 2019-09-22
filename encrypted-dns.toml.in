@@ -1,0 +1,151 @@
+####################################################
+#                                                  #
+#        Encrypted DNS Server configuration        #
+#                                                  #
+####################################################
+
+
+
+##################################
+#         Global settings        #
+##################################
+
+
+## IP addresses and ports to listen to, as well as their external IP
+## If there is no NAT involved, `local` and `external` can be the same.
+## As many addresses as needed can be configured here, IPv4 and/or IPv6.
+
+listen_addrs = [
+    { local = "0.0.0.0:443", external = "@EXTERNAL_IPV4@" }
+]
+
+
+## Upstream DNS server and port
+
+upstream_addr = "127.0.0.1:53"
+
+
+## File name to save the state to
+
+state_file = "/opt/encrypted-dns/etc/keys/encrypted-dns.state"
+
+
+## UDP timeout in seconds
+
+udp_timeout = 10
+
+
+## TCP timeout in seconds
+
+tcp_timeout = 10
+
+
+## Maximum active UDP sockets
+
+udp_max_active_connections = 1000
+
+
+## Maximum active TCP connections
+
+tcp_max_active_connections = 100
+
+
+## IP address to connect to upstream servers from.
+## You probably do not want to change this. `0.0.0.0` should be fine.
+
+external_addr = "0.0.0.0"
+
+
+## Built-in DNS cache capacity
+
+cache_capacity = 50000
+
+
+## DNS cache: minimum TTL
+
+cache_ttl_min = 600
+
+
+## DNS cache: max TTL
+
+cache_ttl_max = 86400
+
+
+## DNS cache: error TTL
+
+cache_ttl_error = 600
+
+
+## Run as a background process
+
+daemonize = false
+
+
+## Log file
+
+# log_file = "/tmp/encrypted-dns.log"
+
+
+## PID file
+
+# pid_file = "/tmp/encrypted-dns.pid"
+
+
+## User name to drop privileges to, when started as root.
+
+# user = "nobody"
+
+
+## Group name to drop privileges to, when started as root.
+
+# group = "nobody"
+
+
+## Path to chroot() to, when started as root.
+## The path to the state file is relative to the chroot base.
+
+# chroot = "/var/empty"
+
+
+
+####################################
+#         DNSCrypt settings        #
+####################################
+
+[dnscrypt]
+
+## Provider name (with or without the `2.dnscrypt-cert.` prefix)
+
+provider_name = "@PROVIDER_NAME@"
+
+
+## Does the server support DNSSEC?
+
+dnssec = true
+
+
+## Does the server always returns correct answers (no filtering, including ad blocking)?
+
+no_filters = true
+
+
+## Set to `true` if the server doesn't keep any information that can be used to identify users
+
+no_logs = true
+
+
+## Key cache capacity, per certificate
+
+key_cache_capacity = 10000
+
+
+
+###############################
+#         TLS settings        #
+###############################
+
+[tls]
+
+## Where to prooxy TLS connections to (e.g. DoH server)
+
+# upstream_addr = "127.0.0.1:4343"

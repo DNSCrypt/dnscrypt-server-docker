@@ -13,8 +13,8 @@ to get your resolver up and running.
 Quickstart
 ==========
 
-* [How to setup your own DNSCrypt server in less than 10 minutes on Scaleway](https://github.com/jedisct1/dnscrypt-proxy/wiki/How-to-setup-your-own-DNSCrypt-server-in-less-than-10-minutes)
-* [DNSCrypt server with vultr.com](https://github.com/jedisct1/dnscrypt-proxy/wiki/DNSCrypt-server-with-vultr.com)
+* [How to setup your own DNSCrypt server in less than 10 minutes on Scaleway](https://github.com/dnscrypt/dnscrypt-proxy/wiki/How-to-setup-your-own-DNSCrypt-server-in-less-than-10-minutes)
+* [DNSCrypt server with vultr.com](https://github.com/dnscrypt/dnscrypt-proxy/wiki/DNSCrypt-server-with-vultr.com)
 
 Installation
 ============
@@ -104,12 +104,10 @@ Details
 - Caching resolver: [Unbound](https://www.unbound.net/), with DNSSEC, prefetching,
 and no logs. The number of threads and memory usage are automatically adjusted.
 Latest stable version, compiled from source. qname minimisation is enabled.
-- [libsodium](https://download.libsodium.org/doc/) - Latest stable version,
-minimal build compiled from source.
-- [dnscrypt-wrapper](https://github.com/Cofyc/dnscrypt-wrapper) - Latest stable version,
-compiled from source.
+- [encrypted-dns-server](https://github.com/jedisct1/dnscrypt-dns-server).
+Compiled from source.
 
-Keys and certificates are automatically rotated every 12 hour.
+Keys and certificates are automatically rotated every 8 hour.
 
 Kubernetes
 ==========
@@ -128,8 +126,3 @@ in minutes.
 
 To get your public key just view the logs for the `dnscrypt-init` job. The public
 IP for your server is merely the `dnscrypt` service address.
-
-Coming up next
-==============
-
-- Better isolation of the certificate signing process, in a dedicated container.

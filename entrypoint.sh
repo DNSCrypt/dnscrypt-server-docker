@@ -4,7 +4,11 @@ set -e
 
 action="$1"
 
-KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
+LEGACY_KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
+KEYS_DIR="/opt/encrypted-dns/etc/keys"
+CONF_DIR="/opt/encrypted-dns/etc"
+CONFIG_FILE="${CONF_DIR}/encrypted-dns.toml"
+
 
 # -N provider-name -E external-ip-address:port
 
@@ -37,18 +41,14 @@ init() {
     esac
 
     echo "Provider name: [$provider_name]"
-    cd "$KEYS_DIR"
-    /opt/dnscrypt-wrapper/sbin/dnscrypt-wrapper \
-        --gen-provider-keypair --nolog --dnssec --nofilter \
-        --provider-name="$provider_name" --ext-address="$ext_address" |
-        tee "${KEYS_DIR}/provider-info.txt"
-    chmod 640 "${KEYS_DIR}/secret.key"
-    chmod 644 "${KEYS_DIR}/public.key"
-    chown root:_dnscrypt-signer "${KEYS_DIR}/public.key" "${KEYS_DIR}/secret.key"
+
     echo "$provider_name" > "${KEYS_DIR}/provider_name"
     chmod 644 "${KEYS_DIR}/provider_name"
-    hexdump -ve '1/1 "%.2x"' < "${KEYS_DIR}/public.key" > "${KEYS_DIR}/public.key.txt"
-    chmod 644 "${KEYS_DIR}/public.key.txt"
+
+    /opt/encrypted-dns/sbin/dnscrypted-dns \
+        --config "$CONFIG_FILE" --dry-run |
+        tee "${KEYS_DIR}/provider-info.txt"
+
     echo
     echo -----------------------------------------------------------------------
     echo
@@ -59,16 +59,13 @@ init() {
 
 provider_info() {
     ensure_initialized
-    echo "Provider name:"
-    cat "${KEYS_DIR}/provider_name"
     echo
-    echo "Provider public key:"
-    cat "${KEYS_DIR}/public.key.txt"
+    cat "${KEYS_DIR}/provider-info.txt"
     echo
 }
 
 is_initialized() {
-    if [ ! -f "${KEYS_DIR}/public.key" ] && [ ! -f "${KEYS_DIR}/secret.key" ] && [ ! -f "${KEYS_DIR}/provider_name" ]; then
+    if [ ! -f "${KEYS_DIR}/encrypted-dns.state" ] && [ ! -f "${KEYS_DIR}/provider-info.txt" ] && [ ! -f "${KEYS_DIR}/provider_name" ]; then
         echo no
     else
         echo yes
@@ -104,7 +101,7 @@ Ports 443/udp and 443/tcp have to be publicly exposed.
 * provider-info: prints the provider name and provider public key.
 
 This container has a single volume that you might want to securely keep a
-backup of: /opt/dnscrypt-wrapper/etc/keys
+backup of: /opt/encrypted-dns/etc/keys
 EOT
     exit 1
 }
