@@ -8,7 +8,7 @@ LEGACY_KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 KEYS_DIR="/opt/encrypted-dns/etc/keys"
 CONF_DIR="/opt/encrypted-dns/etc"
 CONFIG_FILE="${CONF_DIR}/encrypted-dns.toml"
-
+CONFIG_FILE_TEMPLATE="${CONF_DIR}/encrypted-dns.toml.in"
 
 # -N provider-name -E external-ip-address:port
 
@@ -19,33 +19,38 @@ init() {
     fi
     while getopts "h?N:E:" opt; do
         case "$opt" in
-            h | \?) usage ;;
-            N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
-            E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+        h | \?) usage ;;
+        N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+        E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         esac
     done
     [ -z "$provider_name" ] && usage
     case "$provider_name" in
-        .*) usage ;;
-        2.dnscrypt-cert.*) ;;
-        *) provider_name="2.dnscrypt-cert.${provider_name}" ;;
+    .*) usage ;;
+    2.dnscrypt-cert.*) ;;
+    *) provider_name="2.dnscrypt-cert.${provider_name}" ;;
     esac
 
     [ -z "$ext_address" ] && usage
     case "$ext_address" in
-        .*) usage ;;
-        0.*)
-            echo "Do not use 0.0.0.0, use an actual external IP address" >&2
-            exit 1
-            ;;
+    .*) usage ;;
+    0.*)
+        echo "Do not use 0.0.0.0, use an actual external IP address" >&2
+        exit 1
+        ;;
     esac
 
     echo "Provider name: [$provider_name]"
 
-    echo "$provider_name" > "${KEYS_DIR}/provider_name"
+    echo "$provider_name" >"${KEYS_DIR}/provider_name"
     chmod 644 "${KEYS_DIR}/provider_name"
 
-    /opt/encrypted-dns/sbin/dnscrypted-dns \
+    sed \
+        -e "s/@PROVIDER_NAME@/${provider_name}/" \
+        -e "s/@EXTERNAL_IPV4@/${ext_address}/" \
+        "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
+
+    /opt/encrypted-dns/sbin/encrypted-dns \
         --config "$CONFIG_FILE" --dry-run |
         tee "${KEYS_DIR}/provider-info.txt"
 
@@ -87,7 +92,7 @@ start() {
 }
 
 usage() {
-    cat << EOT
+    cat <<EOT
 Commands
 ========
 
@@ -107,11 +112,11 @@ EOT
 }
 
 case "$action" in
-    start) start ;;
-    init)
-        shift
-        init $*
-        ;;
-    provider-info) provider_info ;;
-    *) usage ;;
+start) start ;;
+init)
+    shift
+    init $*
+    ;;
+provider-info) provider_info ;;
+*) usage ;;
 esac
