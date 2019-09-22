@@ -86,9 +86,12 @@ ensure_initialized() {
 
 start() {
     ensure_initialized
-    echo "Starting DNSCrypt service for provider: "
-    cat "${KEYS_DIR}/provider_name"
-    exec /sbin/start_runit
+    cat "${KEYS_DIR}/provider-info.txt"
+    exec /etc/runit/2
+}
+
+shell() {
+    exec /bin/bash
 }
 
 usage() {
@@ -105,6 +108,8 @@ Ports 443/udp and 443/tcp have to be publicly exposed.
 
 * provider-info: prints the provider name and provider public key.
 
+* shell: run a shell
+
 This container has a single volume that you might want to securely keep a
 backup of: /opt/encrypted-dns/etc/keys
 EOT
@@ -118,5 +123,6 @@ init)
     init $*
     ;;
 provider-info) provider_info ;;
+shell) shell ;;
 *) usage ;;
 esac
