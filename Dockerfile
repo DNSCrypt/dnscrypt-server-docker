@@ -26,7 +26,7 @@ RUN apt-get install -qy --no-install-recommends $BUILD_DEPS && \
     --with-username=_unbound --with-libevent --enable-event-api && \
     make -j"$(getconf _NPROCESSORS_ONLN)" install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
-    apt-get -qy purge $BUILD_DEPS && \
+    apt-get -qy purge $BUILD_DEPS && apt-get -qy autoremove && \
     rm -fr /opt/unbound/share/man && \
     rm -fr /tmp/* /var/tmp/*
 
@@ -45,7 +45,7 @@ RUN export PATH="$HOME/.cargo/bin:$PATH" && \
     useradd -g _encrypted-dns -s /etc -d /opt/encrypted-dns/empty _encrypted-dns && \
     chown _encrypted-dns:_encrypted-dns /opt/encrypted-dns/etc/keys && \
     chmod 700 /opt/encrypted-dns/etc/keys && \
-    apt-get -qy purge $BUILD_DEPS && \
+    apt-get -qy purge $BUILD_DEPS && apt-get -qy autoremove && \
     rm -fr ~/.cargo ~/.rustup && \
     rm -fr /tmp/* /var/tmp/*
 
@@ -68,6 +68,6 @@ VOLUME ["/opt/encrypted-dns/etc/keys"]
 
 EXPOSE 443/udp 443/tcp
 
-CMD ["/sbin/start_runit"]
+CMD ["/etc/runit/2"]
 
 ENTRYPOINT ["/entrypoint.sh"]
