@@ -69,7 +69,26 @@ provider_info() {
     echo
 }
 
+dnscrypt_wrapper_compat() {
+    if [ ! -d "$LEGACY_KEYS_DIR" ]; then
+        return
+    fi
+    echo "Legacy [$LEGACY_KEYS_DIR] directory found."
+    if [ -d "$KEYS_DIR" ]; then
+        echo "Both [${LEGACY_KEYS_DIR}] and [${KEYS_DIR}] are present - This is not expected" >&2
+        exit 1
+    else
+        echo "We'll just symlink it to [${KEYS_DIR}] internally"
+        ln -s "${LEGACY_KEYS_DIR}" "$KEYS_DIR"
+    fi
+    if [ ! -f "${LEGACY_KEYS_DIR}/secret.key" ]; then
+        echo "No secret key in [${LEGACY_KEYS_DIR}/secret.key], this is not expected." >&2
+    fi
+    echo "...and this is fine! You can keep using it, no need to change anything to your Docker volumes."
+}
+
 is_initialized() {
+    dnscrypt_wrapper_compat
     if [ ! -f "${KEYS_DIR}/encrypted-dns.state" ] && [ ! -f "${KEYS_DIR}/provider-info.txt" ] && [ ! -f "${KEYS_DIR}/provider_name" ]; then
         echo no
     else
