@@ -71,7 +71,7 @@ provider_info() {
 
 dnscrypt_wrapper_compat() {
     if [ ! -d "$LEGACY_KEYS_DIR" ]; then
-        return
+        exit 1
     fi
     echo "Legacy [$LEGACY_KEYS_DIR] directory found."
     if [ -d "$KEYS_DIR" ]; then
@@ -79,18 +79,37 @@ dnscrypt_wrapper_compat() {
         exit 1
     else
         echo "We'll just symlink it to [${KEYS_DIR}] internally"
-        ln -s "${LEGACY_KEYS_DIR}" "$KEYS_DIR"
+        ln -s "$LEGACY_KEYS_DIR" "$KEYS_DIR"
     fi
     if [ ! -f "${LEGACY_KEYS_DIR}/secret.key" ]; then
         echo "No secret key in [${LEGACY_KEYS_DIR}/secret.key], this is not expected." >&2
+        echo "If you are migrating from a container previously running dnscrypt-wrapper," >&2
+        echo "make sure that the [${LEGACY_KEYS_DIR}] directory is mounted." >&2
+        echo "If you are setting up a brand new server, maybe you've been following" >&2
+        echo "an outdated tutorial." >&2
+        echo "The key directory should be mounted as [${KEYS_DIR}] and not [$LEGACY_KEYS_DIR]." >&2
+        exit 1
     fi
+    echo
     echo "...and this is fine! You can keep using it, no need to change anything to your Docker volumes."
+    echo
+    /opt/encrypted-dns/sbin/encrypted-dns \
+        --config "$CONFIG_FILE" \
+        --import-from-dnscrypt-wrapper "${LEGACY_KEYS_DIR}/secret.key" \
+        --dry-run >/dev/null
 }
 
 is_initialized() {
-    dnscrypt_wrapper_compat
     if [ ! -f "${KEYS_DIR}/encrypted-dns.state" ] && [ ! -f "${KEYS_DIR}/provider-info.txt" ] && [ ! -f "${KEYS_DIR}/provider_name" ]; then
-        echo no
+        if dnscrypt_wrapper_compat; then
+            if [ ! -f "${KEYS_DIR}/encrypted-dns.state" ] && [ ! -f "${KEYS_DIR}/provider-info.txt" ] && [ ! -f "${KEYS_DIR}/provider_name" ]; then
+                echo no
+            else
+                echo yes
+            fi
+        else
+            echo no
+        fi
     else
         echo yes
     fi
