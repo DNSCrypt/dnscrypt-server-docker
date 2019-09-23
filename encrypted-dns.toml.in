@@ -93,12 +93,12 @@ daemonize = false
 
 ## User name to drop privileges to, when started as root.
 
-# user = "nobody"
+user = "_encrypted-dns"
 
 
 ## Group name to drop privileges to, when started as root.
 
-# group = "nobody"
+group = "_encrypted-dns"
 
 
 ## Path to chroot() to, when started as root.
