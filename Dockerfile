@@ -68,6 +68,6 @@ VOLUME ["/opt/encrypted-dns/etc/keys"]
 
 EXPOSE 443/udp 443/tcp
 
-CMD ["/etc/runit/2"]
+CMD ["/entrypoint.sh", "start"]
 
 ENTRYPOINT ["/entrypoint.sh"]

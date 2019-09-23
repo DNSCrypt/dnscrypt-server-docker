@@ -86,7 +86,10 @@ ensure_initialized() {
 
 start() {
     ensure_initialized
-    exec /etc/runit/2
+    /opt/encrypted-dns/sbin/encrypted-dns \
+        --config "$CONFIG_FILE" --dry-run |
+        tee "${KEYS_DIR}/provider-info.txt"
+    exec /etc/runit/2 </dev/null >/dev/null 2>/dev/null
 }
 
 shell() {
@@ -119,7 +122,7 @@ case "$action" in
 start) start ;;
 init)
     shift
-    init $*
+    init "$@"
     ;;
 provider-info) provider_info ;;
 shell) shell ;;
