@@ -13,7 +13,7 @@ CONFIG_FILE_TEMPLATE="${CONF_DIR}/encrypted-dns.toml.in"
 # -N provider-name -E external-ip-address:port
 
 init() {
-    if [ "$(is_initialized)" = yes ]; then
+    if [ "$(is_initialized 2>/dev/null)" = yes ]; then
         start
         exit $?
     fi
