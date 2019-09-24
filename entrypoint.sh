@@ -173,7 +173,7 @@ Ports 443/udp and 443/tcp have to be publicly exposed.
 
 * provider-info: prints the provider name and provider public key.
 
-* shell: run a shell
+* shell: run a shell.
 
 This container has a single volume that you might want to securely keep a
 backup of: /opt/encrypted-dns/etc/keys
