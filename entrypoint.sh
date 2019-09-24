@@ -71,19 +71,23 @@ provider_info() {
 
 dnscrypt_wrapper_compat() {
     if [ ! -d "$LEGACY_KEYS_DIR" ]; then
+        echo "Neither [${KEYS_DIR}] doesn't seem to contain the required DNS provider information, and a [${LEGACY_KEYS_DIR}] directory wasn't found either" >&2
         return 1
     fi
     echo "Legacy [$LEGACY_KEYS_DIR] directory found" >&2
     if [ -d "${KEYS_DIR}/provider_name" ]; then
-        echo "Both [${LEGACY_KEYS_DIR}] and [${KEYS_DIR}] are present and not empty - This is not expected" >&2
+        echo "Both [${LEGACY_KEYS_DIR}] and [${KEYS_DIR}] are present and not empty - This is not expected." >&2
         return 1
     fi
     if [ ! -f "${LEGACY_KEYS_DIR}/secret.key" ]; then
         echo "No secret key in [${LEGACY_KEYS_DIR}/secret.key], this is not expected." >&2
+        echo >&2
         echo "If you are migrating from a container previously running dnscrypt-wrapper," >&2
         echo "make sure that the [${LEGACY_KEYS_DIR}] directory is mounted." >&2
+        echo >&2
         echo "If you are setting up a brand new server, maybe you've been following" >&2
         echo "an outdated tutorial." >&2
+        echo >&2
         echo "The key directory should be mounted as [${KEYS_DIR}] and not [$LEGACY_KEYS_DIR]." >&2
         return 1
     fi
@@ -96,7 +100,13 @@ dnscrypt_wrapper_compat() {
     sed -e "s#${KEYS_DIR}#${LEGACY_KEYS_DIR}#g" <"$CONFIG_FILE_TEMPLATE" >"${CONFIG_FILE_TEMPLATE}.tmp" &&
         mv -f "${CONFIG_FILE_TEMPLATE}.tmp" "$CONFIG_FILE_TEMPLATE" || exit 1
     provider_name=$(cat "${LEGACY_KEYS_DIR}/provider_name")
-    ext_address="0.0.0.0:443"
+    if [ -f "${LEGACY_KEYS_DIR}/provider-info.txt" ]; then
+        ext_address=$(grep -F -- "--resolver-address=" "${LEGACY_KEYS_DIR}/provider-info.txt" 2>/dev/null | cut -d'=' -f2 | sed 's/ //g')
+    fi
+    if [ -z "$ext_address" ]; then
+        echo "(we were not able to find the previous external IP address, the printed stamp will be wrong, but the previous stamp will keep working)" >&2
+        ext_address="0.0.0.0:443"
+    fi
     sed \
         -e "s/@PROVIDER_NAME@/${provider_name}/" \
         -e "s/@EXTERNAL_IPV4@/${ext_address}/" \
@@ -106,14 +116,16 @@ dnscrypt_wrapper_compat() {
         --config "$CONFIG_FILE" \
         --import-from-dnscrypt-wrapper "${LEGACY_KEYS_DIR}/secret.key" \
         --dry-run >/dev/null || exit 1
+    chmod 600 "${LEGACY_KEYS_DIR}/secret.key"
     echo "Done!" >&2
     echo >&2
+    export KEYS_DIR="$LEGACY_KEYS_DIR"
 }
 
 is_initialized() {
     if [ ! -f "${KEYS_DIR}/encrypted-dns.state" ] || [ ! -f "${KEYS_DIR}/provider-info.txt" ] || [ ! -f "${KEYS_DIR}/provider_name" ]; then
         if dnscrypt_wrapper_compat; then
-            if [ ! -f "${LEGACY_KEYS_DIR}/encrypted-dns.state" ] || [ ! -f "${LEGACY_KEYS_DIR}/provider-info.txt" ] || [ ! -f "${LEGACY_KEYS_DIR}/provider_name" ]; then
+            if [ ! -f "${KEYS_DIR}/encrypted-dns.state" ] || [ ! -f "${KEYS_DIR}/provider_name" ]; then
                 echo no
             else
                 echo yes
