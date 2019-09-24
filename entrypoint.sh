@@ -103,7 +103,7 @@ dnscrypt_wrapper_compat() {
     echo "We'll just copy a few things to [${KEYS_DIR}] internally" >&2
     find "$KEYS_DIR" -type f -print -exec cp -afv {} "$LEGACY_KEYS_DIR/" \;
     chmod 700 "$LEGACY_KEYS_DIR"
-    chown _encrypted-dns:_encrypted-dns "$LEGACY_KEYS_DIR"
+    chown -R _encrypted-dns:_encrypted-dns "$LEGACY_KEYS_DIR"
     echo "...and update the configuration file" >&2
     sed -e "s#${KEYS_DIR}#${LEGACY_KEYS_DIR}#g" <"$CONFIG_FILE_TEMPLATE" >"${CONFIG_FILE_TEMPLATE}.tmp" &&
         mv -f "${CONFIG_FILE_TEMPLATE}.tmp" "$CONFIG_FILE_TEMPLATE" || exit 1
