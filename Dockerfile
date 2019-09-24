@@ -36,6 +36,7 @@ RUN apt-get install -qy --no-install-recommends $BUILD_DEPS && \
     curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain nightly
 
 RUN export PATH="$HOME/.cargo/bin:$PATH" && \
+    echo "Compiling encrypted-dns version 0.2.2" && \
     cargo install encrypted-dns && \
     mkdir -p /opt/encrypted-dns/sbin && \
     mkdir -p /opt/encrypted-dns/etc/keys && \
