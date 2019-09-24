@@ -17,11 +17,13 @@ init() {
         start
         exit $?
     fi
-    while getopts "h?N:E:" opt; do
+
+    while getopts "h?N:E:T:" opt; do
         case "$opt" in
         h | \?) usage ;;
         N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+        T) tls_proxy_upstream_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         esac
     done
     [ -z "$provider_name" ] && usage
@@ -40,6 +42,11 @@ init() {
         ;;
     esac
 
+    tls_proxy_configuration=""
+    if [ -n "$tls_proxy_upstream_address" ]; then
+        tls_proxy_configuration="upstream_addr = \"${tls_proxy_upstream_address}\""
+    fi
+
     echo "Provider name: [$provider_name]"
 
     echo "$provider_name" >"${KEYS_DIR}/provider_name"
@@ -48,6 +55,7 @@ init() {
     sed \
         -e "s/@PROVIDER_NAME@/${provider_name}/" \
         -e "s/@EXTERNAL_IPV4@/${ext_address}/" \
+        -e "s/@TLS_PROXY_CONFIGURATION@/${tls_proxy_configuration}/" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
 
     /opt/encrypted-dns/sbin/encrypted-dns \
@@ -167,6 +175,8 @@ Commands
 * init -N <provider_name> -E <external ip>:<port>
 initialize the container for a server accessible at ip <external ip> on port
 <port>, for a provider named <provider_name>. This is required only once.
+If TLS connections to the same port have to be redirected to a HTTPS server
+(e.g. for DoH), add -T <https server ip>:<port>
 
 * start (default command): start the resolver and the dnscrypt server proxy.
 Ports 443/udp and 443/tcp have to be publicly exposed.
