@@ -5,7 +5,9 @@ set -e
 action="$1"
 
 LEGACY_KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
+LEGACY_LISTS_DIR="/opt/dnscrypt-wrapper/etc/lists"
 KEYS_DIR="/opt/encrypted-dns/etc/keys"
+LISTS_DIR="/opt/encrypted-dns/etc/lists"
 CONF_DIR="/opt/encrypted-dns/etc"
 CONFIG_FILE="${CONF_DIR}/encrypted-dns.toml"
 CONFIG_FILE_TEMPLATE="${CONF_DIR}/encrypted-dns.toml.in"
@@ -47,6 +49,12 @@ init() {
         tls_proxy_configuration="upstream_addr = \"${tls_proxy_upstream_address}\""
     fi
 
+    domain_blacklist_file="${LISTS_DIR}/blacklist.txt"
+    domain_blacklist_configuration=""
+    if [ -s "$domain_blacklist_file" ]; then
+        domain_blacklist_configuration="domain_blacklist = \"${domain_blacklist_file}\""
+    fi
+
     echo "Provider name: [$provider_name]"
 
     echo "$provider_name" >"${KEYS_DIR}/provider_name"
@@ -56,6 +64,7 @@ init() {
         -e "s/@PROVIDER_NAME@/${provider_name}/" \
         -e "s/@EXTERNAL_IPV4@/${ext_address}/" \
         -e "s/@TLS_PROXY_CONFIGURATION@/${tls_proxy_configuration}/" \
+        -e "s/@DOMAIN_BLACKLIST_CONFIGURATION@/${domain_blacklist_configuration}/" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
 
     /opt/encrypted-dns/sbin/encrypted-dns \
@@ -127,7 +136,13 @@ dnscrypt_wrapper_compat() {
     chmod 600 "${LEGACY_KEYS_DIR}/secret.key"
     echo "Done!" >&2
     echo >&2
+
+    if [ -s "${LEGACY_LISTS_DIR}/blacklist.txt" ]; then
+        echo "Your blacklist [${LEGACY_LISTS_DIR}/blacklist.txt] will be loaded as well." >&2
+    fi
+
     export KEYS_DIR="$LEGACY_KEYS_DIR"
+    export LISTS_DIR="$LEGACY_LISTS_DIR"
 }
 
 is_initialized() {

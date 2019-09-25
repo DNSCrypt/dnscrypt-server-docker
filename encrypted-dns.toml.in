@@ -160,4 +160,4 @@ key_cache_capacity = 10000
 
 [filtering]
 
-# domain_blacklist = "/etc/domain_blacklist.txt"
+@DOMAIN_BLACKLIST_CONFIGURATION@
