@@ -61,10 +61,10 @@ init() {
     chmod 644 "${KEYS_DIR}/provider_name"
 
     sed \
-        -e "s/@PROVIDER_NAME@/${provider_name}/" \
-        -e "s/@EXTERNAL_IPV4@/${ext_address}/" \
-        -e "s/@TLS_PROXY_CONFIGURATION@/${tls_proxy_configuration}/" \
-        -e "s/@DOMAIN_BLACKLIST_CONFIGURATION@/${domain_blacklist_configuration}/" \
+        -e "s#@PROVIDER_NAME@#${provider_name}#" \
+        -e "s#@EXTERNAL_IPV4@#${ext_address}#" \
+        -e "s#@TLS_PROXY_CONFIGURATION@#${tls_proxy_configuration}#" \
+        -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
 
     /opt/encrypted-dns/sbin/encrypted-dns \
@@ -125,8 +125,8 @@ dnscrypt_wrapper_compat() {
         ext_address="0.0.0.0:443"
     fi
     sed \
-        -e "s/@PROVIDER_NAME@/${provider_name}/" \
-        -e "s/@EXTERNAL_IPV4@/${ext_address}/" \
+        -e "s#@PROVIDER_NAME@#${provider_name}#" \
+        -e "s#@EXTERNAL_IPV4@#${ext_address}#" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
     echo "...and check that everything's fine..." >&2
     /opt/encrypted-dns/sbin/encrypted-dns \
