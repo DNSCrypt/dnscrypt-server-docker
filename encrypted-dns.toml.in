@@ -152,3 +152,12 @@ key_cache_capacity = 10000
 
 @TLS_PROXY_CONFIGURATION@
 
+
+
+#######################################
+#        Server-side filtering        #
+#######################################
+
+[filtering]
+
+# domain_blacklist = "/etc/domain_blacklist.txt"
