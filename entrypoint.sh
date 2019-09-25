@@ -7,6 +7,7 @@ action="$1"
 LEGACY_KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 LEGACY_LISTS_DIR="/opt/dnscrypt-wrapper/etc/lists"
 KEYS_DIR="/opt/encrypted-dns/etc/keys"
+STATE_DIR="${KEYS_DIR}/state"
 LISTS_DIR="/opt/encrypted-dns/etc/lists"
 CONF_DIR="/opt/encrypted-dns/etc"
 CONFIG_FILE="${CONF_DIR}/encrypted-dns.toml"
@@ -15,7 +16,7 @@ CONFIG_FILE_TEMPLATE="${CONF_DIR}/encrypted-dns.toml.in"
 # -N provider-name -E external-ip-address:port
 
 init() {
-    if [ "$(is_initialized 2>/dev/null)" = yes ]; then
+    if [ "$(is_initialized)" = yes ]; then
         start
         exit $?
     fi
@@ -67,6 +68,17 @@ init() {
         -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
 
+    mkdir -p -m 700 "${STATE_DIR}"
+    chown _encrypted-dns:_encrypted-dns "${STATE_DIR}"
+
+    if [ -f "${KEYS_DIR}/secret.key" ]; then
+        echo "Importing the previous secret key [${KEYS_DIR}/secret.key]"
+        /opt/encrypted-dns/sbin/encrypted-dns \
+            --config "$CONFIG_FILE" \
+            --import-from-dnscrypt-wrapper "${KEYS_DIR}/secret.key" \
+            --dry-run >/dev/null || exit 1
+    fi
+
     /opt/encrypted-dns/sbin/encrypted-dns \
         --config "$CONFIG_FILE" --dry-run |
         tee "${KEYS_DIR}/provider-info.txt"
@@ -86,85 +98,9 @@ provider_info() {
     echo
 }
 
-dnscrypt_wrapper_compat() {
-    if [ ! -d "$LEGACY_KEYS_DIR" ]; then
-        echo "Neither [${KEYS_DIR}] doesn't seem to contain the required DNS provider information, and a [${LEGACY_KEYS_DIR}] directory wasn't found either" >&2
-        return 1
-    fi
-    echo "Legacy [$LEGACY_KEYS_DIR] directory found" >&2
-    if [ -d "${KEYS_DIR}/provider_name" ]; then
-        echo "Both [${LEGACY_KEYS_DIR}] and [${KEYS_DIR}] are present and not empty - This is not expected." >&2
-        return 1
-    fi
-    if [ ! -f "${LEGACY_KEYS_DIR}/secret.key" ]; then
-        echo "No secret key in [${LEGACY_KEYS_DIR}/secret.key], this is not expected." >&2
-        echo >&2
-        echo "If you are migrating from a container previously running dnscrypt-wrapper," >&2
-        echo "make sure that the [${LEGACY_KEYS_DIR}] directory is mounted." >&2
-        echo >&2
-        echo "If you are setting up a brand new server, maybe you've been following" >&2
-        echo "an outdated tutorial." >&2
-        echo >&2
-        echo "The key directory should be mounted as [${KEYS_DIR}] and not [$LEGACY_KEYS_DIR]." >&2
-        return 1
-    fi
-    echo "...and this is fine! You can keep using it, no need to change anything to your Docker volumes." >&2
-    echo "We'll just copy a few things to [${KEYS_DIR}] internally" >&2
-    find "$KEYS_DIR" -type f -print -exec cp -afv {} "$LEGACY_KEYS_DIR/" \;
-    chmod 700 "$LEGACY_KEYS_DIR"
-    chown -R _encrypted-dns:_encrypted-dns "$LEGACY_KEYS_DIR"
-    echo "...and update the configuration file" >&2
-    sed -e "s#${KEYS_DIR}#${LEGACY_KEYS_DIR}#g" <"$CONFIG_FILE_TEMPLATE" >"${CONFIG_FILE_TEMPLATE}.tmp" &&
-        mv -f "${CONFIG_FILE_TEMPLATE}.tmp" "$CONFIG_FILE_TEMPLATE" || exit 1
-    provider_name=$(cat "${LEGACY_KEYS_DIR}/provider_name")
-    if [ -f "${LEGACY_KEYS_DIR}/provider-info.txt" ]; then
-        ext_address=$(grep -F -- "--resolver-address=" "${LEGACY_KEYS_DIR}/provider-info.txt" 2>/dev/null | cut -d'=' -f2 | sed 's/ //g')
-    fi
-    if [ -z "$ext_address" ]; then
-        echo "(we were not able to find the previous external IP address, the printed stamp will be wrong, but the previous stamp will keep working)" >&2
-        ext_address="0.0.0.0:443"
-    fi
-
-    tls_proxy_configuration=""
-    domain_blacklist_file="${LISTS_DIR}/blacklist.txt"
-    domain_blacklist_configuration=""
-    if [ -s "$domain_blacklist_file" ]; then
-        domain_blacklist_configuration="domain_blacklist = \"${domain_blacklist_file}\""
-    fi
-    sed \
-        -e "s#@PROVIDER_NAME@#${provider_name}#" \
-        -e "s#@EXTERNAL_IPV4@#${ext_address}#" \
-        -e "s#@TLS_PROXY_CONFIGURATION@#${tls_proxy_configuration}#" \
-        -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
-        "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
-    echo "...and check that everything's fine..." >&2
-    /opt/encrypted-dns/sbin/encrypted-dns \
-        --config "$CONFIG_FILE" \
-        --import-from-dnscrypt-wrapper "${LEGACY_KEYS_DIR}/secret.key" \
-        --dry-run >/dev/null || exit 1
-    chmod 600 "${LEGACY_KEYS_DIR}/secret.key"
-    echo "Done!" >&2
-    echo >&2
-
-    if [ -s "${LEGACY_LISTS_DIR}/blacklist.txt" ]; then
-        echo "Your blacklist [${LEGACY_LISTS_DIR}/blacklist.txt] will be loaded as well." >&2
-    fi
-
-    export KEYS_DIR="$LEGACY_KEYS_DIR"
-    export LISTS_DIR="$LEGACY_LISTS_DIR"
-}
-
 is_initialized() {
-    if [ ! -f "${KEYS_DIR}/encrypted-dns.state" ] || [ ! -f "${KEYS_DIR}/provider-info.txt" ] || [ ! -f "${KEYS_DIR}/provider_name" ]; then
-        if dnscrypt_wrapper_compat; then
-            if [ ! -f "${KEYS_DIR}/encrypted-dns.state" ] || [ ! -f "${KEYS_DIR}/provider_name" ]; then
-                echo no
-            else
-                echo yes
-            fi
-        else
-            echo no
-        fi
+    if [ ! -f "$CONFIG_FILE" ] || [ ! -f "${STATE_DIR}/encrypted-dns.state" ] || [ ! -f "${KEYS_DIR}/provider-info.txt" ] || [ ! -f "${KEYS_DIR}/provider_name" ]; then
+        echo no
     else
         echo yes
     fi

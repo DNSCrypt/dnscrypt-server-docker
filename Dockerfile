@@ -5,7 +5,7 @@ ENV SERIAL 1
 
 ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev byacc
-ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libssl1.1 ldnsutils libevent-2.1 expat ca-certificates runit runit-helper
+ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libssl1.1 ldnsutils libevent-2.1 expat ca-certificates runit runit-helper jed
 
 RUN apt-get update; apt-get -qy dist-upgrade; apt-get -qy clean && \
     apt-get install -qy --no-install-recommends $RUNTIME_DEPS && \
@@ -41,6 +41,7 @@ RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS &&
     cargo install encrypted-dns && \
     mkdir -p /opt/encrypted-dns/sbin && \
     mkdir -p /opt/encrypted-dns/etc/keys && \
+    mkdir -p /opt/encrypted-dns/etc/keys/state && \
     mv ~/.cargo/bin/encrypted-dns /opt/encrypted-dns/sbin/ && \
     strip --strip-all /opt/encrypted-dns/sbin/encrypted-dns && \
     groupadd _encrypted-dns && \
