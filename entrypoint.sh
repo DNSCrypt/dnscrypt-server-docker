@@ -124,9 +124,18 @@ dnscrypt_wrapper_compat() {
         echo "(we were not able to find the previous external IP address, the printed stamp will be wrong, but the previous stamp will keep working)" >&2
         ext_address="0.0.0.0:443"
     fi
+
+    tls_proxy_configuration=""
+    domain_blacklist_file="${LISTS_DIR}/blacklist.txt"
+    domain_blacklist_configuration=""
+    if [ -s "$domain_blacklist_file" ]; then
+        domain_blacklist_configuration="domain_blacklist = \"${domain_blacklist_file}\""
+    fi
     sed \
         -e "s#@PROVIDER_NAME@#${provider_name}#" \
         -e "s#@EXTERNAL_IPV4@#${ext_address}#" \
+        -e "s#@TLS_PROXY_CONFIGURATION@#${tls_proxy_configuration}#" \
+        -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
     echo "...and check that everything's fine..." >&2
     /opt/encrypted-dns/sbin/encrypted-dns \
