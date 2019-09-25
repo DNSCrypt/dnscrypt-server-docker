@@ -1,11 +1,11 @@
 FROM ubuntu:19.04
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
-ENV SERIAL 3
+ENV SERIAL 1
 
 ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev byacc
-ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libssl1.1 ldnsutils libevent-2.1 expat coreutils ca-certificates runit runit-helper
+ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libssl1.1 ldnsutils libevent-2.1 expat ca-certificates runit runit-helper
 
 RUN apt-get update; apt-get -qy dist-upgrade; apt-get -qy clean
 RUN apt-get install -qy --no-install-recommends $RUNTIME_DEPS
@@ -28,14 +28,13 @@ RUN apt-get install -qy --no-install-recommends $BUILD_DEPS && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
     apt-get -qy purge $BUILD_DEPS && apt-get -qy autoremove && \
     rm -fr /opt/unbound/share/man && \
-    rm -fr /tmp/* /var/tmp/*
+    rm -fr /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/* /var/log/apt/* /var/log/*.log
 
 ENV RUSTFLAGS "-C link-arg=-s"
 
-RUN apt-get install -qy --no-install-recommends $BUILD_DEPS && \
-    curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain nightly
-
-RUN export PATH="$HOME/.cargo/bin:$PATH" && \
+RUN apt update && apt-get install -qy --no-install-recommends $BUILD_DEPS && \
+    curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain nightly && \
+    export PATH="$HOME/.cargo/bin:$PATH" && \
     echo "Compiling encrypted-dns version 0.2.3" && \
     cargo install encrypted-dns && \
     mkdir -p /opt/encrypted-dns/sbin && \
@@ -48,7 +47,7 @@ RUN export PATH="$HOME/.cargo/bin:$PATH" && \
     chmod 700 /opt/encrypted-dns/etc/keys && \
     apt-get -qy purge $BUILD_DEPS && apt-get -qy autoremove && \
     rm -fr ~/.cargo ~/.rustup && \
-    rm -fr /tmp/* /var/tmp/*
+    rm -fr /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/* /var/log/apt/* /var/log/*.log
 
 RUN mkdir -p \
     /etc/service/unbound \
