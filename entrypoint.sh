@@ -6,6 +6,7 @@ action="$1"
 
 LEGACY_KEYS_DIR="/opt/dnscrypt-wrapper/etc/keys"
 LEGACY_LISTS_DIR="/opt/dnscrypt-wrapper/etc/lists"
+LEGACY_STATE_DIR="${LEGACY_KEYS_DIR}/state"
 KEYS_DIR="/opt/encrypted-dns/etc/keys"
 STATE_DIR="${KEYS_DIR}/state"
 LISTS_DIR="/opt/encrypted-dns/etc/lists"
@@ -98,11 +99,42 @@ provider_info() {
     echo
 }
 
+legacy_compat() {
+    if [ -f "${KEYS_DIR}/provider-info.txt" ] && [ -f "${KEYS_DIR}/provider_name" ]; then
+        return 0
+    fi
+    if [ -f "${LEGACY_KEYS_DIR}/provider-info.txt" ] && [ -f "${LEGACY_KEYS_DIR}/provider_name" ]; then
+        echo "Using [${LEGACY_KEYS_DIR}] for keys" >&2
+        mkdir -p "${KEYS_DIR}"
+        mv -f "${KEYS_DIR}/provider-info.txt" "${KEYS_DIR}/provider-info.txt.migrated" 2>/dev/null || :
+        ln -s "${LEGACY_KEYS_DIR}/provider-info.txt" "${KEYS_DIR}/provider-info.txt" 2>/dev/null || :
+        mv -f "${KEYS_DIR}/provider_name" "${KEYS_DIR}/provider_name.migrated" 2>/dev/null || :
+        ln -s "${LEGACY_KEYS_DIR}/provider_name" "${KEYS_DIR}/provider_name" 2>/dev/null || :
+        mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated" 2>/dev/null || :
+        ln -s "${LEGACY_KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key" 2>/dev/null || :
+        mkdir -p -m 700 "${LEGACY_STATE_DIR}"
+        chown _encrypted-dns:_encrypted-dns "${LEGACY_STATE_DIR}"
+        mv -f "$STATE_DIR" "${STATE_DIR}.migrated" 2>/dev/null || :
+        ln -s "$LEGACY_STATE_DIR" "${STATE_DIR}" 2>/dev/null || :
+    fi
+    if [ -f "${LEGACY_LISTS_DIR}/blacklist.txt" ]; then
+        echo "Using [${LEGACY_LISTS_DIR}] for lists" >&2
+        mkdir -p "${LISTS_DIR}"
+        mv -f "${LISTS_DIR}/blacklist.txt" "${LISTS_DIR}/blacklist.txt.migrated" 2>/dev/null || :
+        ln -s "${LEGACY_LISTS_DIR}/blacklist.txt" "${LISTS_DIR}/blacklist.txt" 2>/dev/null || :
+    fi
+}
+
 is_initialized() {
-    if [ ! -f "$CONFIG_FILE" ] || [ ! -f "${STATE_DIR}/encrypted-dns.state" ] || [ ! -f "${KEYS_DIR}/provider-info.txt" ] || [ ! -f "${KEYS_DIR}/provider_name" ]; then
-        echo no
-    else
+    if [ -f "$CONFIG_FILE" ] && [ -f "${STATE_DIR}/encrypted-dns.state" ] && [ -f "${KEYS_DIR}/provider-info.txt" ] && [ -f "${KEYS_DIR}/provider_name" ]; then
         echo yes
+    else
+        legacy_compat
+        if [ -f "$CONFIG_FILE" ] && [ -f "${STATE_DIR}/encrypted-dns.state" ] && [ -f "${KEYS_DIR}/provider-info.txt" ] && [ -f "${KEYS_DIR}/provider_name" ]; then
+            echo yes
+        else
+            echo no
+        fi
     fi
 }
 

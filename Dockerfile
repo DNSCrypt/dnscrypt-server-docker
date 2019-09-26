@@ -41,7 +41,6 @@ RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS &&
     cargo install encrypted-dns && \
     mkdir -p /opt/encrypted-dns/sbin && \
     mkdir -p /opt/encrypted-dns/etc/keys && \
-    mkdir -p /opt/encrypted-dns/etc/keys/state && \
     mv ~/.cargo/bin/encrypted-dns /opt/encrypted-dns/sbin/ && \
     strip --strip-all /opt/encrypted-dns/sbin/encrypted-dns && \
     groupadd _encrypted-dns && \
