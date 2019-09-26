@@ -50,8 +50,10 @@ RUN groupadd _encrypted-dns && \
     mkdir -p /opt/encrypted-dns/empty && \
     useradd -g _encrypted-dns -s /etc -d /opt/encrypted-dns/empty _encrypted-dns && \
     mkdir -m 700 -p /opt/encrypted-dns/etc/keys && \
+    mkdir -m 700 -p /opt/encrypted-dns/etc/lists && \
     chown _encrypted-dns:_encrypted-dns /opt/encrypted-dns/etc/keys && \
     mkdir -m 700 -p /opt/dnscrypt-wrapper/etc/keys && \
+    mkdir -m 700 -p /opt/dnscrypt-wrapper/etc/lists && \
     chown _encrypted-dns:_encrypted-dns /opt/dnscrypt-wrapper/etc/keys
 
 RUN mkdir -p \
