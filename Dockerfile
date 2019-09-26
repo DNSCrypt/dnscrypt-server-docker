@@ -40,16 +40,19 @@ RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS &&
     echo "Compiling encrypted-dns version 0.2.5" && \
     cargo install encrypted-dns && \
     mkdir -p /opt/encrypted-dns/sbin && \
-    mkdir -p /opt/encrypted-dns/etc/keys && \
     mv ~/.cargo/bin/encrypted-dns /opt/encrypted-dns/sbin/ && \
     strip --strip-all /opt/encrypted-dns/sbin/encrypted-dns && \
-    groupadd _encrypted-dns && \
-    useradd -g _encrypted-dns -s /etc -d /opt/encrypted-dns/empty _encrypted-dns && \
-    chown _encrypted-dns:_encrypted-dns /opt/encrypted-dns/etc/keys && \
-    chmod 700 /opt/encrypted-dns/etc/keys && \
     apt-get -qy purge $BUILD_DEPS && apt-get -qy autoremove && \
     rm -fr ~/.cargo ~/.rustup && \
     rm -fr /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/* /var/log/apt/* /var/log/*.log
+
+RUN groupadd _encrypted-dns && \
+    mkdir -p /opt/encrypted-dns/empty && \
+    useradd -g _encrypted-dns -s /etc -d /opt/encrypted-dns/empty _encrypted-dns && \
+    mkdir -m 700 -p /opt/encrypted-dns/etc/keys && \
+    chown _encrypted-dns:_encrypted-dns /opt/encrypted-dns/etc/keys && \
+    mkdir -m 700 -p /opt/dnscrypt-wrapper/etc/keys && \
+    chown _encrypted-dns:_encrypted-dns /opt/dnscrypt-wrapper/etc/keys
 
 RUN mkdir -p \
     /etc/service/unbound \
