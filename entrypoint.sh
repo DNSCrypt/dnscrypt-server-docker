@@ -24,26 +24,26 @@ init() {
 
     while getopts "h?N:E:T:" opt; do
         case "$opt" in
-        h | \?) usage ;;
-        N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
-        E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
-        T) tls_proxy_upstream_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+            h | \?) usage ;;
+            N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+            E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+            T) tls_proxy_upstream_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         esac
     done
     [ -z "$provider_name" ] && usage
     case "$provider_name" in
-    .*) usage ;;
-    2.dnscrypt-cert.*) ;;
-    *) provider_name="2.dnscrypt-cert.${provider_name}" ;;
+        .*) usage ;;
+        2.dnscrypt-cert.*) ;;
+        *) provider_name="2.dnscrypt-cert.${provider_name}" ;;
     esac
 
     [ -z "$ext_address" ] && usage
     case "$ext_address" in
-    .*) usage ;;
-    0.*)
-        echo "Do not use 0.0.0.0, use an actual external IP address" >&2
-        exit 1
-        ;;
+        .*) usage ;;
+        0.*)
+            echo "Do not use 0.0.0.0, use an actual external IP address" >&2
+            exit 1
+            ;;
     esac
 
     tls_proxy_configuration=""
@@ -59,7 +59,7 @@ init() {
 
     echo "Provider name: [$provider_name]"
 
-    echo "$provider_name" >"${KEYS_DIR}/provider_name"
+    echo "$provider_name" > "${KEYS_DIR}/provider_name"
     chmod 644 "${KEYS_DIR}/provider_name"
 
     sed \
@@ -67,7 +67,7 @@ init() {
         -e "s#@EXTERNAL_IPV4@#${ext_address}#" \
         -e "s#@TLS_PROXY_CONFIGURATION@#${tls_proxy_configuration}#" \
         -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
-        "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
+        "$CONFIG_FILE_TEMPLATE" > "$CONFIG_FILE"
 
     mkdir -p -m 700 "${STATE_DIR}"
     chown _encrypted-dns:_encrypted-dns "${STATE_DIR}"
@@ -77,7 +77,7 @@ init() {
         /opt/encrypted-dns/sbin/encrypted-dns \
             --config "$CONFIG_FILE" \
             --import-from-dnscrypt-wrapper "${KEYS_DIR}/secret.key" \
-            --dry-run >/dev/null || exit 1
+            --dry-run > /dev/null || exit 1
         mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated"
     fi
 
@@ -107,22 +107,22 @@ legacy_compat() {
     if [ -f "${LEGACY_KEYS_DIR}/provider-info.txt" ] && [ -f "${LEGACY_KEYS_DIR}/provider_name" ]; then
         echo "Using [${LEGACY_KEYS_DIR}] for keys" >&2
         mkdir -p "${KEYS_DIR}"
-        mv -f "${KEYS_DIR}/provider-info.txt" "${KEYS_DIR}/provider-info.txt.migrated" 2>/dev/null || :
-        ln -s "${LEGACY_KEYS_DIR}/provider-info.txt" "${KEYS_DIR}/provider-info.txt" 2>/dev/null || :
-        mv -f "${KEYS_DIR}/provider_name" "${KEYS_DIR}/provider_name.migrated" 2>/dev/null || :
-        ln -s "${LEGACY_KEYS_DIR}/provider_name" "${KEYS_DIR}/provider_name" 2>/dev/null || :
-        mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated" 2>/dev/null || :
-        ln -s "${LEGACY_KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key" 2>/dev/null || :
+        mv -f "${KEYS_DIR}/provider-info.txt" "${KEYS_DIR}/provider-info.txt.migrated" 2> /dev/null || :
+        ln -s "${LEGACY_KEYS_DIR}/provider-info.txt" "${KEYS_DIR}/provider-info.txt" 2> /dev/null || :
+        mv -f "${KEYS_DIR}/provider_name" "${KEYS_DIR}/provider_name.migrated" 2> /dev/null || :
+        ln -s "${LEGACY_KEYS_DIR}/provider_name" "${KEYS_DIR}/provider_name" 2> /dev/null || :
+        mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated" 2> /dev/null || :
+        ln -s "${LEGACY_KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key" 2> /dev/null || :
         mkdir -p -m 700 "${LEGACY_STATE_DIR}"
         chown _encrypted-dns:_encrypted-dns "${LEGACY_STATE_DIR}"
-        mv -f "$STATE_DIR" "${STATE_DIR}.migrated" 2>/dev/null || :
-        ln -s "$LEGACY_STATE_DIR" "${STATE_DIR}" 2>/dev/null || :
+        mv -f "$STATE_DIR" "${STATE_DIR}.migrated" 2> /dev/null || :
+        ln -s "$LEGACY_STATE_DIR" "${STATE_DIR}" 2> /dev/null || :
     fi
     if [ -f "${LEGACY_LISTS_DIR}/blacklist.txt" ]; then
         echo "Using [${LEGACY_LISTS_DIR}] for lists" >&2
         mkdir -p "${LISTS_DIR}"
-        mv -f "${LISTS_DIR}/blacklist.txt" "${LISTS_DIR}/blacklist.txt.migrated" 2>/dev/null || :
-        ln -s "${LEGACY_LISTS_DIR}/blacklist.txt" "${LISTS_DIR}/blacklist.txt" 2>/dev/null || :
+        mv -f "${LISTS_DIR}/blacklist.txt" "${LISTS_DIR}/blacklist.txt.migrated" 2> /dev/null || :
+        ln -s "${LEGACY_LISTS_DIR}/blacklist.txt" "${LISTS_DIR}/blacklist.txt" 2> /dev/null || :
     fi
 }
 
@@ -155,13 +155,13 @@ start() {
         /opt/encrypted-dns/sbin/encrypted-dns \
             --config "$CONFIG_FILE" \
             --import-from-dnscrypt-wrapper "${KEYS_DIR}/secret.key" \
-            --dry-run >/dev/null || exit 1
+            --dry-run > /dev/null || exit 1
         mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated"
     fi
     /opt/encrypted-dns/sbin/encrypted-dns \
         --config "$CONFIG_FILE" --dry-run |
         tee "${KEYS_DIR}/provider-info.txt"
-    exec /etc/runit/2 </dev/null >/dev/null 2>/dev/null
+    exec /etc/runit/2 < /dev/null > /dev/null 2> /dev/null
 }
 
 shell() {
@@ -169,7 +169,7 @@ shell() {
 }
 
 usage() {
-    cat <<EOT
+    cat << EOT
 Commands
 ========
 
@@ -193,12 +193,12 @@ EOT
 }
 
 case "$action" in
-start) start ;;
-init)
-    shift
-    init "$@"
-    ;;
-provider-info) provider_info ;;
-shell) shell ;;
-*) usage ;;
+    start) start ;;
+    init)
+        shift
+        init "$@"
+        ;;
+    provider-info) provider_info ;;
+    shell) shell ;;
+    *) usage ;;
 esac

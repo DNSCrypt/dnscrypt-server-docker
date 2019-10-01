@@ -94,7 +94,7 @@ mkdir -p -m 700 /opt/unbound/etc/unbound/var &&
     /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
 
 if [ ! -f /opt/unbound/etc/unbound/unbound_control.pem ]; then
-    /opt/unbound/sbin/unbound-control-setup 2>/dev/null ||:
+    /opt/unbound/sbin/unbound-control-setup 2> /dev/null || :
 fi
 
 mkdir -p /opt/unbound/etc/unbound/zones
