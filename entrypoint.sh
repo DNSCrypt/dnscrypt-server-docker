@@ -78,6 +78,7 @@ init() {
             --config "$CONFIG_FILE" \
             --import-from-dnscrypt-wrapper "${KEYS_DIR}/secret.key" \
             --dry-run >/dev/null || exit 1
+        mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated"
     fi
 
     /opt/encrypted-dns/sbin/encrypted-dns \
@@ -149,6 +150,14 @@ ensure_initialized() {
 
 start() {
     ensure_initialized
+    if [ -f "${KEYS_DIR}/secret.key" ]; then
+        echo "Importing the previous secret key [${KEYS_DIR}/secret.key]"
+        /opt/encrypted-dns/sbin/encrypted-dns \
+            --config "$CONFIG_FILE" \
+            --import-from-dnscrypt-wrapper "${KEYS_DIR}/secret.key" \
+            --dry-run >/dev/null || exit 1
+        mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated"
+    fi
     /opt/encrypted-dns/sbin/encrypted-dns \
         --config "$CONFIG_FILE" --dry-run |
         tee "${KEYS_DIR}/provider-info.txt"
