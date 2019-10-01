@@ -22,7 +22,7 @@ listen_addrs = [
 
 ## Upstream DNS server and port
 
-upstream_addr = "127.0.0.1:53"
+upstream_addr = "127.0.0.1:553"
 
 
 ## File name to save the state to
