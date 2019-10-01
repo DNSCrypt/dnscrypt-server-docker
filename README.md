@@ -10,6 +10,18 @@ Run your own caching, non-censoring, non-logging, DNSSEC-capable,
 If you are already familiar with Docker, it shouldn't take more than 5 minutes
 to get your resolver up and running.
 
+Table of Contents
+=================
+
+- [Quickstart](#quickstart)
+- [Installation](#installation)
+- [Customizing Unbound](#customizing-unbound)
+  - [Serve custom DNS records on a local network](#serve-custom-dns-records-on-a-local-network)
+  - [Troubleshooting](#troubleshooting)
+- [Details](#details)
+- [Kubernetes](#kubernetes)
+- [Coming up next](#coming-up-next)
+
 Quickstart
 ==========
 
