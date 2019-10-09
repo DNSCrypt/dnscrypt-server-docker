@@ -20,7 +20,6 @@ Table of Contents
   - [Troubleshooting](#troubleshooting)
 - [Details](#details)
 - [Kubernetes](#kubernetes)
-- [Coming up next](#coming-up-next)
 
 Quickstart
 ==========
@@ -112,7 +111,7 @@ to work out what is wrong:
 Details
 =======
 
-- Alpine Linux as a base image.
+- A minimal Ubuntu Linux as a base image.
 - Caching resolver: [Unbound](https://www.unbound.net/), with DNSSEC, prefetching,
 and no logs. The number of threads and memory usage are automatically adjusted.
 Latest stable version, compiled from source. qname minimisation is enabled.
