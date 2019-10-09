@@ -20,6 +20,7 @@ Table of Contents
   - [Troubleshooting](#troubleshooting)
 - [Details](#details)
 - [Kubernetes](#kubernetes)
+- [Join the network](#join-the-network)
 
 Quickstart
 ==========
@@ -55,11 +56,6 @@ Now, to start the whole stack:
     $ docker start dnscrypt-server
 
 Done.
-
-Note that the actual provider name for DNSCrypt is `2.dnscrypt-cert.example.com`,
-not just `example.com` as initially entered. The full name has to start with
-`2.dnscrypt-cert.` for the client and the server to use the same version of the
-protocol.
 
 Customizing Unbound
 ===================
@@ -137,3 +133,12 @@ in minutes.
 
 To get your public key just view the logs for the `dnscrypt-init` job. The public
 IP for your server is merely the `dnscrypt` service address.
+
+Join the network
+================
+
+If you want to help against DNS centralization and surveillance,
+announce your server on the list of [public DNS DoH and DNSCrypt servers](https://dnscrypt.info/public-servers)!
+
+The best way to do so is to send a pull request to the
+[dnscrypt-resolvers](https://github.com/DNSCrypt/dnscrypt-resolvers/) repository.
