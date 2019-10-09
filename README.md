@@ -25,8 +25,8 @@ Table of Contents
 Quickstart
 ==========
 
-* [How to setup your own DNSCrypt server in less than 10 minutes on Scaleway](https://github.com/dnscrypt/dnscrypt-proxy/wiki/How-to-setup-your-own-DNSCrypt-server-in-less-than-10-minutes)
-* [DNSCrypt server with vultr.com](https://github.com/dnscrypt/dnscrypt-proxy/wiki/DNSCrypt-server-with-vultr.com)
+- [How to setup your own DNSCrypt server in less than 10 minutes on Scaleway](https://github.com/dnscrypt/dnscrypt-proxy/wiki/How-to-setup-your-own-DNSCrypt-server-in-less-than-10-minutes)
+- [DNSCrypt server with vultr.com](https://github.com/dnscrypt/dnscrypt-proxy/wiki/DNSCrypt-server-with-vultr.com)
 
 Installation
 ============
@@ -41,7 +41,7 @@ Let's pick `example.com` here.
 
 Download, create and initialize the container, once and for all:
 
-    $ docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
+    docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
         jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
 
 This will only accept connections via DNSCrypt on the standard port (443). Replace
@@ -53,7 +53,7 @@ removed on some shared containers hosting services.
 
 Now, to start the whole stack:
 
-    $ docker start dnscrypt-server
+    docker start dnscrypt-server
 
 Done.
 
@@ -66,6 +66,7 @@ can add any directives to the `server:` section of the Unbound configuration.
 
 Serve custom DNS records on a local network
 -------------------------------------------
+
 While Unbound is not a full authoritative name server, it supports resolving
 custom entries in a way that is serviceable on a small, private LAN. You can use
 unbound to resolve private hostnames such as `my-computer.example.com` within
@@ -101,8 +102,8 @@ If Unbound doesn't like one of the newly added directives, it
 will probably not respond over the network. In that case, here are some commands
 to work out what is wrong:
 
-    $ docker logs dnscrypt-server
-    $ docker exec dnscrypt-server /opt/unbound/sbin/unbound-checkconf
+    docker logs dnscrypt-server
+    docker exec dnscrypt-server /opt/unbound/sbin/unbound-checkconf
 
 Details
 =======
@@ -124,12 +125,12 @@ a persistent disk named `dnscrypt-keys` on GCE. You will need to adjust the volu
 definition on other platforms. Once that is setup, you can have a dnscrypt server up
 in minutes.
 
-* Create a static IP on GCE. This will be used for the LoadBalancer.
-* Edit `kube/dnscrypt-init-job.yml` and change `example.com` to your desired hostname.
-* Edit `kube/dnscrypt-srv.yml` and change `loadBalancerIP` to your static IP.
-* Run `kubectl create -f kube/dnscrypt-init-job.yml` to setup your keys.
-* Run `kubectl create -f kube/dnscrypt-deployment.yml` to deploy the dnscrypt server.
-* Run `kubectl create -f kube/dnscrypt-srv.yml` to expose your server to the world.
+- Create a static IP on GCE. This will be used for the LoadBalancer.
+- Edit `kube/dnscrypt-init-job.yml` and change `example.com` to your desired hostname.
+- Edit `kube/dnscrypt-srv.yml` and change `loadBalancerIP` to your static IP.
+- Run `kubectl create -f kube/dnscrypt-init-job.yml` to setup your keys.
+- Run `kubectl create -f kube/dnscrypt-deployment.yml` to deploy the dnscrypt server.
+- Run `kubectl create -f kube/dnscrypt-srv.yml` to expose your server to the world.
 
 To get your public key just view the logs for the `dnscrypt-init` job. The public
 IP for your server is merely the `dnscrypt` service address.
