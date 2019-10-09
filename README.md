@@ -5,7 +5,7 @@ DNSCrypt server Docker image
 ============================
 
 Run your own caching, non-censoring, non-logging, DNSSEC-capable,
-[DNSCrypt](http://dnscrypt.org)-enabled DNS resolver virtually anywhere!
+[DNSCrypt](https://dnscrypt.info)-enabled DNS resolver virtually anywhere!
 
 If you are already familiar with Docker, it shouldn't take more than 5 minutes
 to get your resolver up and running.
