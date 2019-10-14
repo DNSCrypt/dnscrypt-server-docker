@@ -161,3 +161,37 @@ key_cache_capacity = 10000
 [filtering]
 
 @DOMAIN_BLACKLIST_CONFIGURATION@
+
+
+
+#########################
+#        Metrics        #
+#########################
+
+# [metrics]
+
+# type = "prometheus"
+# listen_addr = "0.0.0.0:9100"
+# path = "/metrics"
+
+
+
+################################
+#        Anonymized DNS        #
+################################
+
+[anonymized_dns]
+
+# Enable relaying support for Anonymized DNS
+
+enabled = @ANONDNS_ENABLED@
+
+
+# Allowed upstream ports
+
+allowed_ports = [ 443 ]
+
+
+# Blacklisted upstream IP addresses
+
+blacklisted_ips = [ @ANONDNS_BLACKLISTED_IPS@ ]

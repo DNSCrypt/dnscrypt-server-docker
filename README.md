@@ -13,6 +13,8 @@ to get your resolver up and running.
 Table of Contents
 =================
 
+- [DNSCrypt server Docker image](#dnscrypt-server-docker-image)
+- [Table of Contents](#table-of-contents)
 - [Quickstart](#quickstart)
 - [Installation](#installation)
 - [Customizing Unbound](#customizing-unbound)
@@ -20,6 +22,8 @@ Table of Contents
   - [Troubleshooting](#troubleshooting)
 - [Details](#details)
 - [Kubernetes](#kubernetes)
+- [Anonymized DNS](#anonymized-dns)
+- [TLS (including HTTPS and DoH) forwarding](#tls-including-https-and-doh-forwarding)
 - [Join the network](#join-the-network)
 
 Quickstart
@@ -134,6 +138,16 @@ in minutes.
 
 To get your public key just view the logs for the `dnscrypt-init` job. The public
 IP for your server is merely the `dnscrypt` service address.
+
+Anonymized DNS
+==============
+
+The server can be configured as a relay for the Anonymized DNSCrypt protocol by adding the `-A` switch to the `init` command.
+
+TLS (including HTTPS and DoH) forwarding
+========================================
+
+If the DNS server is listening to port `443`, but you still want to have a web (or DoH) service accessible on that port, add the `-T` switch followed by the backend server IP and port to the `init` command (for example: `-T 10.0.0.1:4443`).
 
 Join the network
 ================
