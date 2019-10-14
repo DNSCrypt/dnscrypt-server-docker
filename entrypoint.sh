@@ -71,7 +71,7 @@ init() {
         -e "s#@EXTERNAL_IPV4@#${ext_address}#" \
         -e "s#@TLS_PROXY_CONFIGURATION@#${tls_proxy_configuration}#" \
         -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
-        -e "s#@ANONDNS_ENABLEDN@#${anondns_enabled}#" \
+        -e "s#@ANONDNS_ENABLED@#${anondns_enabled}#" \
         -e "s#@ANONDNS_BLACKLISTED_IPS@#${anondns_blacklisted_ips}#" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
 
