@@ -14,8 +14,6 @@ CONF_DIR="/opt/encrypted-dns/etc"
 CONFIG_FILE="${CONF_DIR}/encrypted-dns.toml"
 CONFIG_FILE_TEMPLATE="${CONF_DIR}/encrypted-dns.toml.in"
 
-# -N provider-name -E external-ip-address:port
-
 init() {
     if [ "$(is_initialized)" = yes ]; then
         start
@@ -25,13 +23,16 @@ init() {
     anondns_enabled="false"
     anondns_blacklisted_ips=""
 
-    while getopts "h?N:E:T:A" opt; do
+    metrics_address="127.0.0.1:9100"
+
+    while getopts "h?N:E:T:AM:" opt; do
         case "$opt" in
         h | \?) usage ;;
         N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         T) tls_proxy_upstream_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         A) anondns_enabled="true" ;;
+        M) metrics_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         esac
     done
     [ -z "$provider_name" ] && usage
@@ -73,6 +74,7 @@ init() {
         -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
         -e "s#@ANONDNS_ENABLED@#${anondns_enabled}#" \
         -e "s#@ANONDNS_BLACKLISTED_IPS@#${anondns_blacklisted_ips}#" \
+        -e "s#@METRICS_ADDRESS@#${metrics_address}#" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
 
     mkdir -p -m 700 "${STATE_DIR}"

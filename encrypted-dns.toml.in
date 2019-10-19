@@ -50,10 +50,10 @@ udp_max_active_connections = 1000
 tcp_max_active_connections = 100
 
 
-## IP address to connect to upstream servers from.
-## You probably do not want to change this. `0.0.0.0` should be fine.
+## Optional IP address to connect to upstream servers from.
+## Leave commented/undefined to automatically select it.
 
-external_addr = "0.0.0.0"
+# external_addr = "0.0.0.0"
 
 
 ## Built-in DNS cache capacity
@@ -168,12 +168,11 @@ key_cache_capacity = 10000
 #        Metrics        #
 #########################
 
-# [metrics]
+[metrics]
 
-# type = "prometheus"
-# listen_addr = "0.0.0.0:9100"
-# path = "/metrics"
-
+type = "prometheus"
+listen_addr = "@METRICS_ADDRESS@"
+path = "/metrics"
 
 
 ################################

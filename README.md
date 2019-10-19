@@ -149,6 +149,13 @@ TLS (including HTTPS and DoH) forwarding
 
 If the DNS server is listening to port `443`, but you still want to have a web (or DoH) service accessible on that port, add the `-T` switch followed by the backend server IP and port to the `init` command (for example: `-T 10.0.0.1:4443`).
 
+Prometheus metrics
+==================
+
+Metrics are accessible inside the container as http://127.0.0.1:9100/metrics.
+
+They can be made accessible outside of the container by adding the `-M` option followed by the IP and port (for example: `-M 0.0.0.0:9100`).
+
 Join the network
 ================
 
