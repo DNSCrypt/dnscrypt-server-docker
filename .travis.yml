@@ -18,7 +18,6 @@ jobs:
       script:
         - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.4 shfmt -sr -i 4 -l -w -ci .
         - git diff --color
-        - git diff --stat=220 --color --exit-code
 
 services:
   - docker
