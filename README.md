@@ -1,8 +1,7 @@
 [![Travis Status](https://travis-ci.org/DNSCrypt/dnscrypt-server-docker.svg?branch=master)](https://travis-ci.org/DNSCrypt/dnscrypt-server-docker/builds/)
 [![DNSCrypt](https://raw.github.com/jedisct1/dnscrypt-server-docker/master/dnscrypt-small.png)](https://dnscrypt.info)
 
-DNSCrypt server Docker image
-============================
+# DNSCrypt server Docker image
 
 Run your own caching, non-censoring, non-logging, DNSSEC-capable,
 [DNSCrypt](https://dnscrypt.info)-enabled DNS resolver virtually anywhere!
@@ -10,43 +9,56 @@ Run your own caching, non-censoring, non-logging, DNSSEC-capable,
 If you are already familiar with Docker, it shouldn't take more than 5 minutes
 to get your resolver up and running.
 
-Table of Contents
-=================
+Table of contents:
 
 - [DNSCrypt server Docker image](#dnscrypt-server-docker-image)
-- [Table of Contents](#table-of-contents)
-- [Quickstart](#quickstart)
+- [Example installation procedures](#example-installation-procedures)
 - [Installation](#installation)
+  - [Updating the container](#updating-the-container)
+  - [Anonymized DNS](#anonymized-dns)
+  - [Prometheus metrics](#prometheus-metrics)
+  - [TLS (including HTTPS and DoH) forwarding](#tls-including-https-and-doh-forwarding)
+  - [Filtering](#filtering)
+- [Join the network](#join-the-network)
+- [Usage with Kubernetes](#usage-with-kubernetes)
 - [Customizing Unbound](#customizing-unbound)
-  - [Serve custom DNS records on a local network](#serve-custom-dns-records-on-a-local-network)
+  - [Changing the Unbound configuration file](#changing-the-unbound-configuration-file)
+  - [Serving custom DNS records on a local network](#serving-custom-dns-records-on-a-local-network)
   - [Troubleshooting](#troubleshooting)
 - [Details](#details)
-- [Kubernetes](#kubernetes)
-- [Anonymized DNS](#anonymized-dns)
-- [TLS (including HTTPS and DoH) forwarding](#tls-including-https-and-doh-forwarding)
-- [Join the network](#join-the-network)
 
-Quickstart
-==========
+# Example installation procedures
 
 - [How to setup your own DNSCrypt server in less than 10 minutes on Scaleway](https://github.com/dnscrypt/dnscrypt-proxy/wiki/How-to-setup-your-own-DNSCrypt-server-in-less-than-10-minutes)
 - [DNSCrypt server with vultr.com](https://github.com/dnscrypt/dnscrypt-proxy/wiki/DNSCrypt-server-with-vultr.com)
 
-Installation
-============
+# Installation
 
 Think about a name. This is going to be part of your DNSCrypt provider name.
 If you are planning to make your resolver publicly accessible, this name will
 be public.
-It has to look like a domain name (`example.com`), but it doesn't have to be
-a registered domain.
+By convention, it has to look like a domain name (`example.com`), but it doesn't
+have to be an actual, registered domain.
 
 Let's pick `example.com` here.
 
-Download, create and initialize the container, once and for all:
+You probably need to perform the following steps as `root`.
 
-    docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
-        jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
+Create a directory where the server is going to store internal data such as secret keys.
+Here, we'll use `/etc/dnscrypt-server`:
+
+```sh
+mkdir -p /etc/dnscrypt-server/keys
+```
+
+Download, create and initialize the container:
+
+```sh
+docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
+--ulimit nofile=90000:90000 --restart=unless-stopped \
+-v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
+jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
+```
 
 This will only accept connections via DNSCrypt on the standard port (443). Replace
 `192.168.1.1` with the actual external IP address (not the internal Docker one)
@@ -55,74 +67,128 @@ clients will connect to.
 `--net=host` provides the best network performance, but may have to be
 removed on some shared containers hosting services.
 
+`-v /etc/dnscrypt-server:/opt/encrypted-dns/etc/keys` means that the path `/opt/encrypted-dns/etc/keys`, internal to the container, is mapped to `/etc/dnscrypt-server/keys`, the directory we just created before. Do not change `/opt/encrypted-dns/etc/keys`. But if you created a directory in a different location, replace `/etc/dnscrypt-server/keys` accordingly in the command above.
+
+__Note:__ on MacOS, don't use `-v ...:...`. Remove that part from the command-line, as current versions of MacOS and Docker don't seem to work well with shared directories.
+
+The `init` command will print the DNS stamp of your server.
+
 Now, to start the whole stack:
 
-    docker start dnscrypt-server
+```sh
+docker start dnscrypt-server
+```
 
 Done.
 
-Customizing Unbound
-===================
+You can verify that the server is running with:
 
-To add new configuration to Unbound, add files to the `/opt/unbound/etc/unbound/zones`
-directory. All files ending in `.conf` will be processed. In this manner, you
-can add any directives to the `server:` section of the Unbound configuration.
+```sh
+docker ps
+```
 
-Serve custom DNS records on a local network
--------------------------------------------
+Note: if you previously created a container with the same name, and Docker complains that the name is already in use, remove it and try again:
 
-While Unbound is not a full authoritative name server, it supports resolving
-custom entries in a way that is serviceable on a small, private LAN. You can use
-unbound to resolve private hostnames such as `my-computer.example.com` within
-your LAN.
+```sh
+docker rm --force dnscrypt-server
+```
 
-To support such custom entries using this image, first map a volume to the zones
-directory. Add this to your `docker run` line:
+## Updating the container
 
-    -v /myconfig/zones:/opt/unbound/etc/unbound/zones
+In order to install the latest version of the image, or change parameters, use the following steps:
 
-The whole command to create and initialize a container would look something like
-this:
+1. Update the image
 
-    $ docker run --name=dnscrypt-server \
-        -v /myconfig/zones:/opt/unbound/etc/unbound/zones \
-        -p 443:443/udp -p 443:443/tcp --net=host \
-        jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
+```sh
+docker pull jedisct1/dnscrypt-server
+```
 
-Create a new `.conf` file:
+2. Verify that the directory containing the keys actually has the keys (a `state` directory):
 
-    $ touch /myconfig/zones/example.conf
+```sh
+ls -l /etc/dnscrypt-server/keys
+```
 
-Now, add one or more unbound directives to the file, such as:
+If you have some content here, skip to step 2.
 
-    local-zone: "example.com." static
-    local-data: "my-computer.example.com. IN A 10.0.0.1"
-    local-data: "other-computer.example.com. IN A 10.0.0.2"
+Nothing here? Maybe you didn't use the `-v` option to map container files to a local directory when creating the container.
+In that case, copy the data directly from the container:
 
-Troubleshooting
----------------
+```sh
+docker cp dnscrypt-server:/opt/encrypted-dns/etc/keys ~/keys
+```
 
-If Unbound doesn't like one of the newly added directives, it
-will probably not respond over the network. In that case, here are some commands
-to work out what is wrong:
+3. Stop the container:
 
-    docker logs dnscrypt-server
-    docker exec dnscrypt-server /opt/unbound/sbin/unbound-checkconf
+```sh
+docker stop dnscrypt-server
+docker ps # Check that it's not running
+```
 
-Details
-=======
+1. Use the `init` command again and start the new container:
 
-- A minimal Ubuntu Linux as a base image.
-- Caching resolver: [Unbound](https://www.unbound.net/), with DNSSEC, prefetching,
-and no logs. The number of threads and memory usage are automatically adjusted.
-Latest stable version, compiled from source. qname minimisation is enabled.
-- [encrypted-dns-server](https://github.com/jedisct1/dnscrypt-dns-server).
-Compiled from source.
+```sh
+docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
+--ulimit nofile=90000:90000 --restart=unless-stopped \
+-v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
+jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
+# (adjust accordingly)
 
-Keys and certificates are automatically rotated every 8 hour.
+docker start dnscrypt-server
+```
 
-Kubernetes
-==========
+5. Done!
+
+Parameters differ from the ones used in the previous container.
+
+For example, if you originally didn't activate relaying
+but want to enable it, append `-A` to the command. Or if you want to enable
+metrics, append `-P 0.0.0.0:9100` to the end, and `-p 9100:9100/tcp` after
+`-p 443:443/tcp` (see below).
+
+## Anonymized DNS
+
+The server can be configured as a relay for the Anonymized DNSCrypt protocol by adding the `-A` switch to the `init` command.
+
+The relay DNS stamp will be printed right after the regular stamp.
+
+## Prometheus metrics
+
+Metrics are accessible inside the container as http://127.0.0.1:9100/metrics.
+
+They can be made accessible outside of the container by adding the `-M` option followed by the listening IP and port (for example: `-M 0.0.0.0:9100`).
+
+These metrics can be indexed with [Prometheus](https://prometheus.io/) and dashboards can be created with [Grafana](https://grafana.com/).
+
+## TLS (including HTTPS and DoH) forwarding
+
+If the DNS server is listening to port `443`, but you still want to have a web (or DoH) service accessible on that port, add the `-T` switch followed by the backend server IP and port to the `init` command (for example: `-T 10.0.0.1:4443`).
+
+The backend server must support the HTTP/2 protocol.
+
+## Filtering
+
+The server can be used block domains. For example, the `sfw.scaleway-fr` server uses that feature to provide a service that blocks websites possibly not suitable for children.
+
+In order to do so, create a directory that will contain the blacklists:
+
+```sh
+mkdir -p /etc/dnscrypt-server/lists
+```
+
+And put the list of domains to block in a file named `/etc/dnscrypt-server/lists/blacklist.txt`, one domain per line.
+
+Then, follow the upgrade procedure, adding the following option to the `docker run` command: `-v /etc/dnscrypt-server/lists:/opt/encrypted-dns/etc/lists`.
+
+# Join the network
+
+If you want to help against DNS centralization and surveillance,
+announce your server and/or relay on the list of [public DNS DoH and DNSCrypt servers](https://dnscrypt.info/public-servers).
+
+The best way to do so is to send a pull request to the
+[dnscrypt-resolvers](https://github.com/DNSCrypt/dnscrypt-resolvers/) repository.
+
+# Usage with Kubernetes
 
 Kubernetes configurations are located in the `kube` directory. Currently these assume
 a persistent disk named `dnscrypt-keys` on GCE. You will need to adjust the volumes
@@ -139,28 +205,70 @@ in minutes.
 To get your public key just view the logs for the `dnscrypt-init` job. The public
 IP for your server is merely the `dnscrypt` service address.
 
-Anonymized DNS
-==============
+# Customizing Unbound
 
-The server can be configured as a relay for the Anonymized DNSCrypt protocol by adding the `-A` switch to the `init` command.
+## Changing the Unbound configuration file
 
-TLS (including HTTPS and DoH) forwarding
-========================================
+To add new configuration to Unbound, add files to the `/opt/unbound/etc/unbound/zones`
+directory. All files ending in `.conf` will be processed. In this manner, you
+can add any directives to the `server:` section of the Unbound configuration.
 
-If the DNS server is listening to port `443`, but you still want to have a web (or DoH) service accessible on that port, add the `-T` switch followed by the backend server IP and port to the `init` command (for example: `-T 10.0.0.1:4443`).
+## Serving custom DNS records on a local network
 
-Prometheus metrics
-==================
+While Unbound is not a full authoritative name server, it supports resolving
+custom entries in a way that is serviceable on a small, private LAN. You can use
+unbound to resolve private hostnames such as `my-computer.example.com` within
+your LAN.
 
-Metrics are accessible inside the container as http://127.0.0.1:9100/metrics.
+To support such custom entries using this image, first map a volume to the zones
+directory. Add this to your `docker run` line:
 
-They can be made accessible outside of the container by adding the `-M` option followed by the IP and port (for example: `-M 0.0.0.0:9100`).
+```text
+-v /myconfig/zones:/opt/unbound/etc/unbound/zones
+```
 
-Join the network
-================
+The whole command to create and initialize a container would look something like
+this:
 
-If you want to help against DNS centralization and surveillance,
-announce your server on the list of [public DNS DoH and DNSCrypt servers](https://dnscrypt.info/public-servers)!
+```sh
+docker run --name=dnscrypt-server \
+    -v /myconfig/zones:/opt/unbound/etc/unbound/zones \
+    -p 443:443/udp -p 443:443/tcp --net=host \
+    jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
+```
 
-The best way to do so is to send a pull request to the
-[dnscrypt-resolvers](https://github.com/DNSCrypt/dnscrypt-resolvers/) repository.
+Create a new `.conf` file:
+
+```sh
+touch /myconfig/zones/example.conf
+```
+
+Now, add one or more unbound directives to the file, such as:
+
+```text
+local-zone: "example.com." static
+local-data: "my-computer.example.com. IN A 10.0.0.1"
+local-data: "other-computer.example.com. IN A 10.0.0.2"
+```
+
+## Troubleshooting
+
+If Unbound doesn't like one of the newly added directives, it
+will probably not respond over the network. In that case, here are some commands
+to work out what is wrong:
+
+```sh
+docker logs dnscrypt-server
+docker exec dnscrypt-server /opt/unbound/sbin/unbound-checkconf
+```
+
+# Details
+
+- A minimal Ubuntu Linux as a base image.
+- Caching resolver: [Unbound](https://www.unbound.net/), with DNSSEC, prefetching,
+and no logs. The number of threads and memory usage are automatically adjusted.
+Latest stable version, compiled from source. qname minimisation is enabled.
+- [encrypted-dns-server](https://github.com/jedisct1/dnscrypt-dns-server).
+Compiled from source.
+
+Keys and certificates are automatically rotated every 8 hour.
