@@ -10,7 +10,7 @@ if [ $availableMemory -le $((reserved * 2)) ]; then
     exit 1
 fi
 availableMemory=$((availableMemory - reserved))
-msg_cache_size=$((availableMemory / 3))
+msg_cache_size=$((availableMemory / 4))
 rr_cache_size=$((availableMemory / 3))
 nproc=$(nproc)
 if [ "$nproc" -gt 1 ]; then
