@@ -224,7 +224,7 @@ To support such custom entries using this image, first map a volume to the zones
 directory. Add this to your `docker run` line:
 
 ```text
--v /myconfig/zones:/opt/unbound/etc/unbound/zones
+-v /etc/dnscrypt-server/zones:/opt/unbound/etc/unbound/zones
 ```
 
 The whole command to create and initialize a container would look something like
@@ -232,7 +232,7 @@ this:
 
 ```sh
 docker run --name=dnscrypt-server \
-    -v /myconfig/zones:/opt/unbound/etc/unbound/zones \
+    -v /etc/dnscrypt-server/zones:/opt/unbound/etc/unbound/zones \
     -p 443:443/udp -p 443:443/tcp --net=host \
     jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
 ```
@@ -240,7 +240,7 @@ docker run --name=dnscrypt-server \
 Create a new `.conf` file:
 
 ```sh
-touch /myconfig/zones/example.conf
+touch /etc/dnscrypt-server/zones/example.conf
 ```
 
 Now, add one or more unbound directives to the file, such as:
