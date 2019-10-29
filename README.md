@@ -269,7 +269,7 @@ docker exec dnscrypt-server /opt/unbound/sbin/unbound-checkconf
 - Caching resolver: [Unbound](https://www.unbound.net/), with DNSSEC, prefetching,
 and no logs. The number of threads and memory usage are automatically adjusted.
 Latest stable version, compiled from source. qname minimisation is enabled.
-- [encrypted-dns-server](https://github.com/jedisct1/dnscrypt-dns-server).
+- [encrypted-dns-server](https://github.com/jedisct1/encrypted-dns-server).
 Compiled from source.
 
 Keys and certificates are automatically rotated every 8 hour.
