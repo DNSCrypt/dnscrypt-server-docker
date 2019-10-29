@@ -196,7 +196,8 @@ definition on other platforms. Once that is setup, you can have a dnscrypt serve
 in minutes.
 
 - Create a static IP on GCE. This will be used for the LoadBalancer.
-- Edit `kube/dnscrypt-init-job.yml` and change `example.com` to your desired hostname.
+- Edit `kube/dnscrypt-init-job.yml`. Change `example.com` to your desired hostname
+and `192.0.2.53` to your static IP.
 - Edit `kube/dnscrypt-srv.yml` and change `loadBalancerIP` to your static IP.
 - Run `kubectl create -f kube/dnscrypt-init-job.yml` to setup your keys.
 - Run `kubectl create -f kube/dnscrypt-deployment.yml` to deploy the dnscrypt server.

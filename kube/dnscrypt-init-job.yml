@@ -9,8 +9,8 @@ spec:
     spec:
       containers:
       - name: dnscrypt-init
-        image: jedisct1/unbound-dnscrypt-server
-        command: ["/entrypoint.sh", "init",  "-N", "example.com", "-E", "192.168.1.1:443"]
+        image: jedisct1/dnscrypt-server
+        command: ["/entrypoint.sh", "init", "-A", "-P", "0.0.0.0:9100", "-N", "example.com", "-E", "192.0.2.53:443"]
         volumeMounts:
           - name: dnscrypt-keys
             mountPath: /opt/encrypted-dns/etc/keys

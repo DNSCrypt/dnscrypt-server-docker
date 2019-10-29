@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - env:
-        image: jedisct1/unbound-dnscrypt-server
+        image: jedisct1/dnscrypt-server
         name: dnscrypt
         volumeMounts:
           - name: dnscrypt-keys
