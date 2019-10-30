@@ -14,6 +14,10 @@ echo "$SERVER_IP"
 (
     exec 2>/dev/null
 
+	if ! [ -x "$(command -v docker)" ]; then
+		yum install -y docker
+	fi
+
     docker stop dnscrypt-server
     docker stop watchtower
     docker rm dnscrypt-server
