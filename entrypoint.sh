@@ -51,7 +51,6 @@ init() {
         ;;
     esac
     listen_addresses=$(get_listen_addresses "$ext_addresses")
-    echo "$listen_addresses"
 
     tls_proxy_configuration=""
     if [ -n "$tls_proxy_upstream_address" ]; then
