@@ -51,6 +51,7 @@ init() {
         ;;
     esac
     listen_addresses=$(get_listen_addresses "$ext_addresses")
+    echo "$listen_addresses"
 
     tls_proxy_configuration=""
     if [ -n "$tls_proxy_upstream_address" ]; then
@@ -198,7 +199,7 @@ get_listen_addresses() {
     OIFS="$IFS"
     IFS=","
     for ext_address in $ext_addresses; do
-        localport=$(echo "ext_address" | sed -E 's/.*:([0-9]*)$/\1/')
+        localport=$(echo "$ext_address" | sed -E 's/.*:([0-9]*)$/\1/')
         if [ -z "$localport" ]; then
             localport="443"
         fi
