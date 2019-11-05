@@ -29,7 +29,7 @@ init() {
         case "$opt" in
         h | \?) usage ;;
         N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
-        E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+        E) ext_addresses=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         T) tls_proxy_upstream_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         A) anondns_enabled="true" ;;
         M) metrics_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
@@ -42,14 +42,15 @@ init() {
     *) provider_name="2.dnscrypt-cert.${provider_name}" ;;
     esac
 
-    [ -z "$ext_address" ] && usage
-    case "$ext_address" in
+    [ -z "$ext_addresses" ] && usage
+    case "$ext_addresses" in
     .*) usage ;;
     0.*)
         echo "Do not use 0.0.0.0, use an actual external IP address" >&2
         exit 1
         ;;
     esac
+    listen_addresses=$(get_listen_addresses "$ext_addresses")
 
     tls_proxy_configuration=""
     if [ -n "$tls_proxy_upstream_address" ]; then
@@ -69,7 +70,7 @@ init() {
 
     sed \
         -e "s#@PROVIDER_NAME@#${provider_name}#" \
-        -e "s#@EXTERNAL_IPV4@#${ext_address}#" \
+        -e "s#@LISTEN_ADDRESSES@#${listen_addresses}#" \
         -e "s#@TLS_PROXY_CONFIGURATION@#${tls_proxy_configuration}#" \
         -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
         -e "s#@ANONDNS_ENABLED@#${anondns_enabled}#" \
@@ -176,12 +177,54 @@ shell() {
     exec /bin/bash
 }
 
+is_ipv6() {
+    case "$1" in
+    \[[a-fA-F0-9:.]*\]:[0-9]*)
+        echo yes
+        ;;
+    [0-9.]*:[0-9]*)
+        echo no
+        ;;
+    *)
+        echo "IP and port should be specified as 'ipv4_addr:port' or '[ipv6_addr]:port'" >&2
+        exit 1
+        ;;
+    esac
+}
+
+get_listen_addresses() {
+    listen_addresses=""
+    ext_addresses="$1"
+    OIFS="$IFS"
+    IFS=","
+    localport_v4=443
+    localport_v6=443
+    for ext_address in $ext_addresses; do
+        entry="{ local = "
+        v6=$(is_ipv6 "$ext_address")
+        if [ "$v6" = "yes" ]; then
+            entry="${entry}\"[::]:${localport_v4}\""
+            localport_v4=$((localport_v4 + 1))
+        else
+            entry="${entry}\"0.0.0.0:${localport_v6}\""
+            localport_v6=$((localport_v6 + 1))
+        fi
+        entry="${entry}, external = \"${ext_address}\" }"
+        if [ -n "$listen_addresses" ]; then
+            listen_addresses="${listen_addresses}, "
+        fi
+        listen_addresses="${listen_addresses}${entry}"
+    done
+    IFS="$OIFS"
+    echo "${listen_addresses}"
+}
+
 usage() {
     cat <<EOT
 Commands
 ========
 
-* init -N <provider_name> -E <external ip>:<port>
+* init -N <provider_name> -E <external ip>:<port>[,<external ip>:<port>...]
 initialize the container for a server accessible at ip <external ip> on port
 <port>, for a provider named <provider_name>. This is required only once.
 

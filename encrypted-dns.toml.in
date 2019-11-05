@@ -16,7 +16,7 @@
 ## As many addresses as needed can be configured here, IPv4 and/or IPv6.
 
 listen_addrs = [
-    { local = "0.0.0.0:443", external = "@EXTERNAL_IPV4@" }
+    @LISTEN_ADDRESSES@
 ]
 
 

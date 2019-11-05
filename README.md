@@ -64,6 +64,10 @@ This will only accept connections via DNSCrypt on the standard port (443). Repla
 `192.168.1.1` with the actual external IP address (not the internal Docker one)
 clients will connect to.
 
+IPv6 addresses should be enclosed in brackets; for example: `[2001:0db8::412f]:443`.
+
+Multiple comma-separated IPs and ports can be specified, as in `-E 192.168.1.1:443,[2001:0db8::412f]:443`.
+
 `--net=host` provides the best network performance, but may have to be
 removed on some shared containers hosting services.
 
