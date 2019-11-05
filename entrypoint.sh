@@ -197,17 +197,17 @@ get_listen_addresses() {
     ext_addresses="$1"
     OIFS="$IFS"
     IFS=","
-    localport_v4=443
-    localport_v6=443
     for ext_address in $ext_addresses; do
+        localport=$(echo "ext_address" | sed -E 's/.*:([0-9]*)$/\1/')
+        if [ -z "$localport" ]; then
+            localport="443"
+        fi
         entry="{ local = "
         v6=$(is_ipv6 "$ext_address")
         if [ "$v6" = "yes" ]; then
-            entry="${entry}\"[::]:${localport_v4}\""
-            localport_v4=$((localport_v4 + 1))
+            entry="${entry}\"[::]:${localport}\""
         else
-            entry="${entry}\"0.0.0.0:${localport_v6}\""
-            localport_v6=$((localport_v6 + 1))
+            entry="${entry}\"0.0.0.0:${localport}\""
         fi
         entry="${entry}, external = \"${ext_address}\" }"
         if [ -n "$listen_addresses" ]; then
