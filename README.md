@@ -146,6 +146,27 @@ but want to enable it, append `-A` to the command. Or if you want to enable
 metrics, append `-P 0.0.0.0:9100` to the end, and `-p 9100:9100/tcp` after
 `-p 443:443/tcp` (see below).
 
+## Adding an additional IPV6 Address
+A server can listen on both IPV4 and IPV6 addresses.
+The in-container file `/opt/encrypted-dns/etc/encrypted-dns.toml` can be modified to accept multiple listen address lines.
+```
+listen_addrs = [
+{ local = "0.0.0.0:443",    external = "192.168.1.1:443" },
+    { local = "[::]:443", external = "[FC00::]:443" }
+]
+```
+Or an IPV6 address can be added to the init command using the `-S` switch
+```sh
+docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
+--ulimit nofile=90000:90000 --restart=unless-stopped \
+-v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
+jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443 \
+-S [FC00::]:443
+# (adjust accordingly)
+
+docker start dnscrypt-server
+```
+
 ## Anonymized DNS
 
 The server can be configured as a relay for the Anonymized DNSCrypt protocol by adding the `-A` switch to the `init` command.

@@ -25,11 +25,12 @@ init() {
 
     metrics_address="127.0.0.1:9100"
 
-    while getopts "h?N:E:T:AM:" opt; do
+    while getopts "h?N:E:T:S:AM:" opt; do
         case "$opt" in
         h | \?) usage ;;
         N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         E) ext_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+        S) six_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         T) tls_proxy_upstream_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
         A) anondns_enabled="true" ;;
         M) metrics_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
@@ -67,9 +68,14 @@ init() {
     echo "$provider_name" >"${KEYS_DIR}/provider_name"
     chmod 644 "${KEYS_DIR}/provider_name"
 
+    if [[ "$six_address" ]]; then
+        sed -i '20i ,{local = "[::]:443", external = "@EXTERNAL_IPV6@"}' "$CONFIG_FILE_TEMPLATE"
+    fi
+
     sed \
         -e "s#@PROVIDER_NAME@#${provider_name}#" \
         -e "s#@EXTERNAL_IPV4@#${ext_address}#" \
+        -e "s#@EXTERNAL_IPV6@#${second_address}#" \
         -e "s#@TLS_PROXY_CONFIGURATION@#${tls_proxy_configuration}#" \
         -e "s#@DOMAIN_BLACKLIST_CONFIGURATION@#${domain_blacklist_configuration}#" \
         -e "s#@ANONDNS_ENABLED@#${anondns_enabled}#" \
@@ -189,6 +195,8 @@ If TLS connections to the same port have to be redirected to a HTTPS server
 (e.g. for DoH), add -T <https server ip>:<port>
 
 To enable Anonymized DNS relaying, add -A.
+
+To add an IPV6 address, add -S [<external ipv6>]:port 
 
 * start (default command): start the resolver and the dnscrypt server proxy.
 Ports 443/udp and 443/tcp have to be publicly exposed.
