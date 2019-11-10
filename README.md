@@ -25,6 +25,7 @@ Table of contents:
   - [Changing the Unbound configuration file](#changing-the-unbound-configuration-file)
   - [Serving custom DNS records on a local network](#serving-custom-dns-records-on-a-local-network)
   - [Troubleshooting](#troubleshooting)
+- [Deleting everything](#deleting-everything)
 - [Details](#details)
 
 # Example installation procedures
@@ -265,6 +266,15 @@ to work out what is wrong:
 ```sh
 docker logs dnscrypt-server
 docker exec dnscrypt-server /opt/unbound/sbin/unbound-checkconf
+```
+
+# Deleting everything
+
+In order to delete everything (containers and images), type:
+
+```sh
+docker rm --force dnscrypt-server ||:
+docker rmi --force jedisct1/dnscrypt-server ||:
 ```
 
 # Details
