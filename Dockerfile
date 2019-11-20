@@ -35,7 +35,7 @@ RUN apt-get update; apt-get install -qy --no-install-recommends $BUILD_DEPS && \
 ENV RUSTFLAGS "-C link-arg=-s"
 
 RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS && \
-    curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain nightly && \
+    curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain beta && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
     echo "Compiling encrypted-dns version 0.3.8" && \
     cargo install encrypted-dns && \
