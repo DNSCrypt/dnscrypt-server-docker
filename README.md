@@ -148,7 +148,7 @@ Parameters differ from the ones used in the previous container.
 
 For example, if you originally didn't activate relaying
 but want to enable it, append `-A` to the command. Or if you want to enable
-metrics, append `-P 0.0.0.0:9100` to the end, and `-p 9100:9100/tcp` after
+metrics, append `-M 0.0.0.0:9100` to the end, and `-p 9100:9100/tcp` after
 `-p 443:443/tcp` (see below).
 
 ## Anonymized DNS
