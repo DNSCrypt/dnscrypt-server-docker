@@ -69,6 +69,10 @@ IPv6 addresses should be enclosed in brackets; for example: `[2001:0db8::412f]:4
 
 Multiple comma-separated IPs and ports can be specified, as in `-E 192.168.1.1:443,[2001:0db8::412f]:443`.
 
+If you want to use a different port, replace all occurrences of `443` with the alternative port in the
+command above (including `-p ...`). But if you have an existing website that should be accessible on
+port `443`, the server can transparently relay non-DNS traffic to it (see below).
+
 `--net=host` provides the best network performance, but may have to be
 removed on some shared containers hosting services.
 
