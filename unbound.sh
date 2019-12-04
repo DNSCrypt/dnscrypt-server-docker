@@ -66,6 +66,7 @@ server:
   serve-expired: yes
   access-control: 0.0.0.0/0 allow
   access-control: ::0/0 allow
+  tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
 
   local-zone: "belkin." static
   local-zone: "corp." static
@@ -84,6 +85,14 @@ server:
 remote-control:
   control-enable: yes
   control-interface: 127.0.0.1
+
+auth-zone:
+  name: "."
+  url: "https://www.internic.net/domain/root.zone"
+  fallback-enabled: yes
+  for-downstream: no
+  for-upstream: yes
+  zonefile: "var/root.zone"
 EOT
 
 mkdir -p /opt/unbound/etc/unbound/dev &&
