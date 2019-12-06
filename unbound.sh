@@ -67,6 +67,7 @@ server:
   access-control: 0.0.0.0/0 allow
   access-control: ::0/0 allow
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
+  aggressive-nsec: yes
 
   local-zone: "belkin." static
   local-zone: "corp." static
