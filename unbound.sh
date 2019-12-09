@@ -69,16 +69,47 @@ server:
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
   aggressive-nsec: yes
 
+  local-zone: "1." static
+  local-zone: "airdream." static
+  local-zone: "api." static
+  local-zone: "bbrouter." static
   local-zone: "belkin." static
+  local-zone: "blinkap." static
   local-zone: "corp." static
+  local-zone: "davolink." static
+  local-zone: "dearmyrouter." static
+  local-zone: "dhcp." static
+  local-zone: "dlink." static
   local-zone: "domain." static
+  local-zone: "envoy." static
   local-zone: "example." static
+  local-zone: "grp." static
+  local-zone: "gw==." static
   local-zone: "home." static
+  local-zone: "hub." static
+  local-zone: "internal." static
+  local-zone: "intra." static
   local-zone: "invalid." static
+  local-zone: "ksyun." static
   local-zone: "lan." static
+  local-zone: "loc." static
   local-zone: "local." static
   local-zone: "localdomain." static
+  local-zone: "localnet." static
+  local-zone: "modem." static
+  local-zone: "mynet." static
+  local-zone: "myrouter." static
+  local-zone: "novalocal." static
+  local-zone: "openstacklocal." static
+  local-zone: "priv." static
+  local-zone: "prv." static
+  local-zone: "router." static
+  local-zone: "telus." static
   local-zone: "test." static
+  local-zone: "totolink." static
+  local-zone: "wlan_ap." static
+  local-zone: "workgroup." static
+  local-zone: "zghjccbob3n0." static
   local-zone: "@PROVIDER_NAME@." refuse
 
   include: "@ZONES_DIR@/*.conf"
