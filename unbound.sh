@@ -70,6 +70,10 @@ server:
   aggressive-nsec: yes
 
   local-zone: "1." static
+  local-zone: "10.in-addr.arpa." static
+  local-zone: "127.in-addr.arpa." static
+  local-zone: "16.172.in-addr.arpa." static
+  local-zone: "168.192.in-addr.arpa." static
   local-zone: "airdream." static
   local-zone: "api." static
   local-zone: "bbrouter." static
