@@ -58,7 +58,7 @@ Download, create and initialize the container:
 docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
 --ulimit nofile=90000:90000 --restart=unless-stopped \
 -v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
-jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
+jedisct1/dnscrypt-server init -N example.com -E '192.168.1.1:443'
 ```
 
 This will only accept connections via DNSCrypt on the standard port (443). Replace
@@ -67,7 +67,7 @@ clients will connect to.
 
 IPv6 addresses should be enclosed in brackets; for example: `[2001:0db8::412f]:443`.
 
-Multiple comma-separated IPs and ports can be specified, as in `-E 192.168.1.1:443,[2001:0db8::412f]:443`.
+Multiple comma-separated IPs and ports can be specified, as in `-E '192.168.1.1:443,[2001:0db8::412f]:443'`.
 
 If you want to use a different port, replace all occurrences of `443` with the alternative port in the
 command above (including `-p ...`). But if you have an existing website that should be accessible on
@@ -140,7 +140,7 @@ docker ps # Check that it's not running
 docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
 --ulimit nofile=90000:90000 --restart=unless-stopped \
 -v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
-jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
+jedisct1/dnscrypt-server init -N example.com -E '192.168.1.1:443'
 # (adjust accordingly)
 
 docker start dnscrypt-server
@@ -244,7 +244,7 @@ this:
 docker run --name=dnscrypt-server \
     -v /etc/dnscrypt-server/zones:/opt/unbound/etc/unbound/zones \
     -p 443:443/udp -p 443:443/tcp --net=host \
-    jedisct1/dnscrypt-server init -N example.com -E 192.168.1.1:443
+    jedisct1/dnscrypt-server init -N example.com -E '192.168.1.1:443'
 ```
 
 Create a new `.conf` file:
