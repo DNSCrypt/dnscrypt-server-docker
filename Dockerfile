@@ -14,7 +14,7 @@ RUN apt-get update; apt-get -qy dist-upgrade; apt-get -qy clean && \
 RUN update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/NLnetLabs/unbound.git
-ENV UNBOUND_GIT_REVISION f82f97199741a05cef5c2cd2d84b4fe24847a57a
+ENV UNBOUND_GIT_REVISION e828d678bafb7ef0df32623f6883bc4bdc07dc5b
 
 WORKDIR /tmp
 
@@ -37,7 +37,7 @@ ENV RUSTFLAGS "-C link-arg=-s"
 RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS && \
     curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain stable && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
-    echo "Compiling encrypted-dns version 0.3.9" && \
+    echo "Compiling encrypted-dns version 0.3.8" && \
     cargo install encrypted-dns && \
     mkdir -p /opt/encrypted-dns/sbin && \
     mv ~/.cargo/bin/encrypted-dns /opt/encrypted-dns/sbin/ && \
