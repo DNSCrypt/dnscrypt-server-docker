@@ -70,7 +70,7 @@ cache_capacity = 150000
 
 ## DNS cache: minimum TTL
 
-cache_ttl_min = 600
+cache_ttl_min = 3600
 
 
 ## DNS cache: max TTL
@@ -100,12 +100,12 @@ daemonize = false
 
 ## User name to drop privileges to, when started as root.
 
-# user = "_encrypted-dns"
+user = "_encrypted-dns"
 
 
 ## Group name to drop privileges to, when started as root.
 
-# group = "_encrypted-dns"
+group = "_encrypted-dns"
 
 
 ## Path to chroot() to, when started as root.
