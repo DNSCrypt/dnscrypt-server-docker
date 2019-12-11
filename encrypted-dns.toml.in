@@ -177,7 +177,7 @@ key_cache_capacity = 10000
 ## but will never resolve to anything. The server will immediately return a
 ## synthesized NXDOMAIN response instead of hitting root servers.
 
-# undelegated_list = "/etc/undelegated.txt"
+undelegated_list = "/opt/encrypted-dns/etc/undelegated.txt"
 
 
 ## Ignore A and AAAA queries for unqualified host names.
