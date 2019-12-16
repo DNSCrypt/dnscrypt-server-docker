@@ -64,6 +64,7 @@ server:
   rrset-cache-size: @RR_CACHE_SIZE@
   neg-cache-size: 4M
   serve-expired: yes
+  serve-expired-ttl: 86400
   access-control: 0.0.0.0/0 allow
   access-control: ::0/0 allow
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
