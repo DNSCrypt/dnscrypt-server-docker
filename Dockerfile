@@ -61,6 +61,7 @@ RUN mkdir -p \
     /etc/service/watchdog
 
 COPY encrypted-dns.toml.in /opt/encrypted-dns/etc/
+COPY undelegated.txt /opt/encrypted-dns/etc/
 
 COPY entrypoint.sh /
 

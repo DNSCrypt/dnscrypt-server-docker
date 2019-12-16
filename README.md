@@ -119,7 +119,7 @@ docker pull jedisct1/dnscrypt-server
 ls -l /etc/dnscrypt-server/keys
 ```
 
-If you have some content here, skip to step 2.
+If you have some content here, skip to step 3.
 
 Nothing here? Maybe you didn't use the `-v` option to map container files to a local directory when creating the container.
 In that case, copy the data directly from the container:
@@ -128,14 +128,20 @@ In that case, copy the data directly from the container:
 docker cp dnscrypt-server:/opt/encrypted-dns/etc/keys ~/keys
 ```
 
-3. Stop the container:
+3. Stop the existing container:
 
 ```sh
 docker stop dnscrypt-server
 docker ps # Check that it's not running
 ```
 
-1. Use the `init` command again and start the new container:
+4. Rename the existing container:
+
+```sh
+docker rename dnscrypt-server dnscrypt-server-old
+```
+
+5. Use the `init` command again and start the new container:
 
 ```sh
 docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
@@ -145,9 +151,16 @@ jedisct1/dnscrypt-server init -N example.com -E '192.168.1.1:443'
 # (adjust accordingly)
 
 docker start dnscrypt-server
+docker ps # Check that it's running
 ```
 
-5. Done!
+6. Delete old container:
+
+```sh
+docker rm dnscrypt-server-old
+```
+
+7. Done!
 
 Parameters differ from the ones used in the previous container.
 
