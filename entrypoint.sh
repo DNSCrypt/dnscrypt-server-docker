@@ -60,6 +60,7 @@ init() {
     domain_blacklist_file="${LISTS_DIR}/blacklist.txt"
     domain_blacklist_configuration=""
     if [ -s "$domain_blacklist_file" ]; then
+        chown _encrypted-dns:_encrypted_dns "$domain_blacklist_file"
         domain_blacklist_configuration="domain_blacklist = \"${domain_blacklist_file}\""
     fi
 
@@ -132,6 +133,7 @@ legacy_compat() {
         mkdir -p "${LISTS_DIR}"
         mv -f "${LISTS_DIR}/blacklist.txt" "${LISTS_DIR}/blacklist.txt.migrated" 2>/dev/null || :
         ln -s "${LEGACY_LISTS_DIR}/blacklist.txt" "${LISTS_DIR}/blacklist.txt" 2>/dev/null || :
+        chown _encrypted-dns:_encrypted-dns "${LEGACY_LISTS_DIR}/blacklist.txt"
     fi
 }
 
