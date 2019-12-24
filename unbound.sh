@@ -96,6 +96,7 @@ server:
   local-zone: "hub." static
   local-zone: "internal." static
   local-zone: "intra." static
+  local-zone: "intranet." static
   local-zone: "invalid." static
   local-zone: "ksyun." static
   local-zone: "lan." static
@@ -107,8 +108,10 @@ server:
   local-zone: "mynet." static
   local-zone: "myrouter." static
   local-zone: "novalocal." static
+  local-zone: "onion." static
   local-zone: "openstacklocal." static
   local-zone: "priv." static
+  local-zone: "private." static
   local-zone: "prv." static
   local-zone: "router." static
   local-zone: "telus." static
