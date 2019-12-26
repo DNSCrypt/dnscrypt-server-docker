@@ -25,7 +25,7 @@ RUN apt-get update; apt-get install -qy --no-install-recommends $BUILD_DEPS && \
     groupadd _unbound && \
     useradd -g _unbound -s /etc -d /dev/null _unbound && \
     ./configure --prefix=/opt/unbound --with-pthreads \
-    --with-username=_unbound --with-libevent --enable-event-api && \
+    --with-username=_unbound --with-libevent && \
     make -j"$(getconf _NPROCESSORS_ONLN)" install && \
     mv /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/unbound.conf.example && \
     apt-get -qy purge $BUILD_DEPS && apt-get -qy autoremove && \
