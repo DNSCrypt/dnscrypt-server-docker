@@ -103,6 +103,7 @@ server:
   local-zone: "loc." static
   local-zone: "local." static
   local-zone: "localdomain." static
+  local-zone: "localhost." static
   local-zone: "localnet." static
   local-zone: "modem." static
   local-zone: "mynet." static
