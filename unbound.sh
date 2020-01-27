@@ -54,7 +54,6 @@ server:
   serve-expired: yes
   serve-expired-ttl-reset: yes
   qname-minimisation: yes
-  ratelimit: 1000
   rrset-roundrobin: yes
   minimal-responses: yes
   chroot: "/opt/unbound/etc/unbound"
