@@ -51,8 +51,6 @@ server:
   do-not-query-localhost: no
   prefetch: yes
   prefetch-key: yes
-  serve-expired: yes
-  serve-expired-ttl-reset: yes
   qname-minimisation: yes
   rrset-roundrobin: yes
   minimal-responses: yes
@@ -66,6 +64,7 @@ server:
   neg-cache-size: 4M
   serve-expired: yes
   serve-expired-ttl: 86400
+  serve-expired-ttl-reset: yes
   access-control: 0.0.0.0/0 allow
   access-control: ::0/0 allow
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
