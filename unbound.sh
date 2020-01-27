@@ -51,6 +51,8 @@ server:
   do-not-query-localhost: no
   prefetch: yes
   prefetch-key: yes
+  serve-expired: yes
+  serve-expired-ttl-reset: yes
   qname-minimisation: yes
   ratelimit: 1000
   rrset-roundrobin: yes
