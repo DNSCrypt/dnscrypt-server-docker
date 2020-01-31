@@ -35,7 +35,7 @@ server:
   so-reuseport: yes
   edns-buffer-size: 1220
   delay-close: 10000
-  cache-min-ttl: 60
+  cache-min-ttl: 3600
   cache-max-ttl: 86400
   do-daemonize: no
   username: "_unbound"
