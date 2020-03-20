@@ -65,6 +65,7 @@ server:
   serve-expired: yes
   serve-expired-ttl: 86400
   serve-expired-ttl-reset: yes
+  serve-expired-client-timeout: 1800
   access-control: 0.0.0.0/0 allow
   access-control: ::0/0 allow
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
