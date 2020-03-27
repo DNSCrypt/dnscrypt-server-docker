@@ -46,18 +46,11 @@ Let's pick `example.com` here.
 
 You probably need to perform the following steps as `root`.
 
-Create a directory where the server is going to store internal data such as secret keys.
-Here, we'll use `/etc/dnscrypt-server`:
-
-```sh
-mkdir -p /etc/dnscrypt-server/keys
-```
-
 Download, create and initialize the container:
 
 ```sh
-docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
---ulimit nofile=90000:90000 --restart=unless-stopped \
+docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp \
+--restart=unless-stopped \
 -v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
 jedisct1/dnscrypt-server init -N example.com -E '192.168.1.1:443'
 ```
@@ -74,20 +67,11 @@ If you want to use a different port, replace all occurrences of `443` with the a
 command above (including `-p ...`). But if you have an existing website that should be accessible on
 port `443`, the server can transparently relay non-DNS traffic to it (see below).
 
-`--net=host` provides the best network performance, but may have to be
-removed on some shared containers hosting services.
-
 `-v /etc/dnscrypt-server:/opt/encrypted-dns/etc/keys` means that the path `/opt/encrypted-dns/etc/keys`, internal to the container, is mapped to `/etc/dnscrypt-server/keys`, the directory we just created before. Do not change `/opt/encrypted-dns/etc/keys`. But if you created a directory in a different location, replace `/etc/dnscrypt-server/keys` accordingly in the command above.
 
 __Note:__ on MacOS, don't use `-v ...:...`. Remove that part from the command-line, as current versions of MacOS and Docker don't seem to work well with shared directories.
 
 The `init` command will print the DNS stamp of your server.
-
-Now, to start the whole stack:
-
-```sh
-docker start dnscrypt-server
-```
 
 Done.
 
@@ -144,13 +128,12 @@ docker rename dnscrypt-server dnscrypt-server-old
 5. Use the `init` command again and start the new container:
 
 ```sh
-docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
---ulimit nofile=90000:90000 --restart=unless-stopped \
+docker run --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp \
+--restart=unless-stopped \
 -v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
 jedisct1/dnscrypt-server init -N example.com -E '192.168.1.1:443'
 # (adjust accordingly)
 
-docker start dnscrypt-server
 docker ps # Check that it's running
 ```
 
