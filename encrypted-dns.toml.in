@@ -114,6 +114,11 @@ group = "_encrypted-dns"
 # chroot = "/var/empty"
 
 
+## Queries sent to that name will return the client IP address.
+## This can be very useful for debugging, or to check that relaying works.
+
+my_ip = "my.ip"
+
 
 ####################################
 #         DNSCrypt settings        #
@@ -223,3 +228,23 @@ allow_non_reserved_ports = false
 # Blacklisted upstream IP addresses
 
 blacklisted_ips = [ @ANONDNS_BLACKLISTED_IPS@ ]
+
+
+
+
+################################
+#        Access control        #
+################################
+
+[access_control]
+
+# Enable access control
+
+enabled = false
+
+# Only allow access to client queries including one of these random tokens
+# Tokens can be configured in the `query_meta` section of `dnscrypt-proxy` as
+# `query_meta = ["token:..."]` -- Replace ... with the token to use by the client.
+# Example: `query_meta = ["token:Y2oHkDJNHz"]`
+
+tokens = ["Y2oHkDJNHz", "G5zY3J5cHQtY", "C5zZWN1cmUuZG5z"]
