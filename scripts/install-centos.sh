@@ -30,44 +30,42 @@ echo "$SERVER_IP"
     yum remove -y iptables-services
 )
 
-mkdir -p /etc/encrypted-dns/lists
+mkdir -p /etc/dnscrypt-server/lists
 if [ -d /root/keys ]; then
-    mv /root/keys /etc/encrypted-dns
+    mv /root/keys /etc/dnscrypt-server
 fi
-mkdir -p /etc/encrypted-dns/keys
+mkdir -p /etc/dnscrypt-server/keys
 
-rm -fr /etc/encrypted-dns/keys/short-term
-
-if [ -f /etc/encrypted-dns/keys/secret.key ]; then
+if [ -f /etc/dnscrypt-server/keys/state/encrypted-dns.state ]; then
     docker run \
         --ulimit nofile=90000:90000 \
-        -v /etc/encrypted-dns/keys:/opt/encrypted-dns/etc/keys \
-        -v /etc/encrypted-dns/lists:/opt/encrypted-dns/etc/lists \
+        -v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
+        -v /etc/dnscrypt-server/lists:/opt/encrypted-dns/etc/lists \
         --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
         -d jedisct1/dnscrypt-server start
 else
     docker run \
         --ulimit nofile=90000:90000 \
-        -v /etc/encrypted-dns/keys:/opt/encrypted-dns/etc/keys \
-        -v /etc/encrypted-dns/lists:/opt/encrypted-dns/etc/lists \
+        -v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
+        -v /etc/dnscrypt-server/lists:/opt/encrypted-dns/etc/lists \
         --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
         jedisct1/dnscrypt-server init -N "$SERVER" -E "${SERVER_IP}:443"
     docker start dnscrypt-server
 fi
 
-cat /etc/encrypted-dns/keys/provider-info.txt
+cat /etc/dnscrypt-server/keys/provider-info.txt
 
 docker update --restart=unless-stopped dnscrypt-server
 
 docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower dnscrypt-server
 docker update --restart=unless-stopped watchtower
 
-ln -sf /etc/encrypted-dns/keys /root
+ln -sf /etc/dnscrypt-server/keys /root
 
 echo 3 >/proc/sys/vm/drop_caches
 
 if [ ! -L /etc/motd ]; then
     rm -f /etc/motd
-    ln -s /etc/encrypted-dns/keys/provider-info.txt /etc/motd
+    ln -s /etc/dnscrypt-server/keys/provider-info.txt /etc/motd
     reboot
 fi
