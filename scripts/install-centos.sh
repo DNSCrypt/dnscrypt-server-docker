@@ -57,7 +57,7 @@ cat /etc/dnscrypt-server/keys/provider-info.txt
 
 docker update --restart=unless-stopped dnscrypt-server
 
-docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower dnscrypt-server
+docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower dnscrypt-server
 docker update --restart=unless-stopped watchtower
 
 ln -sf /etc/dnscrypt-server/keys /root
