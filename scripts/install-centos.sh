@@ -41,14 +41,14 @@ if [ -f /etc/dnscrypt-server/keys/state/encrypted-dns.state ]; then
         --ulimit nofile=90000:90000 \
         -v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
         -v /etc/dnscrypt-server/lists:/opt/encrypted-dns/etc/lists \
-        --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
+        --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp \
         -d jedisct1/dnscrypt-server start
 else
     docker run \
         --ulimit nofile=90000:90000 \
         -v /etc/dnscrypt-server/keys:/opt/encrypted-dns/etc/keys \
         -v /etc/dnscrypt-server/lists:/opt/encrypted-dns/etc/lists \
-        --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp --net=host \
+        --name=dnscrypt-server -p 443:443/udp -p 443:443/tcp \
         jedisct1/dnscrypt-server init -N "$SERVER" -E "${SERVER_IP}:443"
     docker start dnscrypt-server
 fi
