@@ -124,7 +124,7 @@ group = "_encrypted-dns"
 ## Queries sent to that name will return the client IP address.
 ## This can be very useful for debugging, or to check that relaying works.
 
-my_ip = "my.ip"
+# my_ip = "my.ip"
 
 
 ####################################
