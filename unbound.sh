@@ -33,7 +33,7 @@ server:
   num-threads: @THREADS@
   interface: 127.0.0.1@553
   so-reuseport: yes
-  edns-buffer-size: 1220
+  edns-buffer-size: 1232
   delay-close: 10000
   cache-min-ttl: 3600
   cache-max-ttl: 86400
