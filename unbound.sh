@@ -54,6 +54,7 @@ server:
   qname-minimisation: yes
   rrset-roundrobin: yes
   minimal-responses: yes
+  udp-connect: no
   chroot: "/opt/unbound/etc/unbound"
   directory: "/opt/unbound/etc/unbound"
   auto-trust-anchor-file: "var/root.key"
