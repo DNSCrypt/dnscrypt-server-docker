@@ -70,6 +70,7 @@ server:
   access-control: ::0/0 allow
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
   aggressive-nsec: yes
+  val-bogus-ttl: 600
 
   local-zone: "1." static
   local-zone: "10.in-addr.arpa." static
