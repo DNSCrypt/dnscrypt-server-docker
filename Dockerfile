@@ -1,7 +1,7 @@
-FROM ubuntu:20.10
+FROM ubuntu:21.04
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
-ENV SERIAL 2
+ENV SERIAL 3
 
 ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev byacc
@@ -57,20 +57,21 @@ RUN groupadd _encrypted-dns && \
     chown _encrypted-dns:_encrypted-dns /opt/dnscrypt-wrapper/etc/keys
 
 RUN mkdir -p \
-    /etc/service/unbound \
-    /etc/service/watchdog
+    /var/svc/unbound \
+    /var/svc/encrypted-dns \
+    /var/svc/watchdog
 
 COPY encrypted-dns.toml.in /opt/encrypted-dns/etc/
 COPY undelegated.txt /opt/encrypted-dns/etc/
 
 COPY entrypoint.sh /
 
-COPY unbound.sh /etc/service/unbound/run
-COPY unbound-check.sh /etc/service/unbound/check
+COPY unbound.sh /var/svc/unbound/run
+COPY unbound-check.sh /var/svc/unbound/check
 
-COPY encrypted-dns.sh /etc/service/encrypted-dns/run
+COPY encrypted-dns.sh /var/svc/encrypted-dns/run
 
-COPY watchdog.sh /etc/service/watchdog/run
+COPY watchdog.sh /var/svc/watchdog/run
 
 VOLUME ["/opt/encrypted-dns/etc/keys"]
 

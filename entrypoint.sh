@@ -13,6 +13,7 @@ LISTS_DIR="/opt/encrypted-dns/etc/lists"
 CONF_DIR="/opt/encrypted-dns/etc"
 CONFIG_FILE="${CONF_DIR}/encrypted-dns.toml"
 CONFIG_FILE_TEMPLATE="${CONF_DIR}/encrypted-dns.toml.in"
+SERVICES_DIR="/etc/runit/runsvdir/svmanaged"
 
 init() {
     if [ "$(is_initialized)" = yes ]; then
@@ -172,6 +173,11 @@ start() {
     /opt/encrypted-dns/sbin/encrypted-dns \
         --config "$CONFIG_FILE" --dry-run |
         tee "${KEYS_DIR}/provider-info.txt"
+
+    find /var/svc -mindepth 1 -maxdepth 1 -type d | while read -r service; do
+        ln -s "$service" "${SERVICES_DIR}/"
+    done
+
     exec /etc/runit/2 </dev/null >/dev/null 2>/dev/null
 }
 
