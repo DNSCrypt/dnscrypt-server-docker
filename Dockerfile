@@ -7,7 +7,7 @@ ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev byacc
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libssl1.1 ldnsutils libevent-2.1 expat ca-certificates runit runit-helper jed
 
-RUN apt-get update; apt-get -qy dist-upgrade; apt-get -qy clean && \
+RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
     apt-get install -qy --no-install-recommends $RUNTIME_DEPS && \
     rm -fr /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/* /var/log/apt/* /var/log/*.log
 
@@ -18,7 +18,7 @@ ENV UNBOUND_GIT_REVISION 74e06cc4b3fbe3dcea08eb93fcfca8f4359a9fb5
 
 WORKDIR /tmp
 
-RUN apt-get update; apt-get install -qy --no-install-recommends $BUILD_DEPS && \
+RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS && \
     git clone --depth=1000 "$UNBOUND_GIT_URL" && \
     cd unbound && \
     git checkout "$UNBOUND_GIT_REVISION" && \
