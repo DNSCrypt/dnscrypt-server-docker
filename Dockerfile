@@ -1,14 +1,13 @@
 FROM ubuntu:21.04
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
-ENV SERIAL 3
+ENV SERIAL 4
 
 ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev byacc
 ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libssl1.1 ldnsutils libevent-2.1 expat ca-certificates runit runit-helper jed
 
-RUN apt-get install -qy --no-install-recommends gpgv && \
-    apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
+RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
     apt-get install -qy --no-install-recommends $RUNTIME_DEPS && \
     rm -fr /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/* /var/log/apt/* /var/log/*.log
 
