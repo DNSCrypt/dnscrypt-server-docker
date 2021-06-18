@@ -175,7 +175,7 @@ start() {
         tee "${KEYS_DIR}/provider-info.txt"
 
     find /var/svc -mindepth 1 -maxdepth 1 -type d | while read -r service; do
-        ln -s "$service" "${SERVICES_DIR}/"
+        ln -s -f "$service" "${SERVICES_DIR}/"
     done
 
     exec /etc/runit/2 </dev/null >/dev/null 2>/dev/null
