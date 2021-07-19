@@ -1,7 +1,7 @@
 FROM ubuntu:21.04
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
-ENV SERIAL 4
+ENV SERIAL 5
 
 ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev byacc
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
 RUN update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/NLnetLabs/unbound.git
-ENV UNBOUND_GIT_REVISION ff6b527184b33ffe1e2b643db8a32fae8061fc5a
+ENV UNBOUND_GIT_REVISION 11b3ebc3869480dec06264cef7b6a7b5f4e22a47
 
 WORKDIR /tmp
 
