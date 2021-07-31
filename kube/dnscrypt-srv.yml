@@ -3,27 +3,33 @@ kind: Service
 metadata:
   name: dnscrypt-tcp
   namespace: default
+  annotations:
+    cloud.google.com/network-tier: Standard
 spec:
   ports:
     - protocol: TCP
-      port: 443
-      targetPort: 443
+      port: 5443
+      targetPort: 5443
   selector:
     service: dnscrypt
   type: LoadBalancer
   loadBalancerIP: 0.0.0.0
+  externalTrafficPolicy: Local
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: dnscrypt-udp
   namespace: default
+  annotations:
+    cloud.google.com/network-tier: Standard
 spec:
   ports:
     - protocol: UDP
-      port: 443
-      targetPort: 443
+      port: 5443
+      targetPort: 5443
   selector:
     service: dnscrypt
   type: LoadBalancer
   loadBalancerIP: 0.0.0.0
+  externalTrafficPolicy: Local
