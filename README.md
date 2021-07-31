@@ -221,7 +221,7 @@ You can setup a server very quickly with Docker Compose.
 - Edit `docker-compose.yml` to use the start command.
 - Run `docker-compose up`
 
-Now you will have a local server running on port 5444.
+Now you will have a local server running on port 5443.
 
 # Customizing Unbound
 
