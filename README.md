@@ -20,6 +20,7 @@ Table of contents:
   - [TLS (including HTTPS and DoH) forwarding](#tls-including-https-and-doh-forwarding)
   - [Filtering](#filtering)
 - [Join the network](#join-the-network)
+- [Usage with Docker Compose](#usage-with-docker-compose)
 - [Usage with Kubernetes](#usage-with-kubernetes)
 - [Customizing Unbound](#customizing-unbound)
   - [Changing the Unbound configuration file](#changing-the-unbound-configuration-file)
@@ -202,14 +203,25 @@ in minutes.
 
 - Create a static IP on GCE. This will be used for the LoadBalancer.
 - Edit `kube/dnscrypt-init-job.yml`. Change `example.com` to your desired hostname
-and `192.0.2.53` to your static IP.
-- Edit `kube/dnscrypt-srv.yml` and change `loadBalancerIP` to your static IP.
+and `127.0.0.1` to your static IP.
+- Edit `kube/dnscrypt-srv.yml` and change `loadBalancerIP` to your static IP in both locations.
 - Run `kubectl create -f kube/dnscrypt-init-job.yml` to setup your keys.
 - Run `kubectl create -f kube/dnscrypt-deployment.yml` to deploy the dnscrypt server.
 - Run `kubectl create -f kube/dnscrypt-srv.yml` to expose your server to the world.
 
 To get your public key just view the logs for the `dnscrypt-init` job. The public
 IP for your server is merely the `dnscrypt` service address.
+
+# Usage with Docker Compose
+
+You can setup a server very quickly with Docker Compose.
+
+- Run `docker-compose up`
+- Ctrl-C after keys are setup.
+- Edit `docker-compose.yml` to use the start command.
+- Run `docker-compose up`
+
+Now you will have a local server running on port 5443.
 
 # Customizing Unbound
 

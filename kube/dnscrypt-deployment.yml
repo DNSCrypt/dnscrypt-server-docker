@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: default
@@ -9,22 +9,30 @@ spec:
   strategy:
     type: Recreate
   replicas: 1
+  selector:
+    matchLabels:
+      service: dnscrypt
   template:
     metadata:
       labels:
         service: dnscrypt
     spec:
       containers:
-      - env:
-        image: jedisct1/dnscrypt-server
+      - image: zquestz/dnscrypt-server:latest
+        imagePullPolicy: Always
         name: dnscrypt
+        ports:
+        - containerPort: 5443
+          protocol: UDP
+        - containerPort: 5443
+          protocol: TCP
         volumeMounts:
           - name: dnscrypt-keys
             mountPath: /opt/encrypted-dns/etc/keys
         command: ["/entrypoint.sh", "start"]
         resources:
           requests:
-            memory: "1Gi"
+            memory: "64Mi"
       restartPolicy: Always
       volumes:
         - name: dnscrypt-keys

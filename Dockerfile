@@ -73,6 +73,8 @@ COPY encrypted-dns.sh /var/svc/encrypted-dns/run
 
 COPY watchdog.sh /var/svc/watchdog/run
 
+RUN ln -sf /opt/encrypted-dns/etc/keys/encrypted-dns.toml /opt/encrypted-dns/etc/encrypted-dns.toml
+
 VOLUME ["/opt/encrypted-dns/etc/keys"]
 
 EXPOSE 443/udp 443/tcp 9100/tcp
