@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:21.10
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
 ENV SERIAL 6
