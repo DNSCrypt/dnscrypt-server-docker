@@ -14,7 +14,7 @@ RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
 RUN update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/NLnetLabs/unbound.git
-ENV UNBOUND_GIT_REVISION c6c54f9de418d7e952276e631fbd09a1bd979f2c
+ENV UNBOUND_GIT_REVISION 79e755e1dd00cd05ae56e77b6f883ce11fbcf8c0
 
 WORKDIR /tmp
 
