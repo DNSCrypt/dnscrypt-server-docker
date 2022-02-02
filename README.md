@@ -263,7 +263,7 @@ touch /etc/dnscrypt-server/zones/example.conf
 
 Now, add one or more unbound directives to the file, such as:
 
-```text
+```zone
 local-zone: "example.com." static
 local-data: "my-computer.example.com. IN A 10.0.0.1"
 local-data: "other-computer.example.com. IN A 10.0.0.2"
