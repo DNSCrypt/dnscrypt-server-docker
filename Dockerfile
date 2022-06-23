@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
-ENV SERIAL 6
+ENV SERIAL 7
 
 ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev byacc
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
 RUN update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL https://github.com/NLnetLabs/unbound.git
-ENV UNBOUND_GIT_REVISION edc1d07718fb0ecabf9ddd3cf65503de1810834c
+ENV UNBOUND_GIT_REVISION 3bade62c8a4b5f4ecc2ba69de67a752891ae77ee
 
 WORKDIR /tmp
 
@@ -37,7 +37,7 @@ ENV RUSTFLAGS "-C link-arg=-s"
 RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS && \
     curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain stable && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
-    echo "Compiling encrypted-dns version 0.3.23" && \
+    echo "Compiling encrypted-dns" && \
     cargo install encrypted-dns && \
     mkdir -p /opt/encrypted-dns/sbin && \
     mv ~/.cargo/bin/encrypted-dns /opt/encrypted-dns/sbin/ && \
