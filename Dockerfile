@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
-ENV SERIAL 8
+ENV SERIAL 9
 
 ENV CFLAGS=-Ofast
 ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev byacc
