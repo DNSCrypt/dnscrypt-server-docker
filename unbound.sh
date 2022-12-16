@@ -27,7 +27,7 @@ sed \
     -e "s/@RR_CACHE_SIZE@/${rr_cache_size}/" \
     -e "s/@THREADS@/${threads}/" \
     -e "s#@ZONES_DIR@#${ZONES_DIR}#" \
-    > /opt/unbound/etc/unbound/unbound.conf << EOT
+    >/opt/unbound/etc/unbound/unbound.conf <<EOT
 server:
   verbosity: 1
   num-threads: @THREADS@
@@ -148,7 +148,7 @@ mkdir -p -m 700 /opt/unbound/etc/unbound/var &&
     /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
 
 if [ ! -f /opt/unbound/etc/unbound/unbound_control.pem ]; then
-    /opt/unbound/sbin/unbound-control-setup 2> /dev/null || :
+    /opt/unbound/sbin/unbound-control-setup 2>/dev/null || :
 fi
 
 mkdir -p /opt/unbound/etc/unbound/zones
