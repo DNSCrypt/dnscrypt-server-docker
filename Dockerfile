@@ -61,17 +61,17 @@ RUN mkdir -p \
     /var/svc/encrypted-dns \
     /var/svc/watchdog
 
-COPY encrypted-dns.toml.in /opt/encrypted-dns/etc/
-COPY undelegated.txt /opt/encrypted-dns/etc/
+COPY --chmod=644 encrypted-dns.toml.in /opt/encrypted-dns/etc/
+COPY --chmod=644 undelegated.txt /opt/encrypted-dns/etc/
 
-COPY entrypoint.sh /
+COPY --chmod=755 entrypoint.sh /
 
-COPY unbound.sh /var/svc/unbound/run
-COPY unbound-check.sh /var/svc/unbound/check
+COPY --chmod=755 unbound.sh /var/svc/unbound/run
+COPY --chmod=755 unbound-check.sh /var/svc/unbound/check
 
-COPY encrypted-dns.sh /var/svc/encrypted-dns/run
+COPY --chmod=755 encrypted-dns.sh /var/svc/encrypted-dns/run
 
-COPY watchdog.sh /var/svc/watchdog/run
+COPY --chmod=755 watchdog.sh /var/svc/watchdog/run
 
 RUN ln -sf /opt/encrypted-dns/etc/keys/encrypted-dns.toml /opt/encrypted-dns/etc/encrypted-dns.toml
 
