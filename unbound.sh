@@ -2,6 +2,37 @@
 
 KEYS_DIR="/opt/encrypted-dns/etc/keys"
 ZONES_DIR="/opt/unbound/etc/unbound/zones"
+AUTHZONES_DIR="/opt/unbound/etc/unbound/auth-zones"
+
+OIFS="${IFS}"
+IFS=""
+
+INTERFACES="\
+  interface: 127.0.0.1@553
+  interface: ::1@553"
+ACCESS_CONTROL="\
+  access-control: 0.0.0.0/0 allow
+  access-control: ::0/0 allow"
+AUTHZONE_INCLUDE=""
+
+test -d $AUTHZONES_DIR && {
+    chown -R _unbound:_unbound $AUTHZONES_DIR
+    INTERFACES="\
+  interface: 0.0.0.0@553
+  interface: ::@553"
+    ACCESS_CONTROL="\
+  access-control: 127.0.0.1/32 allow
+  access-control: ::1/128 allow
+  access-control: 0.0.0.0/0 refuse_non_local
+  access-control: ::0/0 refuse_non_local"
+    AUTHZONE_INCLUDE="include: \"${AUTHZONES_DIR}/*.conf\""
+}
+
+# Replace multiline replacements so sed can deal with them later
+INTERFACES=$(echo -n "${INTERFACES}" | sed -z 's/\n/\\n/g')
+ACCESS_CONTROL=$(echo -n "${ACCESS_CONTROL}" | sed -z 's/\n/\\n/g')
+
+IFS="${OIFS}"
 
 reserved=134217728
 availableMemory=$((1024 * $( (grep -F MemAvailable /proc/meminfo || grep -F MemTotal /proc/meminfo) | sed 's/[^0-9]//g')))
@@ -27,11 +58,15 @@ sed \
     -e "s/@RR_CACHE_SIZE@/${rr_cache_size}/" \
     -e "s/@THREADS@/${threads}/" \
     -e "s#@ZONES_DIR@#${ZONES_DIR}#" \
+    -e "s#@INTERFACES@#${INTERFACES}#" \
+    -e "s#@ACCESS_CONTROL@#${ACCESS_CONTROL}#" \
+    -e "s#@AUTHZONE_INCLUDE@#${AUTHZONE_INCLUDE}#" \
     >/opt/unbound/etc/unbound/unbound.conf <<EOT
 server:
   verbosity: 1
   num-threads: @THREADS@
-  interface: 127.0.0.1@553
+@INTERFACES@
+@ACCESS_CONTROL@
   so-reuseport: yes
   edns-buffer-size: 1232
   delay-close: 10000
@@ -66,8 +101,6 @@ server:
   serve-expired: yes
   serve-expired-ttl: 86400
   serve-expired-ttl-reset: yes
-  access-control: 0.0.0.0/0 allow
-  access-control: ::0/0 allow
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
   aggressive-nsec: yes
   val-bogus-ttl: 600
@@ -138,6 +171,8 @@ auth-zone:
   for-downstream: no
   for-upstream: yes
   zonefile: "var/root.zone"
+
+@AUTHZONE_INCLUDE@
 EOT
 
 mkdir -p /opt/unbound/etc/unbound/dev &&

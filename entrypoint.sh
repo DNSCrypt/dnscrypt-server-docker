@@ -14,6 +14,7 @@ CONF_DIR="/opt/encrypted-dns/etc"
 CONFIG_FILE="${KEYS_DIR}/encrypted-dns.toml"
 CONFIG_FILE_TEMPLATE="${CONF_DIR}/encrypted-dns.toml.in"
 SERVICES_DIR="/etc/runit/runsvdir/svmanaged"
+SCRIPTNAME=$(basename $0)
 
 init() {
     if [ "$(is_initialized)" = yes ]; then
@@ -21,21 +22,57 @@ init() {
         exit $?
     fi
 
+    # TEMP=$(getopt --name "${SCRIPTNAME}" --options 'h?N:E:T:AM:' --longoptions 'unbound-on-all-interfaces' -- "$@")
+    TEMP=$(getopt --name "${SCRIPTNAME}" --options 'h?N:E:T:AM:' -- "$@")
+    eval set -- "$TEMP"
+
     anondns_enabled="false"
     anondns_blacklisted_ips=""
 
     metrics_address="127.0.0.1:9100"
 
-    while getopts "h?N:E:T:AM:" opt; do
-        case "$opt" in
-        h | \?) usage ;;
-        N) provider_name=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
-        E) ext_addresses=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
-        T) tls_proxy_upstream_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
-        A) anondns_enabled="true" ;;
-        M) metrics_address=$(echo "$OPTARG" | sed -e 's/^[ \t]*//' | tr A-Z a-z) ;;
+    # extract options and their arguments into variables.
+    while true ; do
+        case "$1" in
+            -h | -\?)
+                shift
+                usage
+                ;;
+            -N)
+                provider_name=$(echo "$2" | sed -e 's/^[ \t]*//' | tr A-Z a-z)
+                shift 2
+                ;;
+            -E)
+                ext_addresses=$(echo "$2" | sed -e 's/^[ \t]*//' | tr A-Z a-z)
+                shift 2
+                ;;
+            -T)
+                tls_proxy_upstream_address=$(echo "$2" | sed -e 's/^[ \t]*//' | tr A-Z a-z)
+                shift 2
+                ;;
+            -A)
+                anondns_enabled="true"
+                shift
+                ;;
+            -M)
+                metrics_address=$(echo "$2" | sed -e 's/^[ \t]*//' | tr A-Z a-z)
+                shift 2
+                ;;
+            # --unbound-on-all-interfaces)
+            #     touch /opt/unbound/run-options/use-all-interfaces
+            #     shift
+            #     ;;
+            --)
+                shift
+                break
+                ;;
+            *)
+                echo "Internal error!"
+                exit 1
+                ;;
         esac
     done
+
     [ -z "$provider_name" ] && usage
     case "$provider_name" in
     .*) usage ;;
@@ -264,3 +301,5 @@ provider-info) provider_info ;;
 shell) shell ;;
 *) usage ;;
 esac
+
+# vim: sw=4:smarttab
