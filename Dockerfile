@@ -18,6 +18,9 @@ ENV UNBOUND_GIT_REVISION 7b62767e16145415cb6a4e23f93a8138f54a56f0
 
 WORKDIR /tmp
 
+# --- FOR TESTING ---
+# RUN apt-get update && apt-get install -y iproute2 less vim
+
 RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS && \
     git clone --depth=1000 "$UNBOUND_GIT_URL" && \
     cd unbound && \
