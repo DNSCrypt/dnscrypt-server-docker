@@ -1,11 +1,11 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
-ENV SERIAL 12
+ENV SERIAL=1
 
 ENV CFLAGS=-O3
-ENV BUILD_DEPS   curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev flex bison
-ENV RUNTIME_DEPS bash util-linux coreutils findutils grep libssl3 ldnsutils libevent-2.1 expat ca-certificates runit runit-helper jed
+ENV BUILD_DEPS="curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev flex bison"
+ENV RUNTIME_DEPS="bash util-linux coreutils findutils grep libssl3 ldnsutils libevent-2.1 expat ca-certificates runit runit-helper jed"
 
 RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
     apt-get install -qy --no-install-recommends $RUNTIME_DEPS && \
@@ -13,8 +13,8 @@ RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
 
 RUN update-ca-certificates 2> /dev/null || true
 
-ENV UNBOUND_GIT_URL https://github.com/NLnetLabs/unbound.git
-ENV UNBOUND_GIT_REVISION 7b62767e16145415cb6a4e23f93a8138f54a56f0
+ENV UNBOUND_GIT_URL="https://github.com/NLnetLabs/unbound.git"
+ENV UNBOUND_GIT_REVISION="7fbc061846ace7295fb8ab117411daf32aa282fc"
 
 WORKDIR /tmp
 
@@ -32,10 +32,10 @@ RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS &&
     rm -fr /opt/unbound/share/man && \
     rm -fr /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/* /var/log/apt/* /var/log/*.log
 
-ENV RUSTFLAGS "-C link-arg=-s"
+ENV RUSTFLAGS="-C link-arg=-s"
 
 RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS && \
-    curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain stable && \
+    curl -sSf https://sh.rustup.rs | bash -s -- -y --profile minimal --default-toolchain stable && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
     echo "Compiling encrypted-dns" && \
     cargo install encrypted-dns && \
