@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 LABEL maintainer="Frank Denis"
 SHELL ["/bin/sh", "-x", "-c"]
 ENV SERIAL=1
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
 RUN update-ca-certificates 2> /dev/null || true
 
 ENV UNBOUND_GIT_URL="https://github.com/NLnetLabs/unbound.git"
-ENV UNBOUND_GIT_REVISION="75b6dba593d4fff000434cd64807c6ebd50bd244"
+ENV UNBOUND_GIT_REVISION="01a95108b34365a43af2ca94d6033a6dcc5f619b"
 
 WORKDIR /tmp
 
