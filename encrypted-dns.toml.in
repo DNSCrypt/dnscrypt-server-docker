@@ -27,9 +27,10 @@ listen_addrs = [
 ]
 
 
-## Upstream DNS server and port
+## Upstream DNS server(s) and port(s)
+## The server tries each address in order and fails over on timeout/error.
 
-upstream_addr = "127.0.0.1:553"
+upstream_addrs = ["127.0.0.1:553"]
 
 
 ## File name to save the state to
@@ -95,7 +96,7 @@ client_ttl_holdon = 60
 daemonize = false
 
 
-## Log file
+## Log file, when running as a background process
 
 # log_file = "/tmp/encrypted-dns.log"
 
@@ -136,6 +137,15 @@ group = "_encrypted-dns"
 ## Provider name (with or without the `2.dnscrypt-cert.` prefix)
 
 provider_name = "@PROVIDER_NAME@"
+
+
+## Advertise a post-quantum certificate (PQDNSCrypt, X-Wing key exchange)
+## alongside the classical one. Clients that understand it perform a hybrid
+## ML-KEM-768 + X25519 key exchange; clients that don't keep using X25519.
+## Because a PQ certificate is around 1.3 KB, certificate retrieval will
+## usually happen over TCP once this is enabled.
+
+pq_enabled = true
 
 
 ## Does the server support DNSSEC?
@@ -255,3 +265,22 @@ enabled = false
 # Example: `query_meta = ["token:Y2oHkDJNHz"]`
 
 tokens = ["Y2oHkDJNHz", "G5zY3J5cHQtY", "C5zZWN1cmUuZG5z"]
+
+
+################################
+#         Rate limiting        #
+################################
+
+[rate_limit]
+
+# Enable per-client rate limiting
+
+enabled = false
+
+# Maximum queries per second per client IP
+
+max_queries_per_second = 100
+
+# Maximum number of client IPs to track (uses SIEVE cache for automatic eviction)
+
+capacity = 10000
