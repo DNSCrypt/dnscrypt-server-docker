@@ -125,9 +125,9 @@ legacy_compat() {
         mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated" 2>/dev/null || :
         ln -s "${LEGACY_KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key" 2>/dev/null || :
         mkdir -p -m 700 "${LEGACY_STATE_DIR}"
-        chown _encrypted-dns:_encrypted-dns "${KEYS_DIR}" "${STATE_DIR}" "${LEGACY_STATE_DIR}"
         mv -f "$STATE_DIR" "${STATE_DIR}.migrated" 2>/dev/null || :
         ln -s "$LEGACY_STATE_DIR" "${STATE_DIR}" 2>/dev/null || :
+        chown _encrypted-dns:_encrypted-dns "${KEYS_DIR}" "${LEGACY_STATE_DIR}"
     fi
     if [ -f "${LEGACY_LISTS_DIR}/blacklist.txt" ]; then
         echo "Using [${LEGACY_LISTS_DIR}] for lists" >&2
