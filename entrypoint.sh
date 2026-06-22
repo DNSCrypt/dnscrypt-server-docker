@@ -80,8 +80,6 @@ init() {
         -e "s#@METRICS_ADDRESS@#${metrics_address}#" \
         "$CONFIG_FILE_TEMPLATE" >"$CONFIG_FILE"
 
-    update_pq_enabled
-
     mkdir -p -m 700 "${STATE_DIR}"
     chown _encrypted-dns:_encrypted-dns "${STATE_DIR}"
 
@@ -162,39 +160,6 @@ ensure_initialized() {
     fi
 }
 
-fragmented_udp_supported() {
-    if ! command -v dig >/dev/null 2>&1; then
-        echo "Cannot check fragmented UDP support: dig is not installed" >&2
-        return 1
-    fi
-
-    for server in 198.41.0.4 199.9.14.201 192.33.4.12 199.7.91.13; do
-        if dig +notcp +dnssec +bufsize=4096 +ignore +time=3 +tries=1 "@$server" . DNSKEY 2>/dev/null |
-            awk '
-                /^;; flags:/ && /[ ;]tc[ ;]/ { truncated = 1 }
-                /^[.][[:space:]]+[0-9]+[[:space:]]+IN[[:space:]]+DNSKEY[[:space:]]/ { dnskey = 1 }
-                /^;; MSG SIZE  rcvd:/ && $5 > 512 { large = 1 }
-                END { exit !(dnskey && large && !truncated) }
-            '; then
-            return 0
-        fi
-    done
-
-    return 1
-}
-
-update_pq_enabled() {
-    if fragmented_udp_supported; then
-        pq_enabled="true"
-        echo "Fragmented UDP support detected; enabling post-quantum DNSCrypt certificates"
-    else
-        pq_enabled="false"
-        echo "Fragmented UDP support not detected; disabling post-quantum DNSCrypt certificates" >&2
-    fi
-
-    sed -i -E "s/^[[:space:]]*pq_enabled[[:space:]]*=.*/pq_enabled = ${pq_enabled}/" "$CONFIG_FILE"
-}
-
 start() {
     ensure_initialized
     if [ -f "${KEYS_DIR}/secret.key" ]; then
@@ -205,8 +170,6 @@ start() {
             --dry-run >/dev/null || exit 1
         mv -f "${KEYS_DIR}/secret.key" "${KEYS_DIR}/secret.key.migrated"
     fi
-    update_pq_enabled
-
     /opt/encrypted-dns/sbin/encrypted-dns \
         --config "$CONFIG_FILE" --dry-run |
         tee "${KEYS_DIR}/provider-info.txt"

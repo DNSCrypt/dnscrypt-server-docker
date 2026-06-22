@@ -5,7 +5,7 @@ ENV SERIAL=1
 
 ENV CFLAGS=-O3
 ENV BUILD_DEPS="curl make build-essential git libevent-dev libexpat1-dev autoconf file libssl-dev flex bison"
-ENV RUNTIME_DEPS="bash util-linux coreutils findutils grep libssl3 ldnsutils bind9-dnsutils libevent-2.1 expat ca-certificates runit runit-helper jed"
+ENV RUNTIME_DEPS="bash util-linux coreutils findutils grep libssl3 ldnsutils libevent-2.1 expat ca-certificates runit runit-helper jed"
 
 RUN apt-get update && apt-get -qy dist-upgrade && apt-get -qy clean && \
     apt-get install -qy --no-install-recommends $RUNTIME_DEPS && \
