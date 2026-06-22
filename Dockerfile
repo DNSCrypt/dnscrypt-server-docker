@@ -75,6 +75,8 @@ COPY --chmod=755 watchdog.sh /var/svc/watchdog/run
 
 RUN ln -sf /opt/encrypted-dns/etc/keys/encrypted-dns.toml /opt/encrypted-dns/etc/encrypted-dns.toml
 
+RUN echo svmanaged > /etc/runit/default.runsvdir
+
 VOLUME ["/opt/encrypted-dns/etc/keys"]
 
 EXPOSE 443/udp 443/tcp 9100/tcp

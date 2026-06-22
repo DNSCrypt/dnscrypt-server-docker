@@ -15,6 +15,11 @@ CONFIG_FILE="${KEYS_DIR}/encrypted-dns.toml"
 CONFIG_FILE_TEMPLATE="${CONF_DIR}/encrypted-dns.toml.in"
 SERVICES_DIR="/etc/runit/runsvdir/svmanaged"
 
+fix_key_ownership() {
+    chown -R _encrypted-dns:_encrypted-dns "$LEGACY_KEYS_DIR" 2>/dev/null || :
+    chown -R _encrypted-dns:_encrypted-dns "$KEYS_DIR" 2>/dev/null || :
+}
+
 init() {
     if [ "$(is_initialized)" = yes ]; then
         start
@@ -82,6 +87,8 @@ init() {
 
     mkdir -p -m 700 "${STATE_DIR}"
     chown _encrypted-dns:_encrypted-dns "${STATE_DIR}"
+
+    fix_key_ownership
 
     if [ -f "${KEYS_DIR}/secret.key" ]; then
         echo "Importing the previous secret key [${KEYS_DIR}/secret.key]"
@@ -162,6 +169,7 @@ ensure_initialized() {
 
 start() {
     ensure_initialized
+    fix_key_ownership
     if [ -f "${KEYS_DIR}/secret.key" ]; then
         echo "Importing the previous secret key [${KEYS_DIR}/secret.key]"
         /opt/encrypted-dns/sbin/encrypted-dns \
