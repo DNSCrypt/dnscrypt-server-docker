@@ -64,6 +64,9 @@ RUN mkdir -p \
 COPY --chmod=644 encrypted-dns.toml.in /opt/encrypted-dns/etc/
 COPY --chmod=644 undelegated.txt /opt/encrypted-dns/etc/
 
+COPY --chmod=644 opennic.hints /opt/unbound/etc/unbound/
+COPY --chmod=644 opennic.key /opt/unbound/etc/unbound/
+
 COPY --chmod=755 entrypoint.sh /
 
 COPY --chmod=755 unbound.sh /var/svc/unbound/run

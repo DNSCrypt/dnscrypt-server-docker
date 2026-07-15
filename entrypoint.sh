@@ -186,6 +186,10 @@ start() {
         ln -s -f "$service" "${SERVICES_DIR}/"
     done
 
+    # runit wipes the environment before running services, so persist
+    # settings that service scripts need to a file.
+    printf '%s\n' "${OPENNIC:-}" >/etc/opennic-env
+
     exec /etc/runit/2 </dev/null >/dev/null 2>/dev/null
 }
 
