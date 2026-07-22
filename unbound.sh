@@ -19,6 +19,14 @@ else
     threads=1
 fi
 
+if [ -z "${OPENNIC:-}" ] && [ -f /etc/opennic-env ]; then
+    OPENNIC=$(cat /etc/opennic-env)
+fi
+opennic_enabled=0
+case "${OPENNIC:-}" in
+1 | true | yes | on) opennic_enabled=1 ;;
+esac
+
 provider_name=$(cat "$KEYS_DIR/provider_name")
 
 sed \
@@ -57,7 +65,6 @@ server:
   udp-connect: no
   chroot: "/opt/unbound/etc/unbound"
   directory: "/opt/unbound/etc/unbound"
-  auto-trust-anchor-file: "var/root.key"
   num-queries-per-thread: 4096
   outgoing-range: 8192
   msg-cache-size: @MSG_CACHE_SIZE@
@@ -130,6 +137,21 @@ server:
 remote-control:
   control-enable: yes
   control-interface: 127.0.0.1
+EOT
+
+if [ "$opennic_enabled" = 1 ]; then
+    cat >>/opt/unbound/etc/unbound/unbound.conf <<EOT
+
+server:
+  # OpenNIC root: no ICANN root servers, internic.net, or IANA involved
+  root-hints: "opennic.hints"
+  auto-trust-anchor-file: "var/opennic.key"
+EOT
+else
+    cat >>/opt/unbound/etc/unbound/unbound.conf <<EOT
+
+server:
+  auto-trust-anchor-file: "var/root.key"
 
 auth-zone:
   name: "."
@@ -139,13 +161,21 @@ auth-zone:
   for-upstream: yes
   zonefile: "var/root.zone"
 EOT
+fi
 
 mkdir -p /opt/unbound/etc/unbound/dev &&
     cp -a /dev/random /dev/urandom /opt/unbound/etc/unbound/dev/
 
 mkdir -p -m 700 /opt/unbound/etc/unbound/var &&
     chown _unbound:_unbound /opt/unbound/etc/unbound/var &&
-    /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
+    if [ "$opennic_enabled" = 1 ]; then
+        if [ ! -f /opt/unbound/etc/unbound/var/opennic.key ]; then
+            cp /opt/unbound/etc/unbound/opennic.key /opt/unbound/etc/unbound/var/opennic.key
+        fi &&
+            chown _unbound:_unbound /opt/unbound/etc/unbound/var/opennic.key
+    else
+        /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
+    fi
 
 if [ ! -f /opt/unbound/etc/unbound/unbound_control.pem ]; then
     /opt/unbound/sbin/unbound-control-setup 2>/dev/null || :

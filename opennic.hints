@@ -1,0 +1,18 @@
+; OpenNIC root hints
+; https://servers.opennicproject.org/
+; Verified 2026-07-14 against two independent OpenNIC DoH servers.
+; Refresh with: dig +https @dns1.slowb.ro . NS (then A/AAAA for each NS)
+.                       3600000    NS      ns2.opennic.glue.
+.                       3600000    NS      ns4.opennic.glue.
+.                       3600000    NS      ns6.opennic.glue.
+.                       3600000    NS      ns7.opennic.glue.
+.                       3600000    NS      ns8.opennic.glue.
+ns2.opennic.glue.       3600000    A       161.97.219.84
+ns2.opennic.glue.       3600000    AAAA    2001:470:4212:10:0:100:53:10
+ns4.opennic.glue.       3600000    A       116.203.104.203
+ns4.opennic.glue.       3600000    AAAA    2a01:4f8:c2c:da9c::1
+ns6.opennic.glue.       3600000    A       45.79.189.158
+ns7.opennic.glue.       3600000    A       153.56.130.67
+ns7.opennic.glue.       3600000    AAAA    2001:470:7493::e0
+ns8.opennic.glue.       3600000    A       178.63.116.152
+ns8.opennic.glue.       3600000    AAAA    2a01:4f8:141:4281::999

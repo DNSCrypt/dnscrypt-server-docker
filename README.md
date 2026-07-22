@@ -19,6 +19,7 @@ Table of contents:
   - [Prometheus metrics](#prometheus-metrics)
   - [TLS (including HTTPS and DoH) forwarding](#tls-including-https-and-doh-forwarding)
   - [Filtering](#filtering)
+  - [OpenNIC](#opennic)
 - [Join the network](#join-the-network)
 - [Usage with Docker Compose](#usage-with-docker-compose)
 - [Usage with Kubernetes](#usage-with-kubernetes)
@@ -186,6 +187,35 @@ And put the list of domains to block in a file named `/etc/dnscrypt-server/lists
 
 Then, follow the upgrade procedure, adding the following option to the `docker run` command: `-v /etc/dnscrypt-server/lists:/opt/encrypted-dns/etc/lists`.
 
+## OpenNIC
+
+The server can resolve names using the [OpenNIC](https://www.opennic.org/)
+root instead of the ICANN root, giving access to the OpenNIC TLDs (`.bbs`,
+`.chan`, `.cyb`, `.dyn`, `.epic`, `.geek`, `.gopher`, `.indy`, `.libre`,
+`.neo`, `.null`, `.o`, `.oss`, `.oz`, `.parody`, `.pirate`) in addition to
+the regular namespace.
+
+Enable it by setting the `OPENNIC=1` environment variable when creating the
+container (add `-e OPENNIC=1` to the `docker run` command). Without it, the
+image keeps the default behavior and resolves from the ICANN root.
+
+In OpenNIC mode:
+
+- Unbound bootstraps from the OpenNIC root servers (`opennic.hints`) and never
+  contacts the ICANN root servers, internic.net, or IANA.
+- DNSSEC validation is anchored to the OpenNIC root key (`opennic.key`) and
+  kept up to date automatically (RFC 5011). The OpenNIC root also serves the
+  DS records of the ICANN TLDs, so DNSSEC keeps working for the regular
+  namespace.
+
+If the OpenNIC root server set or root key ever changes, refresh both files
+and rebuild the image:
+
+```sh
+dig +https @dns1.slowb.ro . NS         # compare against opennic.hints
+dig +https @dns1.slowb.ro . DNSKEY     # compare the KSK (flags 257) against opennic.key
+```
+
 # Join the network
 
 If you want to help against DNS centralization and surveillance,
@@ -295,6 +325,8 @@ docker rmi --force jedisct1/dnscrypt-server ||:
 - Caching resolver: [Unbound](https://www.unbound.net/), with DNSSEC, prefetching,
 and no logs. The number of threads and memory usage are automatically adjusted.
 Latest stable version, compiled from source. qname minimisation is enabled.
+Optionally resolves from the [OpenNIC](https://www.opennic.org/) root (see
+[OpenNIC](#opennic)).
 - [encrypted-dns-server](https://github.com/jedisct1/encrypted-dns-server).
 Compiled from source.
 
