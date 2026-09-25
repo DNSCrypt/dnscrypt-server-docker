@@ -327,7 +327,7 @@ and no logs. The number of threads and memory usage are automatically adjusted.
 Latest stable version, compiled from source. qname minimisation is enabled.
 Optionally resolves from the [OpenNIC](https://www.opennic.org/) root (see
 [OpenNIC](#opennic)).
-- [encrypted-dns-server](https://github.com/jedisct1/encrypted-dns-server).
+- [encrypted-dns-server](https://github.com/DNSCrypt/encrypted-dns-server).
 Compiled from source.
 
 Keys and certificates are automatically rotated every 8 hour.
