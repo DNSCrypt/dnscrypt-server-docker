@@ -147,6 +147,26 @@ server:
   root-hints: "opennic.hints"
   auto-trust-anchor-file: "var/opennic.key"
 EOT
+
+    # Keep a local copy of the root zone, like the ICANN path does. Without it
+    # every delegation is a cached referral from whichever root server answered,
+    # so a single server serving stale data can break a TLD until the cache
+    # expires. Slaved from the servers already in opennic.hints, so this adds no
+    # dependency beyond the root servers Unbound is configured to use.
+    opennic_masters=$(awk '$1 !~ /^;/ && $3 == "A" { printf "  master: %s\n", $4 }' \
+        /opt/unbound/etc/unbound/opennic.hints)
+    if [ -n "$opennic_masters" ]; then
+        cat >>/opt/unbound/etc/unbound/unbound.conf <<EOT
+
+auth-zone:
+  name: "."
+${opennic_masters}
+  fallback-enabled: yes
+  for-downstream: no
+  for-upstream: yes
+  zonefile: "var/opennic-root.zone"
+EOT
+    fi
 else
     cat >>/opt/unbound/etc/unbound/unbound.conf <<EOT
 
