@@ -203,6 +203,11 @@ In OpenNIC mode:
 
 - Unbound bootstraps from the OpenNIC root servers (`opennic.hints`) and never
   contacts the ICANN root servers, internic.net, or IANA.
+- Unbound keeps a local copy of the root zone, transferred from those same root
+  servers, so delegations come from a complete zone instead of from referrals
+  cached per query. This mirrors what the ICANN path does with the root zone
+  from internic.net. If the transfer fails, Unbound falls back to querying the
+  root servers directly.
 - DNSSEC validation is anchored to the OpenNIC root key (`opennic.key`) and
   kept up to date automatically (RFC 5011). The OpenNIC root also serves the
   DS records of the ICANN TLDs, so DNSSEC keeps working for the regular
