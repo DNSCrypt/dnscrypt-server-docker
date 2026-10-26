@@ -27,9 +27,18 @@ case "${OPENNIC:-}" in
 1 | true | yes | on) opennic_enabled=1 ;;
 esac
 
+if [ -z "${CACHE_MIN_TTL:-}" ] && [ -f /etc/cache-min-ttl-env ]; then
+    CACHE_MIN_TTL=$(cat /etc/cache-min-ttl-env)
+fi
+case "${CACHE_MIN_TTL:-}" in
+"" | *[!0-9]*) cache_min_ttl=3600 ;;
+*) cache_min_ttl=$CACHE_MIN_TTL ;;
+esac
+
 provider_name=$(cat "$KEYS_DIR/provider_name")
 
 sed \
+    -e "s/@CACHE_MIN_TTL@/${cache_min_ttl}/" \
     -e "s/@MSG_CACHE_SIZE@/${msg_cache_size}/" \
     -e "s/@PROVIDER_NAME@/${provider_name}/" \
     -e "s/@RR_CACHE_SIZE@/${rr_cache_size}/" \
@@ -43,7 +52,7 @@ server:
   so-reuseport: yes
   edns-buffer-size: 1232
   delay-close: 10000
-  cache-min-ttl: 3600
+  cache-min-ttl: @CACHE_MIN_TTL@
   cache-max-ttl: 86400
   do-daemonize: no
   username: "_unbound"

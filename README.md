@@ -221,6 +221,21 @@ dig +https @dns1.slowb.ro . NS         # compare against opennic.hints
 dig +https @dns1.slowb.ro . DNSKEY     # compare the KSK (flags 257) against opennic.key
 ```
 
+## Cache TTL
+
+To reduce the load on authoritative servers and keep responses fast, answers
+are cached for at least one hour, even when their TTL is shorter. The downside
+is that changes to records with short TTLs can take an hour or more to be
+visible to clients.
+
+The minimum can be changed with the `CACHE_MIN_TTL` environment variable, in
+seconds, from `0` to `86400` (add `-e CACHE_MIN_TTL=60` to the `docker run`
+command). `CACHE_MIN_TTL=0` honors the TTLs set by the zone owners. Without
+the variable, the one-hour default is used.
+
+The value applies to both the Unbound cache and the encrypted-dns cache, and is
+applied every time the container starts.
+
 # Join the network
 
 If you want to help against DNS centralization and surveillance,

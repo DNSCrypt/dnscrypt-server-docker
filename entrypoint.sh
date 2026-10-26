@@ -167,8 +167,29 @@ ensure_initialized() {
     fi
 }
 
+apply_cache_min_ttl() {
+    cache_min_ttl=$(printf '%s\n' "${CACHE_MIN_TTL:-3600}" | sed 's/^0*\([0-9]\)/\1/')
+    case "$cache_min_ttl" in
+    *[!0-9]* | ??????*) cache_min_ttl_valid=0 ;;
+    *) cache_min_ttl_valid=1 ;;
+    esac
+    if [ "$cache_min_ttl_valid" = 0 ] || [ "$cache_min_ttl" -gt 86400 ]; then
+        echo "CACHE_MIN_TTL must be a number of seconds between 0 and 86400, not [${CACHE_MIN_TTL}]" >&2
+        exit 1
+    fi
+    if grep -qE '^[[:space:]]*cache_ttl_min[[:space:]]*=' "$CONFIG_FILE"; then
+        if ! grep -qE "^cache_ttl_min = ${cache_min_ttl}\$" "$CONFIG_FILE"; then
+            sed -i -E "s/^[[:space:]]*cache_ttl_min[[:space:]]*=.*/cache_ttl_min = ${cache_min_ttl}/" "$CONFIG_FILE"
+        fi
+    elif [ -n "${CACHE_MIN_TTL:-}" ]; then
+        echo "No cache_ttl_min setting in [${CONFIG_FILE}], leaving the encrypted-dns cache unchanged" >&2
+    fi
+    CACHE_MIN_TTL=$cache_min_ttl
+}
+
 start() {
     ensure_initialized
+    apply_cache_min_ttl
     fix_key_ownership
     if [ -f "${KEYS_DIR}/secret.key" ]; then
         echo "Importing the previous secret key [${KEYS_DIR}/secret.key]"
@@ -187,8 +208,9 @@ start() {
     done
 
     # runit wipes the environment before running services, so persist
-    # settings that service scripts need to a file.
+    # settings that service scripts need to files.
     printf '%s\n' "${OPENNIC:-}" >/etc/opennic-env
+    printf '%s\n' "${CACHE_MIN_TTL:-}" >/etc/cache-min-ttl-env
 
     exec /etc/runit/2 </dev/null >/dev/null 2>/dev/null
 }
